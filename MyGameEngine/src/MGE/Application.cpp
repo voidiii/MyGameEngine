@@ -1,4 +1,6 @@
 #include "Application.h"
+#include "./Event/ApplicatonEvent.h"
+#include "./Log.h"
 
 namespace MGE {
 

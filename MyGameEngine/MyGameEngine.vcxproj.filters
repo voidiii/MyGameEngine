@@ -4,6 +4,9 @@
     <Filter Include="MGE">
       <UniqueIdentifier>{DE03880B-4A0D-887C-D388-9E7C3F91937C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MGE\Event">
+      <UniqueIdentifier>{AF7304B4-1BDE-B82A-641C-6AD0D0C5967F}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\MGE.h" />
@@ -15,6 +18,21 @@
     </ClInclude>
     <ClInclude Include="src\MGE\EntryPoint.h">
       <Filter>MGE</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Event\ApplicatonEvent.h">
+      <Filter>MGE\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Event\Event.h">
+      <Filter>MGE\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Event\EventTypes.h">
+      <Filter>MGE\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Event\KeyEvent.h">
+      <Filter>MGE\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Event\MouseEvent.h">
+      <Filter>MGE\Event</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\Log.h">
       <Filter>MGE</Filter>

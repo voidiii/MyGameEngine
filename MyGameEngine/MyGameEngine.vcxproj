@@ -19,7 +19,7 @@
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MyGameEngine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -142,6 +142,11 @@
     <ClInclude Include="src\MGE\Application.h" />
     <ClInclude Include="src\MGE\Core.h" />
     <ClInclude Include="src\MGE\EntryPoint.h" />
+    <ClInclude Include="src\MGE\Event\ApplicatonEvent.h" />
+    <ClInclude Include="src\MGE\Event\Event.h" />
+    <ClInclude Include="src\MGE\Event\EventTypes.h" />
+    <ClInclude Include="src\MGE\Event\KeyEvent.h" />
+    <ClInclude Include="src\MGE\Event\MouseEvent.h" />
     <ClInclude Include="src\MGE\Log.h" />
     <ClInclude Include="src\Test.h" />
   </ItemGroup>
