@@ -13,6 +13,16 @@ namespace MGE {
 	}
 
 	void Application::Run() {
+
+		WindowResizeEvent test(1280, 720);
+		if (test.IsInCategory(EventCategoryApplication)) {
+			MGE_CLIENT_TRACE(test);
+		}
+
+		if (test.IsInCategory(EventCategoryInput)) {
+			MGE_CLIENT_TRACE(test);
+		}
+
 		while (true);
 	}
 
