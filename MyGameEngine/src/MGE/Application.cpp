@@ -3,10 +3,12 @@
 #include "./Event/ApplicatonEvent.h"
 #include "./Log.h"
 
+#include <GLFW/glfw3.h>
+
 namespace MGE {
 
 	Application::Application() {
-	
+		m_Window = std::unique_ptr<Window>(Window::Create());
 	}
 
 	Application::~Application() {
@@ -15,16 +17,11 @@ namespace MGE {
 
 	void Application::Run() {
 
-		WindowResizeEvent test(1280, 720);
-		if (test.IsInCategory(EventCategoryApplication)) {
-			MGE_CLIENT_TRACE(test);
+		while (m_Running) {
+			glClearColor(1, 0, 1, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
+			m_Window->OnUpdate();
 		}
-
-		if (test.IsInCategory(EventCategoryInput)) {
-			MGE_CLIENT_TRACE(test);
-		}
-
-		while (true);
 	}
 
 }
