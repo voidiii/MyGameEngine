@@ -1,3 +1,4 @@
+#include "MGEpch.h"
 #include "Log.h"
 
 namespace MGE {

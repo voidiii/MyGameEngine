@@ -1,8 +1,6 @@
 #pragma once
 #include "Event.h"
 
-#include <sstream>
-
 namespace MGE {
 
 	class MGE_API KeyEvent : public Event

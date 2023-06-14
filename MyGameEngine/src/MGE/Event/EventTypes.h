@@ -1,5 +1,6 @@
 #pragma once
-#include "../Core.h"
+#include "MGEpch.h"
+#include "Core.h"
 
 namespace MGE {
 

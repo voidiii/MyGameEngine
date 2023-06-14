@@ -1,10 +1,5 @@
 #pragma once
-
 #include "EventTypes.h"
-
-#include <string>
-#include <functional>
-#include <iostream>
 
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() {return EventType::##type;} \
 																virtual EventType GetEventType() const override { return GetStaticType(); } \

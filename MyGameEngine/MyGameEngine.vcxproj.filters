@@ -37,6 +37,7 @@
     <ClInclude Include="src\MGE\Log.h">
       <Filter>MGE</Filter>
     </ClInclude>
+    <ClInclude Include="src\MGEpch.h" />
     <ClInclude Include="src\Test.h" />
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +47,7 @@
     <ClCompile Include="src\MGE\Log.cpp">
       <Filter>MGE</Filter>
     </ClCompile>
+    <ClCompile Include="src\MGEpch.cpp" />
     <ClCompile Include="src\Test.cpp" />
   </ItemGroup>
 </Project>
