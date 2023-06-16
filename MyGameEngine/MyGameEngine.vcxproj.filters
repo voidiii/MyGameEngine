@@ -40,6 +40,12 @@
     <ClInclude Include="src\MGE\Event\MouseEvent.h">
       <Filter>MGE\Event</Filter>
     </ClInclude>
+    <ClInclude Include="src\MGE\Layer.h">
+      <Filter>MGE</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\LayerStack.h">
+      <Filter>MGE</Filter>
+    </ClInclude>
     <ClInclude Include="src\MGE\Log.h">
       <Filter>MGE</Filter>
     </ClInclude>
@@ -54,6 +60,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">
+      <Filter>MGE</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MGE\Layer.cpp">
+      <Filter>MGE</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MGE\LayerStack.cpp">
       <Filter>MGE</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\Log.cpp">

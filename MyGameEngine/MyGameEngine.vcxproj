@@ -84,6 +84,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -107,6 +108,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -130,6 +132,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -153,6 +156,8 @@
     <ClInclude Include="src\MGE\Event\EventTypes.h" />
     <ClInclude Include="src\MGE\Event\KeyEvent.h" />
     <ClInclude Include="src\MGE\Event\MouseEvent.h" />
+    <ClInclude Include="src\MGE\Layer.h" />
+    <ClInclude Include="src\MGE\LayerStack.h" />
     <ClInclude Include="src\MGE\Log.h" />
     <ClInclude Include="src\MGE\Window.h" />
     <ClInclude Include="src\MGEpch.h" />
@@ -161,6 +166,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp" />
+    <ClCompile Include="src\MGE\Layer.cpp" />
+    <ClCompile Include="src\MGE\LayerStack.cpp" />
     <ClCompile Include="src\MGE\Log.cpp" />
     <ClCompile Include="src\MGEpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

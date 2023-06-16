@@ -16,7 +16,6 @@ namespace MGE {
 
 	class MGE_API Event
 	{
-		friend class EventDispatcher;
 	public:
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
@@ -26,9 +25,9 @@ namespace MGE {
 		inline bool IsInCategory(EventCategory category) {
 			return GetCategoryFlags() & category;
 		}
-
+		bool Handled = false;
 	protected:
-		bool m_Handled = false;
+		
 	};
 
 	class EventDispatcher
@@ -49,7 +48,7 @@ namespace MGE {
 		template<typename EventT>
 		bool Dispatch(EventHandlerFunction <EventT> handlerFunction) {
 			if (m_Event.GetEventType() == EventT::GetStaticType()) {
-				m_Event.m_Handled = handlerFunction(*(EventT*)&m_Event);
+				m_Event.Handled = handlerFunction(*(EventT*)&m_Event);
 				return true;
 			}
 			return false;

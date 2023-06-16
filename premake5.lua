@@ -66,14 +66,17 @@ project "MyGameEngine"
 
 	filter "configurations:Debug"
 		defines "MGE_DEBUG"
+		buildoptions "/MDd"
 		symbols "On"
 	
 	filter "configurations:Release"
 		defines "MGE_RELEASE"
+		buildoptions "/MD"
 		symbols "On"
 
 	filter "configurations:Dist"
 		defines "MGE_DIST"
+		buildoptions "/MD"
 		symbols "On"
 
 project "Sandbox"		
@@ -114,12 +117,15 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "MGE_DEBUG"
+		buildoptions "/MDd"
 		symbols "On"
 	
 	filter "configurations:Release"
 		defines "MGE_RELEASE"
+		buildoptions "/MD"
 		symbols "On"
 
 	filter "configurations:Dist"
 		defines "MGE_DIST"
+		buildoptions "/MD"
 		symbols "On"

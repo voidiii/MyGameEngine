@@ -51,8 +51,8 @@ namespace MGE {
 		// Set GLFW callback
 		// when a user is trying to resize the window, GLFW would know it first and GLFW will send me (the coder) data
 		// so I can use that data to construct a event which will actually change the size of the window
-		
-		// GLFWAPI GLFWwindowsizefun glfwSetWindowSizeCallback(GLFWwindow* window, GLFWwindowsizefun callback)
+		 
+		/* GLFWAPI GLFWwindowsizefun glfwSetWindowSizeCallback(GLFWwindow* window, GLFWwindowsizefun callback) */ 
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 			data.Width = width;
