@@ -49,7 +49,7 @@ namespace MGE {
 		template<typename EventT>
 		bool Dispatch(EventHandlerFunction <EventT> handlerFunction) {
 			if (m_Event.GetEventType() == EventT::GetStaticType()) {
-				m_Event.m_handled = handlerFunction(*(EventT*)&e_Event);
+				m_Event.m_Handled = handlerFunction(*(EventT*)&m_Event);
 				return true;
 			}
 			return false;
