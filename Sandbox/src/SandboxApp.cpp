@@ -8,7 +8,7 @@ public:
 		: Layer("Example") {}
 
 	void OnUpdate() override {
-		MGE_CORE_INFO("ExampleLayer::Update");
+		//MGE_CORE_INFO("ExampleLayer::Update");
 	}
 
 	void OnEvent(MGE::Event& event) override {
@@ -21,6 +21,7 @@ class Sandbox : public MGE::Application {
 public:
 	Sandbox() {
 		PushLayer(new ExampleLayer());
+		PushOverlay(new MGE::ImGuiLayer());
 	}
 
 	~Sandbox() {

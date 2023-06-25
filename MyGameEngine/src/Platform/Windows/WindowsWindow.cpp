@@ -7,7 +7,7 @@
 #include "Event/MouseEvent.h"
 #include "Event/KeyEvent.h"
 
-
+#include <glad/glad.h>
 
 namespace MGE {
 
@@ -38,13 +38,21 @@ namespace MGE {
 
 		if (!g_GLFWInitialized) {
 			int success = glfwInit();
-			HZ_CORE_ASSERT(success, "Could not intialize GLFW!");
+			MGE_CORE_ASSERT(success, "Could not intialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
 			g_GLFWInitialized = true;
 		}
 
 		m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
+
+		// using GLFW's glfwGetProcAddress function to load the addresses 
+		// of the OpenGL function pointers, which are then managed by GLAD.
+		// glfwGetProcAddress is a function provided by GLFW, another library 
+		// that's used for creating windows, contexts and surfaces, receiving input and events
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		MGE_CORE_ASSERT(status, "Failed to initialize Glad!");
+
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 

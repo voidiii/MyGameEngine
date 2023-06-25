@@ -3,14 +3,19 @@
 #include "./Event/ApplicatonEvent.h"
 #include "./Log.h"
 
-#include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 // This creates a function object that, when called (the whole macro would be a function), will invoke x on this Application object.
 #define BIND_EVENT_FUNCTION(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 namespace MGE {
 
+	Application* Application::s_Instance = nullptr;
+
 	Application::Application() {
+		MGE_CORE_ASSERT(!s_Instance, "Application already exists!");
+		s_Instance = this;
+
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FUNCTION(OnEvent));
 	}
@@ -59,6 +64,12 @@ namespace MGE {
 
 	void Application::PushLayer(Layer* layer) {
 		m_LayerStack.PushLayer(layer);	
+		layer->OnAttach();
+	}
+
+	void Application::PushOverlay(Layer* layer) {
+		m_LayerStack.PushOverLayer(layer);	
+		layer->OnAttach();
 	}
 
 }

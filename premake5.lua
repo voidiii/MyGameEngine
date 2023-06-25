@@ -14,8 +14,12 @@ outputdir = "${cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "MyGameEngine/vendor/GLFW/include"
+IncludeDir["Glad"] = "MyGameEngine/vendor/Glad/include"
+IncludeDir["ImGui"] = "MyGameEngine/vendor/ImGui"
 
 include "MyGameEngine/vendor/GLFW"
+include "MyGameEngine/vendor/Glad"
+include "MyGameEngine/vendor/ImGui"
 
 project "MyGameEngine"
 	location "MyGameEngine"
@@ -39,13 +43,17 @@ project "MyGameEngine"
 		"%{prj.name}/vendor/spdlog/include",
 		"%{prj.name}/src",
 		"%{prj.name}/src/MGE",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.ImGui}"
 	}
 
 	links 
 	{ 
 		"GLFW",
-		"opengl32.lib"
+		"Glad",
+		"opengl32.lib",
+		"ImGui"
 	}
 
 	filter "system:windows"
@@ -56,7 +64,8 @@ project "MyGameEngine"
 		defines
 		{
 			"MGE_BUILD_DLL",
-			"MGE_PLATFORM_WINDOWS"
+			"MGE_PLATFORM_WINDOWS",
+			"GLFW_INCLUDE_NONE" -- This is to prevent GLFW from including OpenGL headers which we already include in Glad so it might cause include conflicts
 		}
 
 		postbuildcommands
