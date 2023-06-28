@@ -1,6 +1,6 @@
 #include "MGEpch.h"
 #include "Application.h"
-#include "./Event/ApplicatonEvent.h"
+#include "./Event/ApplicationEvent.h"
 #include "./Log.h"
 
 #include <glad/glad.h>

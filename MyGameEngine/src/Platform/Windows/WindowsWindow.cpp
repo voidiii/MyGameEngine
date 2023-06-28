@@ -3,7 +3,7 @@
 #include "Log.h"
 #include "Core.h"
 
-#include "Event/ApplicatonEvent.h"
+#include "Event/ApplicationEvent.h"
 #include "Event/MouseEvent.h"
 #include "Event/KeyEvent.h"
 
@@ -102,6 +102,14 @@ namespace MGE {
 			}
 		});
 
+
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			KeyTypedEvent event(keycode);
+			data.EventCallBack(event);
+		});
+
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
@@ -126,7 +134,7 @@ namespace MGE {
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xoffset, double yoffset) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-			MouseScorlledEvent event((float)xoffset, (float)yoffset);
+			MouseScrolledEvent event((float)xoffset, (float)yoffset);
 			data.EventCallBack(event);
 		});
 

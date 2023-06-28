@@ -3,7 +3,7 @@
 #include "Core.h"
 #include "Event/Event.h"
 #include "Window.h"
-#include "Event/ApplicatonEvent.h"
+#include "Event/ApplicationEvent.h"
 #include "Event/MouseEvent.h"
 #include "Event/KeyEvent.h"
 #include "LayerStack.h"

@@ -20,3 +20,6 @@
 
 
 #define BIT(x) (1 << x)
+
+// This creates a function object that, when called (the whole macro would be a function), will invoke x on this Application object.
+#define MGE_BIND_EVENT_FUNCTION(x) std::bind(&x, this, std::placeholders::_1)

@@ -26,10 +26,10 @@ namespace MGE {
 		float X, Y;
 	};
 
-	class MGE_API MouseScorlledEvent : public Event
+	class MGE_API MouseScrolledEvent : public Event
 	{
 	public:
-		MouseScorlledEvent(float xOffset, float yOffset)
+		MouseScrolledEvent(float xOffset, float yOffset)
 			: m_XOffset(xOffset), m_YOffset(yOffset) {}
 
 		inline float GetXOffset() const { return m_XOffset; }
