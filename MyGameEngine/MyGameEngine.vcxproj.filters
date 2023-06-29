@@ -71,6 +71,8 @@
     <ClInclude Include="src\Test.h" />
     <ClInclude Include="src\MGE\input.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
+    <ClInclude Include="src\MGE\KeyCodes.h" />
+    <ClInclude Include="src\MGE\MouseButtonCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">

@@ -12,7 +12,13 @@ public:
 	}
 
 	void OnEvent(MGE::Event& event) override {
-		MGE_CORE_TRACE("{0}", event);
+		if (event.GetEventType() == MGE::EventType::KeyPressed) {
+			MGE::KeyPressedEvent& e = (MGE::KeyPressedEvent&)event;
+			if (e.GetKeyCode() == MGE_KEY_TAB) {
+				MGE_CORE_TRACE("Tab key is pressed (event)!");
+			}
+			MGE_CORE_TRACE("{0}", (char)e.GetKeyCode());
+		}
 	}
 
 };

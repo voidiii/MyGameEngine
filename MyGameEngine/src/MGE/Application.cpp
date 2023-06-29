@@ -3,6 +3,8 @@
 #include "./Event/ApplicationEvent.h"
 #include "./Log.h"
 
+#include "Input.h"
+
 #include <glad/glad.h>
 
 // This creates a function object that, when called (the whole macro would be a function), will invoke x on this Application object.
