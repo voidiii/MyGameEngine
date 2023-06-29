@@ -157,6 +157,7 @@
     <ClInclude Include="src\MGE\Event\KeyEvent.h" />
     <ClInclude Include="src\MGE\Event\MouseEvent.h" />
     <ClInclude Include="src\MGE\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\MGE\input.h" />
     <ClInclude Include="src\MGE\Layer.h" />
     <ClInclude Include="src\MGE\LayerStack.h" />
     <ClInclude Include="src\MGE\Log.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRender.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Test.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp" />
@@ -178,6 +180,7 @@
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRender.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Test.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
