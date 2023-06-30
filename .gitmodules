@@ -7,3 +7,6 @@
 [submodule "MyGameEngine/vendor/imgui"]
 	path = MyGameEngine/vendor/imgui
 	url = https://github.com/voidiii/imgui
+[submodule "MyGameEngine/src/MGE/Math/Mather"]
+	path = MyGameEngine/src/MGE/Math/Mather
+	url = https://github.com/voidiii/Mathter.git

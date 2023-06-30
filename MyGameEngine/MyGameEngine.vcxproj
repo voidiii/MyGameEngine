@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>MGEpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>MGE_BUILD_DLL;MGE_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;MGE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -104,7 +104,7 @@
       <PrecompiledHeaderFile>MGEpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>MGE_BUILD_DLL;MGE_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;MGE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -128,7 +128,7 @@
       <PrecompiledHeaderFile>MGEpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>MGE_BUILD_DLL;MGE_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;MGE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -151,24 +151,72 @@
     <ClInclude Include="src\MGE\Application.h" />
     <ClInclude Include="src\MGE\Core.h" />
     <ClInclude Include="src\MGE\EntryPoint.h" />
-    <ClInclude Include="src\MGE\Event\ApplicatonEvent.h" />
+    <ClInclude Include="src\MGE\Event\ApplicationEvent.h" />
     <ClInclude Include="src\MGE\Event\Event.h" />
     <ClInclude Include="src\MGE\Event\EventTypes.h" />
     <ClInclude Include="src\MGE\Event\KeyEvent.h" />
     <ClInclude Include="src\MGE\Event\MouseEvent.h" />
     <ClInclude Include="src\MGE\ImGui\ImGuiLayer.h" />
-    <ClInclude Include="src\MGE\input.h" />
     <ClInclude Include="src\MGE\KeyCodes.h" />
     <ClInclude Include="src\MGE\Layer.h" />
     <ClInclude Include="src\MGE\LayerStack.h" />
     <ClInclude Include="src\MGE\Log.h" />
     <ClInclude Include="src\MGE\MouseButtonCodes.h" />
     <ClInclude Include="src\MGE\Window.h" />
+    <ClInclude Include="src\MGE\input.h" />
     <ClInclude Include="src\MGEpch.h" />
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRender.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Test.h" />
-    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Common\Approx.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Common\Definitions.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Common\DeterministicInitializer.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Common\MathUtil.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Common\Range.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Common\Traits.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Decompositions\DecomposeLU.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Decompositions\DecomposeQR.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Decompositions\DecomposeSVD.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Geometry.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\IoStream.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Matrix.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Matrix\MatrixArithmetic.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Matrix\MatrixCast.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Matrix\MatrixCompare.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Matrix\MatrixFunction.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Matrix\MatrixImpl.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Matrix\MatrixVectorArithmetic.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Quaternion.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Quaternion\QuaternionArithmetic.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Quaternion\QuaternionCompare.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Quaternion\QuaternionFunction.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Quaternion\QuaternionImpl.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Quaternion\QuaternionLiterals.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Quaternion\QuaternionVectorArithmetic.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\SIMD\Simd.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\SIMD\Simd_SSE2.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Swizzle\Swizzle_1.inc.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Swizzle\Swizzle_2.inc.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Swizzle\Swizzle_3.inc.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Swizzle\Swizzle_4.inc.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Transforms\IdentityBuilder.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Transforms\OrthographicBuilder.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Transforms\PerspectiveBuilder.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Transforms\Rotation2DBuilder.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Transforms\Rotation3DBuilder.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Transforms\ScaleBuilder.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Transforms\ShearBuilder.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Transforms\TranslationBuilder.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Transforms\ViewBuilder.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Transforms\ZeroBuilder.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Utility.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Vector.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Vector\VectorArithmetic.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Vector\VectorCompare.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Vector\VectorConcat.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Vector\VectorFunction.hpp" />
+    <ClInclude Include="vendor\Math\Mather\include\Mathter\Vector\VectorImpl.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp" />
@@ -180,9 +228,9 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRender.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Test.cpp" />
-    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
