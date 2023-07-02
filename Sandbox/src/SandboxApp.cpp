@@ -1,11 +1,23 @@
 #pragma once
 #include "MGE.h"
+#include "MathAlias.h"
 
 class ExampleLayer : public MGE::Layer 
 {
 public:
 	ExampleLayer()
-		: Layer("Example") {}
+		: Layer("Example") {
+			MGE::Vec2 a = { 1, 2 };
+			MGE::Vec3 v1 = { 1, 2, 3 };
+			MGE::Vec3 v2 = { a, 3 };
+			MGE::Vec4 v3 = a.xxyy;
+			MGE::Mat33 mdecl = {
+			  1, 0, 0,
+			  0, 1, 0,
+			  0, 0, 1,
+			};
+			MGE_CORE_INFO("mdecl[0]: [{0}, {1}]", mdecl(0, 0), mdecl(0, 1));
+		}
 
 	void OnUpdate() override {
 		//MGE_CORE_INFO("ExampleLayer::Update");

@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>MGEpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>MGE_BUILD_DLL;MGE_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;MGE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include\Mathter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -104,7 +104,7 @@
       <PrecompiledHeaderFile>MGEpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>MGE_BUILD_DLL;MGE_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;MGE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include\Mathter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -128,7 +128,7 @@
       <PrecompiledHeaderFile>MGEpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>MGE_BUILD_DLL;MGE_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;MGE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include\Mathter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -165,6 +165,7 @@
     <ClInclude Include="src\MGE\Window.h" />
     <ClInclude Include="src\MGE\input.h" />
     <ClInclude Include="src\MGEpch.h" />
+    <ClInclude Include="src\MathAlias.h" />
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRender.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />

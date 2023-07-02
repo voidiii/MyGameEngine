@@ -117,6 +117,9 @@
     <ClInclude Include="src\MGEpch.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\MathAlias.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRender.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>

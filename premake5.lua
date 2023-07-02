@@ -16,7 +16,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "MyGameEngine/vendor/GLFW/include"
 IncludeDir["Glad"] = "MyGameEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "MyGameEngine/vendor/ImGui"
-IncludeDir["Mather"] = "MyGameEngine/vendor/Math/Mather/include" -- this is what I added for Mather
+IncludeDir["Mathter"] = "MyGameEngine/vendor/Math/Mather/include/Mathter" -- this is what I added for Mather
 
 include "MyGameEngine/vendor/GLFW"
 include "MyGameEngine/vendor/Glad"
@@ -48,7 +48,7 @@ project "MyGameEngine"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.Mather}" -- this is what I added for Mather
+		"%{IncludeDir.Mathter}" -- this is what I added for Mather
 	}
 
 	links 
@@ -110,7 +110,7 @@ project "Sandbox"
 	{
 		"MyGameEngine/vendor/spdlog/include",
 		"MyGameEngine/src",
-		"%{IncludeDir.Mather}"
+		"%{IncludeDir.Mathter}"
 	}
 
 	links
