@@ -8,6 +8,8 @@
 #include "Event/KeyEvent.h"
 #include "LayerStack.h"
 
+#include "MGE/ImGui/ImGuiLayer.h"
+
 namespace MGE {
 
 	class MGE_API Application
@@ -33,6 +35,7 @@ namespace MGE {
 		bool OnWindowClose(WindowCloseEvent& e);
 		
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 

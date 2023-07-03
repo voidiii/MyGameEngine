@@ -39,7 +39,7 @@ class Sandbox : public MGE::Application {
 public:
 	Sandbox() {
 		PushLayer(new ExampleLayer());
-		PushOverlay(new MGE::ImGuiLayer());
+		//PushOverlay(new MGE::ImGuiLayer());
 	}
 
 	~Sandbox() {
