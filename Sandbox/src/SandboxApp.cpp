@@ -2,6 +2,9 @@
 #include "MGE.h"
 #include "MathAlias.h"
 
+#include "imgui.h"
+#include "MGE/ImGui/ImGuiLayer.h"
+
 class ExampleLayer : public MGE::Layer 
 {
 public:
@@ -21,6 +24,13 @@ public:
 
 	void OnUpdate() override {
 		//MGE_CORE_INFO("ExampleLayer::Update");
+	}
+
+	void virtual OnImGuiRender() override {
+		//MGE_CORE_INFO("ExampleLayer::ImGuiRender");
+		ImGui::Begin("Test");
+		ImGui::Text("Hello World");
+		ImGui::End();
 	}
 
 	void OnEvent(MGE::Event& event) override {

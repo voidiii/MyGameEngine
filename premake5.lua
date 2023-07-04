@@ -12,6 +12,8 @@ workspace "MyGameEngine"
 outputdir = "${cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (solution directory)
+
+defines { "IMGUI_API=__declspec(dllexport)" }
 IncludeDir = {}
 IncludeDir["GLFW"] = "MyGameEngine/vendor/GLFW/include"
 IncludeDir["Glad"] = "MyGameEngine/vendor/Glad/include"
@@ -24,8 +26,10 @@ include "MyGameEngine/vendor/ImGui"
 
 project "MyGameEngine"
 	location "MyGameEngine"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -71,11 +75,6 @@ project "MyGameEngine"
 			"GLFW_INCLUDE_NONE" -- This is to prevent GLFW from including OpenGL headers which we already include in Glad so it might cause include conflicts
 		}
 
-		postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
-		}
-
 	filter "configurations:Debug"
 		defines "MGE_DEBUG"
 		buildoptions "/MDd"
@@ -96,6 +95,8 @@ project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -110,12 +111,14 @@ project "Sandbox"
 	{
 		"MyGameEngine/vendor/spdlog/include",
 		"MyGameEngine/src",
-		"%{IncludeDir.Mathter}"
+		"%{IncludeDir.Mathter}",
+		"%{IncludeDir.ImGui}"
 	}
 
 	links
 	{
-		"MyGameEngine"
+		"MyGameEngine",
+		--"ImGui" -- I added this 
 	}
 
 	filter "system:windows"

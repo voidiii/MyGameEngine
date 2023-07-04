@@ -1,11 +1,15 @@
  #pragma once
 
 #ifdef MGE_PLATFORM_WINDOWS
+#if MGE_DYNAMIC_LINK
 	#ifdef MGE_BUILD_DLL
 		#define MGE_API __declspec(dllexport)
     #else
 		#define MGE_API __declspec(dllimport)
 	#endif
+#else
+	#define MGE_API
+#endif
 #else
 	#error GME only supoorts windows
 #endif
