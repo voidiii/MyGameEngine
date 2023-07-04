@@ -5,9 +5,8 @@
 
 #include "Event/ApplicationEvent.h"
 #include "Event/MouseEvent.h"
-#include "Event/KeyEvent.h"
 
-#include <glad/glad.h>
+#include "Platform/OpenGL/OpenGLContext.h"
 
 namespace MGE {
 
@@ -44,14 +43,17 @@ namespace MGE {
 		}
 
 		m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_Window);
+		// glfwMakeContextCurrent(m_Window);
 
 		// using GLFW's glfwGetProcAddress function to load the addresses 
 		// of the OpenGL function pointers, which are then managed by GLAD.
 		// glfwGetProcAddress is a function provided by GLFW, another library 
 		// that's used for creating windows, contexts and surfaces, receiving input and events
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		MGE_CORE_ASSERT(status, "Failed to initialize Glad!");
+		// int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		// MGE_CORE_ASSERT(status, "Failed to initialize Glad!");
+
+		m_Context = new OpenGLContext(m_Window);
+		m_Context->Init();
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
@@ -157,7 +159,7 @@ namespace MGE {
 		// Swap the front and back buffers (update the window with the new frame).
 
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		m_Context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enable) {
