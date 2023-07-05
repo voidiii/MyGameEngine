@@ -270,6 +270,8 @@
     <ClInclude Include="vendor\Math\Mather\include\Mathter\Vector\VectorImpl.hpp">
       <Filter>vendor\Math\Mather\include\Mathter\Vector</Filter>
     </ClInclude>
+    <ClInclude Include="src\MGE\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">
@@ -302,5 +304,6 @@
     <ClCompile Include="src\Test.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@
 
 #include "Event/ApplicationEvent.h"
 #include "Event/MouseEvent.h"
+#include "Event/KeyEvent.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
 
