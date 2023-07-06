@@ -138,6 +138,10 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\MGE\Renderer\Renderer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
+    <ClInclude Include="src\MGE\Renderer\Buffer.h" />
+    <ClInclude Include="src\MGE\Renderer\Shader.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\MGE.h" />
     <ClInclude Include="src\MGE\Application.h" />
@@ -212,6 +216,10 @@
     <ClInclude Include="vendor\Math\Mather\include\Mathter\Vector\VectorImpl.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\MGE\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
+    <ClCompile Include="src\MGE\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\MGE\Renderer\Shader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\MGE\Application.cpp" />
     <ClCompile Include="src\MGE\ImGui\ImGuiBuild.cpp" />
