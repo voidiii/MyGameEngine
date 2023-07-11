@@ -13,6 +13,7 @@
 
 #include "MGE/Renderer/Buffer.h"
 #include "MGE/Renderer/VertexArray.h"
+#include "MGE/Renderer/Camera.h"
 
 namespace MGE {
 
@@ -48,6 +49,8 @@ namespace MGE {
 
 		std::shared_ptr<Shader> m_BlueShader;
 		std::shared_ptr<VertexArray> m_SquareVA;
+
+		Camera m_Camera;
 
 	private:
 		static Application* s_Instance;

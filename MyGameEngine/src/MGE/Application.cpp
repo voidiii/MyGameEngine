@@ -13,7 +13,9 @@ namespace MGE {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application() {
+	Application::Application() 
+		: m_Camera(Vec4(-1.6f, 1.6f, -0.9f, 0.9f))
+	{
 		MGE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 

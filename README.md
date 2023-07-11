@@ -5,8 +5,8 @@ Studying Hazel Engine coded by The Cherno
 https://zhuanlan.zhihu.com/p/640303210?
 
 
-Event system anslysis
+Event system anslysis at 7/10
 ![alt text](https://github.com/voidiii/MyGameEngine/blob/main/CodeStructNotebook/Event_system_note.jpg?raw=true)
 
-Render Abstraction
+Render Abstraction at 7/10
 ![alt text](https://github.com/voidiii/MyGameEngine/blob/main/CodeStructNotebook/Render_Abstraction_note.jpg?raw=true)
