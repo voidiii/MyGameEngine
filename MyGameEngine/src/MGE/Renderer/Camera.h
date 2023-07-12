@@ -13,9 +13,9 @@ namespace MGE {
         void SetRotation(float radian) { 
 
             m_Rotation.w = std::cos(radian / 2);
-            m_Rotation.x = m_Rotation.x * std::sin(radian / 2);
-            m_Rotation.y = m_Rotation.y * std::sin(radian / 2);
-            m_Rotation.z = m_Rotation.z * std::sin(radian / 2);
+            //m_Rotation.x = m_Rotation.x * std::sin(radian / 2);
+            //m_Rotation.y = m_Rotation.y * std::sin(radian / 2);
+            //m_Rotation.z = m_Rotation.z * std::sin(radian / 2);
             RecalculateViewMatrix(); 
         }
         
@@ -35,7 +35,7 @@ namespace MGE {
 
         Vec3 m_Position;
         Quat m_Rotation;
-        float m_radian = 0.0f;
+        // float m_radian = 0.0f;
 
 	};
 

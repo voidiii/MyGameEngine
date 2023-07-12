@@ -9,7 +9,7 @@ class ExampleLayer : public MGE::Layer
 {
 public:
 	ExampleLayer()
-		: Layer("Example"), m_Camera(MGE::Vec4(-1.6f, 1.6f, -0.9f, 0.9f))
+		: Layer("Example"), m_Camera(MGE::Vec4(-1.5f, 1.5f, -1.0f, 1.0f))
 	{
 		/*
 			The code generates a Vertex Array Object (VAO) using glGenVertexArrays. 
@@ -200,12 +200,12 @@ private:
 	std::shared_ptr<MGE::VertexArray> m_SquareVA;
 
 	MGE::Camera m_Camera;
-	MGE::Vec3 m_CameraPosition = MGE::Vec3(1.0f);
+	MGE::Vec3 m_CameraPosition = MGE::Vec3(0.0f);
 	float m_CameraMoveSpeed = 5.0f;
 
-	float radian = 0.f;
-	MGE::Quat m_CameraRotation = mathter::Normalize(MGE::Quat(0.0f, 0.f, 0.f, 1.f));
-	float m_CameraRotationSpeed = 180.0f;
+	float radian = 3.1415926f;
+	// MGE::Quat m_CameraRotation = mathter::Normalize(MGE::Quat(0.0f, 0.f, 0.f, 1.f));
+	float m_CameraRotationSpeed = 1.0f;
 
 };
 
