@@ -138,6 +138,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\MGE\Core\Timestep.h" />
     <ClInclude Include="src\MGE\Renderer\Camera.h" />
     <ClInclude Include="src\MGE\Renderer\RenderCommand.h" />
     <ClInclude Include="src\MGE\Renderer\RendererAPI.h" />

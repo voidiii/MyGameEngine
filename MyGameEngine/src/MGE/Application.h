@@ -8,12 +8,9 @@
 #include "Event/KeyEvent.h"
 #include "LayerStack.h"
 #include "MGE/Renderer/Shader.h"
-
+#include "MGE/Core/Timestep.h"
 #include "MGE/ImGui/ImGuiLayer.h"
 
-#include "MGE/Renderer/Buffer.h"
-#include "MGE/Renderer/VertexArray.h"
-#include "MGE/Renderer/Camera.h"
 
 namespace MGE {
 
@@ -44,13 +41,7 @@ namespace MGE {
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
-		std::shared_ptr<Shader> m_Shader;
-		std::shared_ptr<VertexArray> m_VertexArray;
-
-		std::shared_ptr<Shader> m_BlueShader;
-		std::shared_ptr<VertexArray> m_SquareVA;
-
-		Camera m_Camera;
+		float m_LastFrameTime = 0.0f;
 
 	private:
 		static Application* s_Instance;

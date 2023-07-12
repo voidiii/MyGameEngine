@@ -1,6 +1,7 @@
 #pragma once
 #include "MGE/Core.h"
 #include "MGE/Event/Event.h"
+#include "MGE/Core/Timestep.h"
 
 namespace MGE {
 
@@ -12,7 +13,7 @@ namespace MGE {
 
         virtual void OnAttach() {}
         virtual void OnDetach() {}
-        virtual void OnUpdate() {}
+        virtual void OnUpdate(Timestep ts) {}
         virtual void OnEvent(Event& event) {}
         virtual void OnImGuiRender() {}
 

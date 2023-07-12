@@ -282,6 +282,7 @@
     <ClInclude Include="src\MGE\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
     <ClInclude Include="src\MGE\Renderer\Camera.h" />
+    <ClInclude Include="src\MGE\Core\Timestep.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">
