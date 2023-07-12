@@ -69,7 +69,7 @@ T Length(const Quaternion<T, Packed>& q) {
 /// <summary> Returns the unit quaternion of the same direction. Does not change this object. </summary>
 template <class T, bool Packed>
 Quaternion<T, Packed> Normalize(const Quaternion<T, Packed>& q) {
-	return Quaternion<T, Packed>{ q.vec.Normalized() };
+	return Quaternion<T, Packed>{ Normalize(q.vec) }; // bug? used to be q.vec.Normalized()
 }
 
 /// <summary> Returns the quaternion of opposite rotation. </summary>

@@ -13,7 +13,7 @@ namespace MGE {
         float const& zFar
     )
     {
-        Mat44 Result;
+        Mat44 Result = mathter::Identity();;
         Result(0, 0) = 2.0f / (right - left);
         Result(1, 1) = 2.0f / (top - bottom);
         Result(2, 2) = -2.0f / (zFar - zNear);
@@ -30,12 +30,15 @@ namespace MGE {
                                    left_right_bottom_top[3], -1.0f, 1.0f)), m_ViewMatrix(mathter::Identity())
 	{
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
+        m_Position = Vec3(1.0f);
+        m_Rotation = Quat(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
 	void Camera::RecalculateViewMatrix()
 	{
         Mat44 IDMatrix = mathter::Identity();
-        Mat44 RotationMatrix = (Mat44)m_Rotation;
+        m_Rotation = Normalize(m_Rotation);
+        Mat44 RotationMatrix = (Mat44)(m_Rotation);
         Mat44 transform = (Mat44)mathter::Translation(m_Position) * IDMatrix * RotationMatrix;
 
         m_ViewMatrix = mathter::Inverse(transform);

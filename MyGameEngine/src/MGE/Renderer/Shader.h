@@ -1,6 +1,7 @@
  #pragma once
 
 #include <string>
+#include "MathAlias.h"
 
 namespace MGE {
 
@@ -12,6 +13,8 @@ namespace MGE {
 
 		void Bind() const;
 		void Unbind() const;
+
+		void UploadUniformMat4(const std::string& name, const Mat44& matrix);
 	private:
 		uint32_t m_RendererID;
 	};

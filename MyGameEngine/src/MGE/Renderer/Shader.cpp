@@ -127,4 +127,10 @@ namespace MGE {
 		glUseProgram(0);
 	}
 
+	void Shader::UploadUniformMat4(const std::string& name, const Mat44& matrix)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniformMatrix4fv(location, 1, GL_FALSE, (GLfloat *)&matrix);
+	}
+
 }
