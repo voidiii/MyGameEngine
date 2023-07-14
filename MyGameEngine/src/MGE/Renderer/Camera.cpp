@@ -39,7 +39,7 @@ namespace MGE {
         Mat44 IDMatrix = mathter::Identity();
         m_Rotation = Normalize(m_Rotation);
         Mat44 RotationMatrix = (Mat44)(m_Rotation);
-        Mat44 transform = RotationMatrix * (Mat44)mathter::Translation(m_Position);
+        Mat44 transform = RotationMatrix * (IDMatrix + (Mat44)mathter::Translation(m_Position));
 
         m_ViewMatrix = mathter::Inverse(transform);
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;

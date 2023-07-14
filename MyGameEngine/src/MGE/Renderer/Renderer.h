@@ -11,7 +11,9 @@ namespace MGE {
 		static void BeginScene(Camera& camera);
 		static void EndScene();
 
-		static void Submit(const std::shared_ptr<VertexArray>& vertexArray, const std::shared_ptr<Shader>& shader);
+		static void Submit(const std::shared_ptr<VertexArray>& vertexArray, 
+			const std::shared_ptr<Shader>& shader,
+			const Mat44& transform = mathter::Identity());
 
 		inline static RendererAPI::API GetRendererAPI() { return RendererAPI::GetRendererAPI(); }
 
