@@ -1,5 +1,7 @@
  #pragma once
 
+ #include <memory>
+
 #ifdef MGE_PLATFORM_WINDOWS
 #if MGE_DYNAMIC_LINK
 	#ifdef MGE_BUILD_DLL
@@ -27,3 +29,14 @@
 
 // This creates a function object that, when called (the whole macro would be a function), will invoke x on this Application object.
 #define MGE_BIND_EVENT_FUNCTION(x) std::bind(&x, this, std::placeholders::_1)
+
+namespace MGE {
+
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+
+
+}

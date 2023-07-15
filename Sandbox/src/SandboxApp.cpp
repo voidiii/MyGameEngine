@@ -5,6 +5,8 @@
 #include "MGE/ImGui/ImGuiLayer.h"
 #include "MathAlias.h"
 
+#include "Platform/OpenGL/OpenGLShader.h"
+
 class ExampleLayer : public MGE::Layer 
 {
 public:
@@ -123,9 +125,9 @@ public:
 			}
 		)";
 
-		m_Shader.reset(new MGE::Shader(vertexSrc, fragmentSrc));
+		m_Shader.reset(MGE::Shader::Create(vertexSrc, fragmentSrc));
 
-		std::string blueShaderVertexSrc = R"(
+		std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_Position;
@@ -141,18 +143,21 @@ public:
 			}
 		)";
 
-		std::string blueShaderFragmentSrc = R"(
+		std::string flatColorShaderFragmentSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) out vec4 color;
 			in vec3 v_Position;
+
+			uniform vec3 u_Color;
+
 			void main()
 			{
-				color = vec4(0.2, 0.3, 0.8, 1.0);
+				color = vec4(u_Color, 1.0);
 			}
 		)";
 
-		m_BlueShader.reset(new MGE::Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
+		m_FlatColorShader.reset(MGE::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
 		}
 
 	void OnUpdate(MGE::Timestep ts) override {
@@ -183,13 +188,16 @@ public:
 		static MGE::Mat44 scale = mathter::Scale(MGE::Vec3(0.1f));
 		//MGE::Renderer::Submit(m_SquareVA, m_BlueShader);
 
+		std::dynamic_pointer_cast<MGE::OpenGLShader>(m_FlatColorShader)->Bind();
+		std::dynamic_pointer_cast<MGE::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+
 		for (int y = 0; y < 20; y++)
 		{
 			for (int x = 0; x < 20; x++)
 			{
 				MGE::Vec3 pos(x * 1.11f, y * 1.11f, 0.0f);
 				MGE::Mat44 transform = (MGE::Mat44)mathter::Translation(pos) * scale;
-				MGE::Renderer::Submit(m_SquareVA, m_BlueShader, transform);
+				MGE::Renderer::Submit(m_SquareVA, m_FlatColorShader, transform);
 			}
 		}
 		MGE::Renderer::Submit(m_VertexArray, m_Shader);
@@ -198,7 +206,9 @@ public:
 	}
 
 	void virtual OnImGuiRender() override {
-
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", (float*)(&m_SquareColor));
+		ImGui::End();
 	}
 
 	void OnEvent(MGE::Event& event) override {
@@ -206,11 +216,11 @@ public:
 	}
 
 private:
-	std::shared_ptr<MGE::Shader> m_Shader;
-	std::shared_ptr<MGE::VertexArray> m_VertexArray;
+	MGE::Ref<MGE::Shader> m_Shader;
+	MGE::Ref<MGE::VertexArray> m_VertexArray;
 
-	std::shared_ptr<MGE::Shader> m_BlueShader;
-	std::shared_ptr<MGE::VertexArray> m_SquareVA;
+	MGE::Ref<MGE::Shader> m_FlatColorShader;
+	MGE::Ref<MGE::VertexArray> m_SquareVA;
 
 	MGE::Camera m_Camera;
 	MGE::Vec3 m_CameraPosition = MGE::Vec3(0.0f);
@@ -219,6 +229,8 @@ private:
 	float radian = 3.1415926f;
 	// MGE::Quat m_CameraRotation = mathter::Normalize(MGE::Quat(0.0f, 0.f, 0.f, 1.f));
 	float m_CameraRotationSpeed = 1.0f;
+
+	MGE::Vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
 
 };
 
