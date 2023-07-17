@@ -6,6 +6,12 @@
 
 namespace MGE {
 
+	void OpenGLRendererAPI::Init()
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
 	void OpenGLRendererAPI::SetClearColor(const Vec4& color)
 	{
 		glClearColor(color[0], color[1], color[2], color[3]);

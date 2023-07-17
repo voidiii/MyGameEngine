@@ -18,6 +18,7 @@
 #include "MGE/Renderer/Buffer.h"
 #include "MGE/Renderer/Shader.h"
 #include "MGE/Renderer/VertexArray.h"
+#include "MGE/Renderer/Texture.h"
 
 #include "MGE/Renderer/Camera.h"
 // -----------------------------------

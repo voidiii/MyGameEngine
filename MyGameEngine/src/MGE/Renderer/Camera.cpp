@@ -31,7 +31,7 @@ namespace MGE {
 	{
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
         m_Position = Vec3(0.0f);
-        m_Rotation = Quat(0.0f, 0.0f, 0.0f, -1.0f);
+        m_Rotation = Quat(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
 	void Camera::RecalculateViewMatrix()
@@ -41,7 +41,7 @@ namespace MGE {
         Mat44 RotationMatrix = (Mat44)(m_Rotation);
         Mat44 transform = RotationMatrix * (IDMatrix + (Mat44)mathter::Translation(m_Position));
 
-        m_ViewMatrix = mathter::Inverse(transform);
+        // m_ViewMatrix = mathter::Inverse(transform); not sure why this doesn't work
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 

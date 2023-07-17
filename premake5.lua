@@ -19,6 +19,7 @@ IncludeDir["GLFW"] = "MyGameEngine/vendor/GLFW/include"
 IncludeDir["Glad"] = "MyGameEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "MyGameEngine/vendor/ImGui"
 IncludeDir["Mathter"] = "MyGameEngine/vendor/Math/Mather/include/Mathter" -- this is what I added for Mather
+IncludeDir["stb_image"] = "MyGameEngine/vendor/stb_image"
 
 include "MyGameEngine/vendor/GLFW"
 include "MyGameEngine/vendor/Glad"
@@ -41,7 +42,9 @@ project "MyGameEngine"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
-		"%{prj.name}/vendor/Math/Mather/include/**.hpp" -- this is what I added for Mather
+		"%{prj.name}/vendor/Math/Mather/include/**.hpp", -- this is what I added for Mather
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp"
 	}
 
 	includedirs
@@ -52,7 +55,8 @@ project "MyGameEngine"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.Mathter}" -- this is what I added for Mather
+		"%{IncludeDir.Mathter}", -- this is what I added for Mather
+		"%{IncludeDir.stb_image}"
 	}
 
 	links 

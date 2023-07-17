@@ -11,6 +11,7 @@ namespace MGE {
 	public:
 		static void BeginScene(Camera& camera);
 		static void EndScene();
+		static void Init();
 
 		static void Submit(const Ref<VertexArray>& vertexArray, 
 			const Ref<Shader>& shader,

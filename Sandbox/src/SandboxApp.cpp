@@ -42,7 +42,7 @@ public:
 			m_VertexBuffer->SetLayout(layout);
 		}
 */
-		std::shared_ptr<MGE::VertexBuffer> vertexBuffer;
+		MGE::Ref<MGE::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(MGE::VertexBuffer::Create(vertices, sizeof(vertices)));
 		MGE::BufferLayout layout = {
 			{ MGE::ShaderDataType::Float3, "a_Position" },
@@ -51,7 +51,7 @@ public:
 		vertexBuffer->SetLayout(layout);
 		m_VertexArray->AddVertexBuffer(vertexBuffer);
 		uint32_t indices[3] = { 0, 1, 2 };
-		std::shared_ptr<MGE::IndexBuffer> indexBuffer;
+		MGE::Ref<MGE::IndexBuffer> indexBuffer;
 		indexBuffer.reset(MGE::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
@@ -65,22 +65,23 @@ public:
 			
 		*/
 
-		float squareVertices[3 * 4] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f
+		float squareVertices[5 * 4] = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
-		std::shared_ptr<MGE::VertexBuffer> squareVB;
+		MGE::Ref<MGE::VertexBuffer> squareVB;
 		squareVB.reset(MGE::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
 		squareVB->SetLayout({
-			{ MGE::ShaderDataType::Float3, "a_Position" }
+			{ MGE::ShaderDataType::Float3, "a_Position" },
+			{ MGE::ShaderDataType::Float2, "a_TexCoord" }
 			});
 		m_SquareVA->AddVertexBuffer(squareVB);
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };// represent the order in which the vertices should be connected to form triangles
-		std::shared_ptr<MGE::IndexBuffer> squareIB;
+		MGE::Ref<MGE::IndexBuffer> squareIB;
 		squareIB.reset(MGE::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
 		m_SquareVA->SetIndexBuffer(squareIB);
 		
@@ -158,7 +159,16 @@ public:
 		)";
 
 		m_FlatColorShader.reset(MGE::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
-		}
+
+		m_TextureShader.reset(MGE::Shader::Create("assets/shaders/Texture.glsl"));
+
+		m_Texture = MGE::Texture2D::Create("assets/textures/Checkerboard.png");
+		m_ChernoLogoTexture = MGE::Texture2D::Create("assets/textures/ChernoLogo.png");
+
+		std::dynamic_pointer_cast<MGE::OpenGLShader>(m_TextureShader)->Bind();
+		std::dynamic_pointer_cast<MGE::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+		
+	}
 
 	void OnUpdate(MGE::Timestep ts) override {
 		//MGE_CORE_INFO("ExampleLayer::Update");
@@ -200,7 +210,11 @@ public:
 				MGE::Renderer::Submit(m_SquareVA, m_FlatColorShader, transform);
 			}
 		}
-		MGE::Renderer::Submit(m_VertexArray, m_Shader);
+		// MGE::Renderer::Submit(m_VertexArray, m_Shader);
+		m_Texture->Bind();
+		MGE::Renderer::Submit(m_SquareVA, m_TextureShader, mathter::Scale(MGE::Vec3(1.5f)));
+		m_ChernoLogoTexture->Bind();
+		MGE::Renderer::Submit(m_SquareVA, m_TextureShader, mathter::Scale(MGE::Vec3(1.5f)));
 
 		MGE::Renderer::EndScene();
 	}
@@ -219,8 +233,10 @@ private:
 	MGE::Ref<MGE::Shader> m_Shader;
 	MGE::Ref<MGE::VertexArray> m_VertexArray;
 
-	MGE::Ref<MGE::Shader> m_FlatColorShader;
+	MGE::Ref<MGE::Shader> m_FlatColorShader, m_TextureShader;
 	MGE::Ref<MGE::VertexArray> m_SquareVA;
+
+	MGE::Ref<MGE::Texture2D> m_Texture, m_ChernoLogoTexture;
 
 	MGE::Camera m_Camera;
 	MGE::Vec3 m_CameraPosition = MGE::Vec3(0.0f);

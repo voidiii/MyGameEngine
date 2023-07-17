@@ -3,11 +3,14 @@
 #include "MGE/Renderer/Shader.h"
 #include "MathAlias.h"
 
+typedef unsigned int GLenum;
+
 namespace MGE {
 
 	class OpenGLShader : public Shader
 	{
 	public:
+		OpenGLShader(const std::string& filepath);
 		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
 		virtual ~OpenGLShader();
 
@@ -25,6 +28,10 @@ namespace MGE {
 		void UploadUniformMat4(const std::string& name, const Mat44& matrix);
 	private:
 		uint32_t m_RendererID;
+	private:
+		std::string ReadFile(const std::string& filepath);
+		std::unordered_map<GLenum, std::string> PreProcess(const std::string& source);
+		void Compile(const std::unordered_map<GLenum, std::string>& shaderSources);
 	};
 
 }

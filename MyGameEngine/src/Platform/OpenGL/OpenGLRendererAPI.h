@@ -9,6 +9,7 @@ namespace MGE {
 	public:
 		virtual void SetClearColor(const Vec4& color) override;
 		virtual void Clear() override;
+		virtual void Init() override;
 
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) override;
 	};
