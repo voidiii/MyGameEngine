@@ -126,7 +126,7 @@ public:
 			}
 		)";
 
-		m_Shader.reset(MGE::Shader::Create(vertexSrc, fragmentSrc));
+		m_Shader = MGE::Shader::Create("VertexPosColor", vertexSrc, fragmentSrc);
 
 		std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
@@ -158,15 +158,16 @@ public:
 			}
 		)";
 
-		m_FlatColorShader.reset(MGE::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+		m_FlatColorShader = MGE::Shader::Create("FlatColor", flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
 
-		m_TextureShader.reset(MGE::Shader::Create("assets/shaders/Texture.glsl"));
+		// m_TextureShader.reset(MGE::Shader::Create("assets/shaders/Texture.glsl"));
+		auto textureShader = m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
 
 		m_Texture = MGE::Texture2D::Create("assets/textures/Checkerboard.png");
 		m_ChernoLogoTexture = MGE::Texture2D::Create("assets/textures/ChernoLogo.png");
 
-		std::dynamic_pointer_cast<MGE::OpenGLShader>(m_TextureShader)->Bind();
-		std::dynamic_pointer_cast<MGE::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+		std::dynamic_pointer_cast<MGE::OpenGLShader>(textureShader)->Bind();
+		std::dynamic_pointer_cast<MGE::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
 		
 	}
 
@@ -210,11 +211,14 @@ public:
 				MGE::Renderer::Submit(m_SquareVA, m_FlatColorShader, transform);
 			}
 		}
+
+		auto textureShader = m_ShaderLibrary.Get("Texture");
+
 		// MGE::Renderer::Submit(m_VertexArray, m_Shader);
 		m_Texture->Bind();
-		MGE::Renderer::Submit(m_SquareVA, m_TextureShader, mathter::Scale(MGE::Vec3(1.5f)));
+		MGE::Renderer::Submit(m_SquareVA, textureShader, mathter::Scale(MGE::Vec3(1.5f)));
 		m_ChernoLogoTexture->Bind();
-		MGE::Renderer::Submit(m_SquareVA, m_TextureShader, mathter::Scale(MGE::Vec3(1.5f)));
+		MGE::Renderer::Submit(m_SquareVA, textureShader, mathter::Scale(MGE::Vec3(1.5f)));
 
 		MGE::Renderer::EndScene();
 	}
@@ -230,10 +234,11 @@ public:
 	}
 
 private:
+	MGE::ShaderLibrary m_ShaderLibrary;
 	MGE::Ref<MGE::Shader> m_Shader;
 	MGE::Ref<MGE::VertexArray> m_VertexArray;
 
-	MGE::Ref<MGE::Shader> m_FlatColorShader, m_TextureShader;
+	MGE::Ref<MGE::Shader> m_FlatColorShader;
 	MGE::Ref<MGE::VertexArray> m_SquareVA;
 
 	MGE::Ref<MGE::Texture2D> m_Texture, m_ChernoLogoTexture;
