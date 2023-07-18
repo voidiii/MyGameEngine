@@ -10,6 +10,7 @@
 #include "MGE/Input.h"
 #include "MGE/KeyCodes.h"
 #include "MGE/MouseButtonCodes.h"
+#include "MGE/CameraController.h"
 
 // ---Renderer------------------------
 #include "MGE/Renderer/Renderer.h"

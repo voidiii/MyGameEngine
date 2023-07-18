@@ -41,6 +41,7 @@ namespace MGE {
 		// Dispatch function will compare the e from dispatcher and the WindowCloseEvent
 		// if they are the same type, the macro would be called and thus invoke the OnWindowClose function of this Application
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNCTION(OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNCTION(OnWindowResize));
 		
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
 			
@@ -61,8 +62,10 @@ namespace MGE {
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-			for (auto layer : m_LayerStack) {
-				layer->OnUpdate(timestep);
+			if (!m_Minimized)
+			{
+				for (Layer* layer : m_LayerStack)
+					layer->OnUpdate(timestep);
 			}
 			
 			m_ImGuiLayer->Begin();
@@ -79,6 +82,19 @@ namespace MGE {
 		return true;
 	}
 
+	bool Application::OnWindowResize(WindowResizeEvent& e) {
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			m_Minimized = true;
+			return false;
+		}
+
+		m_Minimized = false;
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
+	}
+
 	void Application::PushLayer(Layer* layer) {
 		m_LayerStack.PushLayer(layer);	
 		layer->OnAttach();
@@ -88,5 +104,6 @@ namespace MGE {
 		m_LayerStack.PushOverLayer(layer);	
 		layer->OnAttach();
 	}
+
 
 }

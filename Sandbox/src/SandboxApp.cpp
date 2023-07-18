@@ -11,7 +11,7 @@ class ExampleLayer : public MGE::Layer
 {
 public:
 	ExampleLayer()
-		: Layer("Example"), m_Camera(MGE::Vec4(-1.5f, 1.5f, -1.0f, 1.0f))
+		: Layer("Example"), m_CameraController(1280.0f / 720.0f, true)
 	{
 		/*
 			The code generates a Vertex Array Object (VAO) using glGenVertexArrays. 
@@ -172,29 +172,13 @@ public:
 	}
 
 	void OnUpdate(MGE::Timestep ts) override {
-		//MGE_CORE_INFO("ExampleLayer::Update");
-		if (MGE::Input::IsKeyPressed(MGE_KEY_LEFT))
-			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
-		else if (MGE::Input::IsKeyPressed(MGE_KEY_RIGHT))
-			m_CameraPosition.x += m_CameraMoveSpeed * ts;
 
-		if (MGE::Input::IsKeyPressed(MGE_KEY_UP))
-			m_CameraPosition.y += m_CameraMoveSpeed * ts;
-		else if (MGE::Input::IsKeyPressed(MGE_KEY_DOWN))
-			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
-
-		if (MGE::Input::IsKeyPressed(MGE_KEY_A))
-			radian += m_CameraRotationSpeed * ts;
-		if (MGE::Input::IsKeyPressed(MGE_KEY_D))
-			radian -= m_CameraRotationSpeed * ts;
+		m_CameraController.OnUpdate(ts);
 
 		MGE::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		MGE::RenderCommand::Clear();
 
-		m_Camera.SetPosition(m_CameraPosition);
-		m_Camera.SetRotation(radian);
-
-		MGE::Renderer::BeginScene(m_Camera);
+		MGE::Renderer::BeginScene(m_CameraController.GetCamera());
 
 		static MGE::Mat44 scale = mathter::Scale(MGE::Vec3(0.1f));
 		//MGE::Renderer::Submit(m_SquareVA, m_BlueShader);
@@ -230,7 +214,7 @@ public:
 	}
 
 	void OnEvent(MGE::Event& event) override {
-
+		m_CameraController.OnEvent(event);
 	}
 
 private:
@@ -243,13 +227,7 @@ private:
 
 	MGE::Ref<MGE::Texture2D> m_Texture, m_ChernoLogoTexture;
 
-	MGE::Camera m_Camera;
-	MGE::Vec3 m_CameraPosition = MGE::Vec3(0.0f);
-	float m_CameraMoveSpeed = 5.0f;
-
-	float radian = 3.1415926f;
-	// MGE::Quat m_CameraRotation = mathter::Normalize(MGE::Quat(0.0f, 0.f, 0.f, 1.f));
-	float m_CameraRotationSpeed = 1.0f;
+	MGE::CameraController m_CameraController;
 
 	MGE::Vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
 

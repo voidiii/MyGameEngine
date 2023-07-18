@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="src\MGE.h" />
     <ClInclude Include="src\MGE\Application.h" />
+    <ClInclude Include="src\MGE\CameraController.h" />
     <ClInclude Include="src\MGE\Core.h" />
     <ClInclude Include="src\MGE\Core\Timestep.h" />
     <ClInclude Include="src\MGE\EntryPoint.h" />
@@ -228,6 +229,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp" />
+    <ClCompile Include="src\MGE\CameraController.cpp" />
     <ClCompile Include="src\MGE\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\MGE\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\MGE\Layer.cpp" />

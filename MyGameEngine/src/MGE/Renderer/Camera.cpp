@@ -13,7 +13,7 @@ namespace MGE {
         float const& zFar
     )
     {
-        Mat44 Result = mathter::Identity();;
+        Mat44 Result = mathter::Identity();
         Result(0, 0) = 2.0f / (right - left);
         Result(1, 1) = 2.0f / (top - bottom);
         Result(2, 2) = -2.0f / (zFar - zNear);
@@ -34,14 +34,21 @@ namespace MGE {
         m_Rotation = Quat(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
+    void Camera::SetProjection(float left, float right, float bottom, float top)
+    {
+        m_ProjectionMatrix = ortho(left, right, bottom, top, -1.0f, 1.0f);
+        m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
+    }
+
 	void Camera::RecalculateViewMatrix()
 	{
-        Mat44 IDMatrix = mathter::Identity();
+
         m_Rotation = Normalize(m_Rotation);
         Mat44 RotationMatrix = (Mat44)(m_Rotation);
-        Mat44 transform = RotationMatrix * (IDMatrix + (Mat44)mathter::Translation(m_Position));
+        Mat44 TranslationMatrix = (Mat44)mathter::Translation(m_Position);
+        Mat44 transform = TranslationMatrix * RotationMatrix;
 
-        // m_ViewMatrix = mathter::Inverse(transform); not sure why this doesn't work
+        m_ViewMatrix = mathter::Inverse(transform);
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 

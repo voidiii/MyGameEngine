@@ -13,11 +13,14 @@ namespace MGE {
         void SetRotation(float radian) { 
 
             m_Rotation.w = std::cos(radian / 2);
-            //m_Rotation.x = m_Rotation.x * std::sin(radian / 2);
-            //m_Rotation.y = m_Rotation.y * std::sin(radian / 2);
-            //m_Rotation.z = m_Rotation.z * std::sin(radian / 2);
+            // m_Rotation.x = std::sin(radian / 2);
+            // m_Rotation.y = std::sin(radian / 2);
+            m_Rotation.z = std::sin(radian / 2);
+
             RecalculateViewMatrix(); 
         }
+
+        void SetProjection(float left, float right, float bottom, float top);
         
         const Vec3& GetPosition() const { return m_Position; }
         Quat GetRotation() const { return m_Rotation; }
