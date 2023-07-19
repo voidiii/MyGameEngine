@@ -34,7 +34,7 @@ namespace MGE {
 
 		Vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
 		// Quat m_CameraRotation;
-		float radian = 3.1415926f / 4;
+		float radian = 0.0f;
 		float m_CameraTranslationSpeed = 5.0f, m_CameraRotationSpeed = 180.0f;
 	};
 }

@@ -2,6 +2,7 @@
 
 #include "MGE.h"
 #include "MathAlias.h"
+#include "MGE/Core/ProfilingTimer.h"
 
 class Sandbox2D : public MGE::Layer
 {
@@ -22,6 +23,8 @@ private:
 	MGE::Ref<MGE::VertexArray> m_SquareVA;
 	MGE::Ref<MGE::Shader> m_FlatColorShader;
 	MGE::Ref<MGE::Texture2D> m_CheckerboardTexture;
+
+	std::vector<MGE::ProfileResult> m_ProfileResults;
 
 	MGE::Vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 };

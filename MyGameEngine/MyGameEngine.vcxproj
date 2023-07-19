@@ -138,6 +138,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\MGE\Core\ProfilingTimer.h" />
     <ClInclude Include="src\MGE\Renderer\Renderer2D.h" />
     <ClInclude Include="src\MGE.h" />
     <ClInclude Include="src\MGE\Application.h" />

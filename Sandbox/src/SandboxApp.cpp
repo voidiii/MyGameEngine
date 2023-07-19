@@ -238,9 +238,9 @@ private:
 class Sandbox : public MGE::Application {
 public:
 	Sandbox() {
-		// PushLayer(new Sandbox2D());
+		PushLayer(new Sandbox2D());
 		
-		PushLayer(new ExampleLayer());
+		// PushLayer(new ExampleLayer());
 		//PushOverlay(new MGE::ImGuiLayer());
 	}
 

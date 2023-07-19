@@ -337,6 +337,7 @@
     <ClInclude Include="src\MGE\Renderer\Renderer2D.h">
       <Filter>src\MGE\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\MGE\Core\ProfilingTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">
