@@ -22,9 +22,8 @@
 #include "MGE/Renderer/Texture.h"
 
 #include "MGE/Renderer/Camera.h"
+#include "MGE/Renderer/Renderer2D.h"
 // -----------------------------------
 // testing
-// -- Entry Point ----------
-#include "MGE/EntryPoint.h"
 
 #include "MGE/Core/Timestep.h"

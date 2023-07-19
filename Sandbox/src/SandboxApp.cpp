@@ -4,8 +4,10 @@
 #include "imgui.h"
 #include "MGE/ImGui/ImGuiLayer.h"
 #include "MathAlias.h"
+#include <MGE/EntryPoint.h>
 
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "Sandbox2D.h"
 
 class ExampleLayer : public MGE::Layer 
 {
@@ -22,7 +24,7 @@ public:
 		// glGenVertexArrays(1, &m_VertexArray);
 		// glBindVertexArray(m_VertexArray); // The VAO is then bound using glBindVertexArray to set it as the active VAO.
 
-		m_VertexArray.reset(MGE::VertexArray::Create());
+		m_VertexArray = MGE::VertexArray::Create();
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f, /* x, y, z, and color�� depends on the layout*/
@@ -55,7 +57,7 @@ public:
 		indexBuffer.reset(MGE::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
-		m_SquareVA.reset(MGE::VertexArray::Create());
+		m_SquareVA = MGE::VertexArray::Create();
 		// glEnableVertexAttribArray(0); // This enables the attribute at index 0 to be passed to the vertex shader during rendering.
 		// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
@@ -190,7 +192,7 @@ public:
 		{
 			for (int x = 0; x < 20; x++)
 			{
-				MGE::Vec3 pos(x * 1.11f, y * 1.11f, 0.0f);
+				MGE::Vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				MGE::Mat44 transform = (MGE::Mat44)mathter::Translation(pos) * scale;
 				MGE::Renderer::Submit(m_SquareVA, m_FlatColorShader, transform);
 			}
@@ -236,6 +238,8 @@ private:
 class Sandbox : public MGE::Application {
 public:
 	Sandbox() {
+		// PushLayer(new Sandbox2D());
+		
 		PushLayer(new ExampleLayer());
 		//PushOverlay(new MGE::ImGuiLayer());
 	}

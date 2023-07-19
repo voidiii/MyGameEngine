@@ -16,14 +16,26 @@ namespace MGE {
     void CameraController::OnUpdate(Timestep ts)
     {
         if (Input::IsKeyPressed(MGE_KEY_A))
-            m_CameraPosition.x -= m_CameraTranslationSpeed * ts;
+        {
+            m_CameraPosition.x -= cos(radian) * m_CameraTranslationSpeed * ts;
+            m_CameraPosition.y -= sin(radian) * m_CameraTranslationSpeed * ts; 
+        }
         else if (Input::IsKeyPressed(MGE_KEY_D))
-            m_CameraPosition.x += m_CameraTranslationSpeed * ts;
+        {
+            m_CameraPosition.x += cos(radian) * m_CameraTranslationSpeed * ts;
+            m_CameraPosition.y += sin(radian) * m_CameraTranslationSpeed * ts;
+        }
 
         if (Input::IsKeyPressed(MGE_KEY_W))
-            m_CameraPosition.y += m_CameraTranslationSpeed * ts;
+        {
+            m_CameraPosition.y += cos(radian) * m_CameraTranslationSpeed * ts;
+            m_CameraPosition.x += -sin(radian) * m_CameraTranslationSpeed * ts;
+        }
         else if (Input::IsKeyPressed(MGE_KEY_S))
-            m_CameraPosition.y -= m_CameraTranslationSpeed * ts;
+        {
+            m_CameraPosition.y -= cos(radian) * m_CameraTranslationSpeed * ts;
+            m_CameraPosition.x -= -sin(radian) * m_CameraTranslationSpeed * ts;
+        }
 
         if (m_Rotation)
         {
@@ -31,6 +43,11 @@ namespace MGE {
                 radian += m_CameraRotationSpeed * ts * 0.01f;
             if (Input::IsKeyPressed(MGE_KEY_E))
                 radian -= m_CameraRotationSpeed * ts * 0.01f;
+
+            if (radian > 3.1415926f)
+                radian -= 2 * 3.1415926f;
+            else if (radian <= -3.1415926f)
+                radian += 2 * 3.1415926f;
 
             m_Camera.SetRotation(radian);
         }

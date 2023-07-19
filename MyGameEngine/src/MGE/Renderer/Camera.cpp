@@ -42,7 +42,6 @@ namespace MGE {
 
 	void Camera::RecalculateViewMatrix()
 	{
-
         m_Rotation = Normalize(m_Rotation);
         Mat44 RotationMatrix = (Mat44)(m_Rotation);
         Mat44 TranslationMatrix = (Mat44)mathter::Translation(m_Position);

@@ -334,6 +334,9 @@
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\CameraController.h" />
+    <ClInclude Include="src\MGE\Renderer\Renderer2D.h">
+      <Filter>src\MGE\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">
@@ -412,5 +415,8 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\CameraController.cpp" />
+    <ClCompile Include="src\MGE\Renderer\Renderer2D.cpp">
+      <Filter>src\MGE\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
