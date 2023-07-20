@@ -338,6 +338,7 @@
       <Filter>src\MGE\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\Core\ProfilingTimer.h" />
+    <ClInclude Include="src\MGE\Debug\Instrumentor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">

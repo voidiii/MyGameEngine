@@ -39,12 +39,12 @@ namespace MGE {
 		bool m_Stopped;
 	};
 
-	struct ProfileResult
-	{
-		const char* Name;
-		float Time;
-	};
+	// struct ProfileResult
+	// {
+	// 	const char* Name;
+	// 	float Time;
+	// };
 
 }
 
-#define PROFILE_SCOPE(name) MGE::Timer timer##__LINE__(name, [&](MGE::ProfileResult profileResult) { m_ProfileResults.push_back(profileResult); })
+// #define PROFILE_SCOPE(name) MGE::Timer timer##__LINE__(name, [&](MGE::ProfileResult profileResult) { m_ProfileResults.push_back(profileResult); })

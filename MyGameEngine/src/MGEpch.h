@@ -15,6 +15,8 @@
 #include <array>
 
 #include "Core.h"
+#include "MGE/Debug/Instrumentor.h"
+
 
 #ifdef MGE_PLATFORM_WINDOWS
 	#include <Windows.h>
