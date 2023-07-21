@@ -13,6 +13,8 @@ namespace MGE {
 
 		static void BeginScene(const Camera& camera);
 		static void EndScene();
+		static void Flush();
+		
 
 		// Primitives
 		static void DrawQuad(const Vec2& position, const Vec2& size, const Vec4& color);

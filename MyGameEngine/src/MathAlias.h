@@ -8,9 +8,9 @@
 
 namespace MGE
 {
-    using Vec2 = mathter::Vector<float, 2, false>;
-    using Vec3 = mathter::Vector<float, 3, false>;
-    using Vec4 = mathter::Vector<float, 4, false>;
+    using Vec2 = mathter::Vector<float, 2, true>;
+    using Vec3 = mathter::Vector<float, 3, true>;
+    using Vec4 = mathter::Vector<float, 4, true>;
     using Mat33 = mathter::Matrix<float, 3, 3, mathter::eMatrixOrder::PRECEDE_VECTOR, mathter::eMatrixLayout::COLUMN_MAJOR, false>;
     using Mat43 = mathter::Matrix<float, 4, 3, mathter::eMatrixOrder::PRECEDE_VECTOR, mathter::eMatrixLayout::COLUMN_MAJOR, false>;
     using Mat34 = mathter::Matrix<float, 3, 4, mathter::eMatrixOrder::PRECEDE_VECTOR, mathter::eMatrixLayout::COLUMN_MAJOR, false>;

@@ -44,8 +44,7 @@ public:
 			m_VertexBuffer->SetLayout(layout);
 		}
 */
-		MGE::Ref<MGE::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(MGE::VertexBuffer::Create(vertices, sizeof(vertices)));
+		MGE::Ref<MGE::VertexBuffer> vertexBuffer = (MGE::VertexBuffer::Create(vertices, sizeof(vertices)));
 		MGE::BufferLayout layout = {
 			{ MGE::ShaderDataType::Float3, "a_Position" },
 			{ MGE::ShaderDataType::Float4, "a_Color" }
@@ -53,15 +52,14 @@ public:
 		vertexBuffer->SetLayout(layout);
 		m_VertexArray->AddVertexBuffer(vertexBuffer);
 		uint32_t indices[3] = { 0, 1, 2 };
-		MGE::Ref<MGE::IndexBuffer> indexBuffer;
-		indexBuffer.reset(MGE::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		MGE::Ref<MGE::IndexBuffer> indexBuffer = (MGE::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
 		m_SquareVA = MGE::VertexArray::Create();
 		// glEnableVertexAttribArray(0); // This enables the attribute at index 0 to be passed to the vertex shader during rendering.
 		// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
-		/*
+		/*a
 			so we made everything in a layout, it is easier to read and write
 			in a layer there are many elements to tell shader how to interpreate the info in vertices
 			
@@ -74,8 +72,7 @@ public:
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
-		MGE::Ref<MGE::VertexBuffer> squareVB;
-		squareVB.reset(MGE::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
+		MGE::Ref<MGE::VertexBuffer> squareVB = (MGE::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
 		squareVB->SetLayout({
 			{ MGE::ShaderDataType::Float3, "a_Position" },
 			{ MGE::ShaderDataType::Float2, "a_TexCoord" }
@@ -83,8 +80,7 @@ public:
 		m_SquareVA->AddVertexBuffer(squareVB);
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };// represent the order in which the vertices should be connected to form triangles
-		MGE::Ref<MGE::IndexBuffer> squareIB;
-		squareIB.reset(MGE::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+		MGE::Ref<MGE::IndexBuffer> squareIB = MGE::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 		m_SquareVA->SetIndexBuffer(squareIB);
 		
 		/*

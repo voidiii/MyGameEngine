@@ -1,1 +1,1 @@
-{"otherData": {},"traceEvents":[]}
+{"otherData": {},"traceEvents":[{"cat":"function","dur":19,"name":"__cdecl MGE::OpenGLVertexBuffer::OpenGLVertexBuffer(unsigned int)","ph":"X","pid":0,"tid":275309380,"ts":11946926544},{"cat":"function","dur":375,"name":"__cdecl MGE::OpenGLTexture2D::OpenGLTexture2D(unsigned int,unsigned int)","ph":"X","pid":0,"tid":275309380,"ts":11946926886},{"cat":"function","dur":10,"name":"void __cdecl MGE::OpenGLTexture2D::SetData(void *,unsigned int)","ph":"X","pid":0,"tid":275309380,"ts":11946927319}]}
