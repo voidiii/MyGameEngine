@@ -11,6 +11,15 @@ Sandbox2D::Sandbox2D()
 void Sandbox2D::OnAttach()
 {
 	m_CheckerboardTexture = MGE::Texture2D::Create("assets/textures/Checkerboard.png");
+	int count = 0;
+	for(int i = 0; i < 10; i++)
+	{
+		for(int j = 0; j < 10; j++) 
+		{
+			m_PhysicsObjects[count] = MGE::CreateRef<MGE::TrianglePhyicsObject>(MGE::Vec2{ 0.0f + i * 0.5f, -0.0f + j * 0.5f }, MGE::Vec4{ 0.2f, 0.3f, 0.8f, 1.0f});
+			count++;
+		}
+	}
 }
 
 void Sandbox2D::OnDetach()
@@ -43,7 +52,12 @@ void Sandbox2D::OnUpdate(MGE::Timestep ts)
 		MGE_PROFILE_FUNCTION();
 		MGE::Renderer2D::BeginScene(m_CameraController.GetCamera());
 		//MGE::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-		MGE::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
+		// MGE::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.5f }, { 0.2f, 0.3f, 0.8f, 1.0f });
+		for(auto i : m_PhysicsObjects)
+		{
+			i->DrawPhysicsObject();
+		}
+		MGE::Renderer2D::DrawCircle(MGE::Vec3{0.0f, 0.0f, 0.0f}, { 1.0f, 1.0f, 0.8f, 1.0f });
 		// MGE::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture);
 		MGE::Renderer2D::EndScene();
 	}

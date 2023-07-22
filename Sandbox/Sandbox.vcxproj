@@ -143,6 +143,11 @@
   <ItemGroup>
     <Text Include="assets\shaders\FlatColor.glsl" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Renderer2D_Quad.glsl" />
+    <None Include="assets\shaders\Renderer2D_Circle.glsl" />
+    <None Include="assets\shaders\Renderer2D_Quad.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -11,6 +11,7 @@
 #include "MGE/KeyCodes.h"
 #include "MGE/MouseButtonCodes.h"
 #include "MGE/CameraController.h"
+#include "MGE/Core.h"
 
 // ---Renderer------------------------
 #include "MGE/Renderer/Renderer.h"
