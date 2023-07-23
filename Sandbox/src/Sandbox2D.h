@@ -3,7 +3,7 @@
 #include "MGE.h"
 #include "MathAlias.h"
 #include "MGE/Core/ProfilingTimer.h"
-#include "MGE/Physics/PhysicsObject.h"
+#include "MGE/Physics/PhysicsScene.h"
 
 
 class Sandbox2D : public MGE::Layer
@@ -26,7 +26,7 @@ private:
 	MGE::Ref<MGE::Shader> m_FlatColorShader;
 	MGE::Ref<MGE::Texture2D> m_CheckerboardTexture;
 
-	MGE::Ref<MGE::TrianglePhyicsObject> m_PhysicsObjects[10 * 10];
+	MGE::PhysicsScene m_PhysicsScene;
 
 	std::vector<MGE::ProfileResult> m_ProfileResults;
 

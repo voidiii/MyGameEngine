@@ -106,7 +106,7 @@ namespace MGE {
 		uint32_t whiteTextureData = 0xffffffff;
 		s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
-		// s_Data.QuadShader = Shader::Create("assets/shaders/Renderer2D_Quad.glsl");
+		s_Data.QuadShader = Shader::Create("assets/shaders/Renderer2D_Quad.glsl");
 		s_Data.CircleShader = Shader::Create("assets/shaders/Renderer2D_Circle.glsl");
 	}
 
@@ -143,16 +143,16 @@ namespace MGE {
 	void Renderer2D::Flush()
 	{
 		// RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
-		// if (s_Data.QuadIndexCount)
-		// {
-		// 	uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
-		// 	s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
-		// 	// Bind textures
-		// 
-		// 	s_Data.QuadShader->Bind();
-		// 	s_Data.QuadShader->SetMat4("u_ViewProjection", s_Data.ViewProjection);
-		// 	RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
-		// }
+		if (s_Data.QuadIndexCount)
+		{
+			uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
+			s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
+			// Bind textures
+		
+			s_Data.QuadShader->Bind();
+			s_Data.QuadShader->SetMat4("u_ViewProjection", s_Data.ViewProjection);
+			RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
+		}
 
 		if (s_Data.CircleIndexCount)
 		{
@@ -222,10 +222,10 @@ namespace MGE {
 
 		Vec3 QuadVertexPositions[4];
 
-		QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f };
-		QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f };
-		QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f };
-		QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f };
+		QuadVertexPositions[0] = { -0.1f, -0.1f, 0.0f };
+		QuadVertexPositions[1] = { 0.1f, -0.1f, 0.0f };
+		QuadVertexPositions[2] = { 0.1f,  0.1f, 0.0f };
+		QuadVertexPositions[3] = { -0.1f,  0.1f, 0.0f };
 
 		for (size_t i = 0; i < 4; i++)
 		{

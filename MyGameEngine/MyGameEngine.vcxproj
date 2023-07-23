@@ -138,6 +138,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\MGE\Physics\PhysicsScene.h" />
     <ClInclude Include="src\MGE\Core\ProfilingTimer.h" />
     <ClInclude Include="src\MGE\Debug\Instrumentor.h" />
     <ClInclude Include="src\MGE\Physics\PhysicsObject.h" />
@@ -232,6 +233,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\MGE\Physics\PhysicsScene.cpp" />
     <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp" />
     <ClCompile Include="src\MGE\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\MGE\Application.cpp" />
