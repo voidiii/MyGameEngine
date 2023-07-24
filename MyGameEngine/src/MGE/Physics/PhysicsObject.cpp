@@ -3,20 +3,6 @@
 
 namespace MGE {
 
-	TrianglePhyicsObject::TrianglePhyicsObject(Vec2 Position, Vec4 Color)
-		: m_Position(Position), m_Color(Color)
-	{
-	}
-
-	TrianglePhyicsObject::~TrianglePhyicsObject()
-	{
-	}
-
-	void TrianglePhyicsObject::DrawPhysicsObject()
-	{
-		Renderer2D::DrawQuad(m_Position, { 0.1f, 0.2f }, m_Color);
-	}
-
 	CirclePhyicsObject::CirclePhyicsObject(Vec2 Position, Vec4 Color)
 		: m_Position(Position), m_Color(Color)
 	{
@@ -44,32 +30,40 @@ namespace MGE {
 
 	void CirclePhyicsObject::UpdatePosition(Vec2 DeltaPosition)
 	{
-		DeltaPosition = on_Ground ? Vec2{ DeltaPosition.x, 0.0f } : DeltaPosition;
+		// DeltaPosition = on_Ground ? Vec2{ DeltaPosition.x, 0.0f } : DeltaPosition;
 		m_Position += DeltaPosition;
 	}
 
 	void CirclePhyicsObject::OnUpdate(Timestep ts)
 	{
-		//on_Ground = m_Position.y < -1.0f;
+		on_Ground = m_Position.y < -m_YLimit;
+		// m_Position.y = on_Ground ? -m_YLimit : m_Position.y;
 
-		//m_Gravity = on_Ground ? 0.0f : m_Gravity;
-		//m_Velocity = on_Ground ? Vec2{ m_Velocity.x, 0.0f } : m_Velocity;
+		m_Gravity = on_Ground ? 0.0f : 9.8f;
+		// m_Velocity = on_Ground ? Vec2{ m_Velocity.x, 0.0f } : m_Velocity;
 
-		// Vec2 FractionDirection =  -mathter::Normalize(m_Velocity);
+		Vec2 FractionDirection = mathter::Length(m_Velocity) > 0.0f ? -mathter::Normalize(m_Velocity) : Vec2{0.0f, 0.0f};
 
-		float FractionAccelaration =  0.01f; // fraction 
+		float FractionAccelaration =  2.0f; // fraction 
 
-		if (std::abs(m_Position.x) > 2.0f) {
-			ChangeVelocity(Vec2{ -m_Velocity.x, m_Velocity.y });
+		if (std::abs(m_Position.x) > m_XLimit) {
+			ChangeVelocity(Vec2{ -0.9f * m_Velocity.x, m_Velocity.y });
 		}
 
-		if (m_Position.y > 5.0f || m_Position.y < -1.0f) {
-			ChangeVelocity(Vec2{ m_Velocity.x, -m_Velocity.y });
+		if (m_Position.y < -m_YLimit) {
+			ChangeVelocity(Vec2{ m_Velocity.x, 0.9f * (-m_Velocity.y) });
+			UpdatePosition(Vec2{ 0.0f , -m_YLimit - m_Position.y });
 		}
 		
-		UpdateVelocity(m_Gravity * Vec2{ 0.0f, -1.0f } * 0.1f * ts /* + FractionDirection * FractionAccelaration * ts*/);
+		UpdateVelocity(m_Gravity * Vec2{ 0.0f, -1.0f } * ts + FractionDirection * FractionAccelaration * ts);
 
 		UpdatePosition(m_Velocity * ts);
+	}
+
+	void CirclePhyicsObject::SetMotionLimit(float xLimit, float yLimit)
+	{
+		m_XLimit = xLimit;
+		m_YLimit = yLimit;
 	}
 
 }

@@ -6,7 +6,7 @@ namespace MGE {
 	class PhysicsScene
 	{
 	public:
-		PhysicsScene();
+		PhysicsScene(float height, float width, int numberOfObjects);
 		~PhysicsScene() {}
 
 		void OnUpdate(Timestep ts);
@@ -16,9 +16,13 @@ namespace MGE {
 
 		void FindCollisions();
 		void ElasticCollisions(Ref<MGE::CirclePhyicsObject> i, Ref<MGE::CirclePhyicsObject> j);
+		inline int GetNumberOfObjects() { return m_NumberOfObjects; }
+		void CreateObjects();
 
 	private:
-		Ref<MGE::CirclePhyicsObject> m_PhysicsObjects[10];
+		int m_NumberOfObjects;
+		std::vector<Ref<MGE::CirclePhyicsObject>> m_PhysicsObjects;
+		float m_SceneWidth, m_SceneHeight;
 	};
 
 }

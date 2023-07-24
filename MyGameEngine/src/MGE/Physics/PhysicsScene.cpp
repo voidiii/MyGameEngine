@@ -3,12 +3,23 @@
 
 namespace MGE {
 
-	PhysicsScene::PhysicsScene() 
+	PhysicsScene::PhysicsScene(float height, float width, int numberOfObjects)
+		: m_SceneHeight(height), m_SceneWidth(width), m_NumberOfObjects(numberOfObjects)
 	{
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < m_NumberOfObjects; i++)
 		{
-			m_PhysicsObjects[i] = MGE::CreateRef<MGE::CirclePhyicsObject>(MGE::Vec2{0.0f + i % 2 ? 0.05f : -0.05f , 0.0f + i * 0.5f}, MGE::Vec4{0.2f, 0.3f, 0.8f, 1.0f});
+			CreateObjects();
 		}
+	}
+
+	void PhysicsScene::CreateObjects()
+	{
+		m_PhysicsObjects.push_back(MGE::CreateRef<MGE::CirclePhyicsObject>(
+			MGE::Vec2{ rand() / double(RAND_MAX) * 5.0f,
+			rand() / double(RAND_MAX) * 5.0f },
+			MGE::Vec4{ 0.2f, 0.3f, 0.8f, 1.0f }
+		));
+		m_PhysicsObjects.back()->SetMotionLimit(m_SceneWidth, m_SceneHeight);
 	}
 
 	void PhysicsScene::OnUpdate(Timestep ts)
@@ -46,9 +57,9 @@ namespace MGE {
 
 	void PhysicsScene::FindCollisions()
 	{
-		for (int i = 0; i < 10; i++) 
+		for (int i = 0; i < m_NumberOfObjects; i++)
 		{
-			for (int j = i + 1; j < 10; j++) 
+			for (int j = i + 1; j < m_NumberOfObjects; j++)
 			{
 				Vec2 hit_distance = Vec2(m_PhysicsObjects[i]->GetPosition() - m_PhysicsObjects[j]->GetPosition());
 				if (mathter::Length(hit_distance) < 0.2f)

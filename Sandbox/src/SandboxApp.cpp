@@ -205,7 +205,7 @@ public:
 		MGE::Renderer::EndScene();
 	}
 
-	void virtual OnImGuiRender() override {
+	void virtual OnImGuiRender(MGE::Timestep ts) override {
 		ImGui::Begin("Settings");
 		ImGui::ColorEdit3("Square Color", (float*)(&m_SquareColor));
 		ImGui::End();

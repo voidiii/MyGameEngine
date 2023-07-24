@@ -19,3 +19,7 @@ Todo:
 1, need to create better API for the scene, like how many balls/width and height etc
 2, improve the collision detection function, now is O(n^2), which is stupid
 3, Add debug tools and Frame rate 
+
+7/24/2023
+Done with basic API. Right now with 500 balls the fps is only around 60
+A known bug: moving the window will cause timestep to grow into a unusual number which can lead to unknown behavior. 

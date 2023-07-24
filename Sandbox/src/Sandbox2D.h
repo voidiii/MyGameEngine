@@ -16,7 +16,7 @@ public:
 	virtual void OnDetach() override;
 
 	void OnUpdate(MGE::Timestep ts) override;
-	virtual void OnImGuiRender() override;
+	virtual void OnImGuiRender(MGE::Timestep ts) override;
 	void OnEvent(MGE::Event& e) override;
 private:
 	MGE::CameraController m_CameraController;

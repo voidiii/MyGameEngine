@@ -4,7 +4,7 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 
 Sandbox2D::Sandbox2D()
-	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f, true), m_PhysicsScene()
+	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f, true), m_PhysicsScene(5.0f, 30.0f, 500)
 {
 }
 
@@ -45,27 +45,29 @@ void Sandbox2D::OnUpdate(MGE::Timestep ts)
 
 		m_PhysicsScene.OnUpdate(ts);
 
-		for(int i = 0 ; i < 10; i++)
+		for(int i = 0 ; i < m_PhysicsScene.GetNumberOfObjects(); i++)
 		{
 			m_PhysicsScene.GetPhysicsObjects(i)->OnUpdate(ts);
 		}
 		
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < m_PhysicsScene.GetNumberOfObjects(); i++)
 		{
 			m_PhysicsScene.GetPhysicsObjects(i)->DrawPhysicsObject();
 		}
-		// MGE::Renderer2D::DrawCircle(MGE::Vec3{0.0f, 0.0f, 0.0f}, { 1.0f, 1.0f, 0.8f, 1.0f });
 		MGE::Renderer2D::EndScene();
 	}
 
 }
 
-void Sandbox2D::OnImGuiRender()
+void Sandbox2D::OnImGuiRender(MGE::Timestep ts)
 {
 	MGE_PROFILE_FUNCTION();
 
 	ImGui::Begin("Settings");
 	ImGui::ColorEdit4("Square Color", (float*)(&m_SquareColor));
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1.0f / ts, (1.0f / ts) > 120.0f ? 120.0f : (1.0f / ts));
+
+	ImGui::Text("Sample object's speed: %.3f , %.3f", m_PhysicsScene.GetPhysicsObjects(0)->GetVelocity().x, m_PhysicsScene.GetPhysicsObjects(0)->GetVelocity().y);
 
 	ImGui::End();
 }
