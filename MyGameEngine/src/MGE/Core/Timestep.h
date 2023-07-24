@@ -14,8 +14,13 @@ namespace MGE {
 
 		float GetSeconds() const { return m_Time; }
 		float GetMilliseconds() const { return m_Time * 1000.0f; }
+
+		float GetFrameRate() const { return m_FrameRate; }
+		void SetFrameRate(float frameRate) { m_FrameRate = frameRate; }
+
 	private:
 		float m_Time;
+		float m_FrameRate;
 	};
 
 }

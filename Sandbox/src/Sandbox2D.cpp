@@ -65,7 +65,7 @@ void Sandbox2D::OnImGuiRender(MGE::Timestep ts)
 
 	ImGui::Begin("Settings");
 	ImGui::ColorEdit4("Square Color", (float*)(&m_SquareColor));
-	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1.0f / ts, (1.0f / ts) > 120.0f ? 120.0f : (1.0f / ts));
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1.0f / ts.GetFrameRate(), (1.0f / ts.GetFrameRate()) > 120.0f ? 120.0f : (1.0f / ts.GetFrameRate()));
 
 	ImGui::Text("Sample object's speed: %.3f , %.3f", m_PhysicsScene.GetPhysicsObjects(0)->GetVelocity().x, m_PhysicsScene.GetPhysicsObjects(0)->GetVelocity().y);
 

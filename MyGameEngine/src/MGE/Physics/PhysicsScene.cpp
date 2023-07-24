@@ -10,6 +10,7 @@ namespace MGE {
 		{
 			CreateObjects();
 		}
+		GridManage();
 	}
 
 	void PhysicsScene::CreateObjects()
@@ -25,6 +26,8 @@ namespace MGE {
 	void PhysicsScene::OnUpdate(Timestep ts)
 	{
 		FindCollisions();
+		m_Grid.clear();
+		GridManage();
 	}
 
 	void PhysicsScene::ElasticCollisions(Ref<MGE::CirclePhyicsObject> i, Ref<MGE::CirclePhyicsObject> j) 
@@ -57,17 +60,68 @@ namespace MGE {
 
 	void PhysicsScene::FindCollisions()
 	{
-		for (int i = 0; i < m_NumberOfObjects; i++)
+		for (int i = 1; i < (int)(m_SceneHeight * 2) - 1; i++)
 		{
-			for (int j = i + 1; j < m_NumberOfObjects; j++)
+			for (int j = 1; j < (int)(m_SceneWidth * 2) - 1; j++)
 			{
-				Vec2 hit_distance = Vec2(m_PhysicsObjects[i]->GetPosition() - m_PhysicsObjects[j]->GetPosition());
-				if (mathter::Length(hit_distance) < 0.2f)
+				for (auto k : m_Grid[i][j]->GridObjects)
 				{
-					ElasticCollisions(m_PhysicsObjects[i], m_PhysicsObjects[j]);
+					for(int a = -1; a <= 1; a ++)
+					{
+						for(int b = -1; b <= 1; b++)
+						{
+							for (auto k_1 = m_Grid[i + a][j + b]->GridObjects.begin(); k_1 != m_Grid[i + a][j + b]->GridObjects.end(); k_1++)
+							{
+								if(k == *k_1) 
+									continue;
+
+								Vec2 hit_distance = Vec2(k->GetPosition() - (*k_1)->GetPosition());
+								if (mathter::Length(hit_distance) < 0.2f)
+								{
+									ElasticCollisions(k, (*k_1));
+								}
+							}
+						}
+					}
 				}
 			}
 		}
+		
+		//for (int i = 0; i < m_NumberOfObjects; i++)
+		//{
+		//	for (int j = i + 1; j < m_NumberOfObjects; j++)
+		//	{
+		//		Vec2 hit_distance = Vec2(m_PhysicsObjects[i]->GetPosition() - m_PhysicsObjects[j]->GetPosition());
+		//		if (mathter::Length(hit_distance) < 0.2f)
+		//		{
+		//			ElasticCollisions(m_PhysicsObjects[i], m_PhysicsObjects[j]);
+		//		}
+		//	}
+		//}
+	}
+
+	void PhysicsScene::GridManage()
+	{
+		for (int i = -(int)m_SceneHeight; i < (int)m_SceneHeight; i++)
+		{
+			std::vector<Ref<Grid>> temp;
+			for (int j = -(int)m_SceneWidth; j < (int)m_SceneWidth; j++)
+			{
+				temp.push_back(CreateRef<Grid>(
+					j, i
+				));
+			}
+			m_Grid.push_back(temp);
+		}
+
+		for(auto object : m_PhysicsObjects)
+		{
+			int x = (int)(object->GetPosition().x + m_SceneWidth);
+			int y = (int)(object->GetPosition().y + m_SceneHeight);
+
+			m_Grid[y][x]->GridObjects.push_back(object);
+		}
+
 	}
 
 }
