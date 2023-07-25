@@ -23,3 +23,8 @@ Todo:
 7/24/2023
 Done with basic API. Right now with 500 balls the fps is only around 60
 A known bug: moving the window will cause timestep to grow into a unusual number which can lead to unknown behavior. 
+
+7/25/2023
+Fix the bug with timestep but it feels like the simulation now is depenedent on the frame rate. Great, another bug.
+Roughy done with the grid optimazition, it is a Space Division optimazition. With 500 balls, the fps can now be over 120 now. However the frame rate can be influeneced by how tight balls are to each other. 
+Next step I will see if I can further optimaze the grid, or I will see if I can implement Sort and Sweep or AABB

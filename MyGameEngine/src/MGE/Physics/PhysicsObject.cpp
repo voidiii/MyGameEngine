@@ -3,8 +3,8 @@
 
 namespace MGE {
 
-	CirclePhyicsObject::CirclePhyicsObject(Vec2 Position, Vec4 Color)
-		: m_Position(Position), m_Color(Color)
+	CirclePhyicsObject::CirclePhyicsObject(Vec2 Position, Vec4 Color, int uID)
+		: m_Position(Position), m_Color(Color), m_uID(uID)
 	{
 
 	}

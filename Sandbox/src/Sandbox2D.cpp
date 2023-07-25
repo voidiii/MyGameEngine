@@ -44,11 +44,6 @@ void Sandbox2D::OnUpdate(MGE::Timestep ts)
 		MGE::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
 		m_PhysicsScene.OnUpdate(ts);
-
-		for(int i = 0 ; i < m_PhysicsScene.GetNumberOfObjects(); i++)
-		{
-			m_PhysicsScene.GetPhysicsObjects(i)->OnUpdate(ts);
-		}
 		
 		for (int i = 0; i < m_PhysicsScene.GetNumberOfObjects(); i++)
 		{

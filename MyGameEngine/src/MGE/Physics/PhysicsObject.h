@@ -35,7 +35,7 @@ namespace MGE {
 	class CirclePhyicsObject : public PhysicsObject
 	{
 	public:
-		CirclePhyicsObject(Vec2 Position, Vec4 Color);
+		CirclePhyicsObject(Vec2 Position, Vec4 Color, int uID);
 		virtual ~CirclePhyicsObject();
 
 		virtual void DrawPhysicsObject() override;
@@ -43,6 +43,7 @@ namespace MGE {
 
 		inline Vec2 GetVelocity() const { return m_Velocity; }
 		inline float GetMass() const { return m_mass; }
+		inline float GetUID() const { return m_uID; }
 
 		inline float GetGravity() const { return m_Gravity; }
 		inline void SetGravity(float gravity) { m_Gravity = gravity; }
@@ -64,6 +65,7 @@ namespace MGE {
 		bool on_Ground = false;
 		float m_Gravity = 9.8f;
 		float m_XLimit, m_YLimit;
+		int m_uID;
 	};
 
 }

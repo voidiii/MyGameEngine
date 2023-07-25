@@ -1,17 +1,30 @@
 #pragma once
 #include "PhysicsObject.h"
+#include <unordered_map>
+#include <utility>
 
 namespace MGE {
 
 	struct Grid
 	{
-		Grid(float x, float y)
-			: x(x), y(y)
+		Grid(float x, float y, Ref<std::unordered_map<int, Ref<CirclePhyicsObject>>> g)
+			: x(x), y(y), GridObjects(g)
 		{
 		}
-		
+
 		float x, y;
-		std::vector<Ref<MGE::CirclePhyicsObject>> GridObjects;
+		Ref<std::unordered_map<int, Ref<CirclePhyicsObject>>> GridObjects;
+	};
+
+	struct CoordinatesWithUID
+	{
+		CoordinatesWithUID(float x, float y, int uID)
+			: x(x), y(y), uID(uID)
+		{
+		}
+
+		float x, y;
+		int uID;
 	};
 
 	class PhysicsScene
@@ -28,13 +41,19 @@ namespace MGE {
 		void FindCollisions();
 		void ElasticCollisions(Ref<MGE::CirclePhyicsObject> i, Ref<MGE::CirclePhyicsObject> j);
 		inline int GetNumberOfObjects() { return m_NumberOfObjects; }
-		void CreateObjects();
+		void CreateObjects(int& count);
 		void GridManage();
 
 	private:
 		int m_NumberOfObjects;
 		std::vector<Ref<MGE::CirclePhyicsObject>> m_PhysicsObjects;
 		std::vector<std::vector<Ref<Grid>>> m_Grid;
+
+		std::unordered_map<int, Ref<CoordinatesWithUID>> m_CoordinatesWithUID;
+		std::unordered_map<int, Ref<MGE::CirclePhyicsObject>> m_CirclePhyicsObjectContainer;
+
+		std::unordered_set<int> m_CollisionUIDs;
+		
 		float m_SceneWidth, m_SceneHeight;
 	};
 
