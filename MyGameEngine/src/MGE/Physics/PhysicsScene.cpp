@@ -1,5 +1,9 @@
 #include "MGEpch.h"
 #include "PhysicsScene.h"
+#include <thread>
+#include <mutex>
+
+std::mutex mtx;
 
 namespace MGE {
 	
@@ -12,6 +16,7 @@ namespace MGE {
 			CreateObjects(count);
 			count++;
 		}
+		m_Grid.reserve((int)m_SceneHeight * 2 + 3);
 		GridManage();
 		
 	}
@@ -43,8 +48,24 @@ namespace MGE {
 			i->OnUpdate(ts);
 		}
 		
-		FindCollisions();
+		// FindCollisions();
 
+		std::vector<std::thread> threads;
+    	int numThreads = 20;
+		
+		for (int i = 0; i < numThreads / 2; ++i) {
+    	    threads.push_back(std::thread(&PhysicsScene::FindCollisions_mutithread, this,
+								(int)(i * m_SceneWidth / (numThreads / 4) + 1),
+								(int)(m_SceneHeight / 2.0f + 1.0f)));
+			threads.push_back(std::thread(&PhysicsScene::FindCollisions_mutithread, this,
+								(int)(i * m_SceneWidth / (numThreads / 4) + 1),
+								1));
+    	}
+		
+    	for (auto& thread : threads) {
+    	    thread.join();
+    	}
+		
 		for (auto i : m_Grid) 
 		{
 			for (auto j : i) 
@@ -58,11 +79,12 @@ namespace MGE {
 
 	void PhysicsScene::ElasticCollisions(Ref<MGE::CirclePhyicsObject> i, Ref<MGE::CirclePhyicsObject> j) 
 	{
+
 		Vec2 hit_distance = Vec2(i->GetPosition() - j->GetPosition());
 		Vec2 hit_direction = mathter::Normalize(hit_distance);
 
-		float temp_i = mathter::Dot(Vec2(i->GetVelocity() - j->GetVelocity()), hit_distance);
-		float temp_j = mathter::Dot(Vec2(-i->GetVelocity() + j->GetVelocity()), -hit_distance);
+		float temp = mathter::Dot(Vec2(i->GetVelocity() - j->GetVelocity()), hit_distance);
+		// float temp_j = mathter::Dot(Vec2(-i->GetVelocity() + j->GetVelocity()), -hit_distance);
 
 		float mass_i = i->GetMass();
 		float mass_j = j->GetMass();
@@ -74,14 +96,54 @@ namespace MGE {
 		Vec2 delta_x = hit_distance;
 		float delta_x_square = mathter::Length(hit_distance) * mathter::Length(hit_distance);
 
-		Vec2 new_v_i = v_i - ((2.0f * mass_j) / (mass_i + mass_j)) * (temp_i) / (delta_x_square) * (hit_distance);
-		Vec2 new_v_j = v_j - ((2.0f * mass_i) / (mass_i + mass_j)) * (temp_j) / (delta_x_square) * (-hit_distance);
+		Vec2 new_v_temp = ((2.0f * mass_j) / (mass_i + mass_j)) * (temp) / (delta_x_square) * (hit_distance);
+		
+		Vec2 new_v_i = v_i - new_v_temp;
+		Vec2 new_v_j = v_j + new_v_temp;
 
 		i->ChangeVelocity(new_v_i);
 		j->ChangeVelocity(new_v_j);
 
 		i->UpdatePosition((0.2f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
 		j->UpdatePosition(-(0.2f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
+	}
+
+	void PhysicsScene::FindCollisions_mutithread(int start_X, int start_Y)
+	{
+		
+		for (int i = start_Y; i <= (int)(start_Y + m_SceneHeight); i++)
+		{
+			for (int j = start_X; j <= (int)(start_X + m_SceneWidth / 5.0f); j++)
+			{
+				/* loop through the 2-D grid vector */
+				if (m_Grid[i][j]->GridObjects->size() == 0) 
+					continue; 
+
+				for (auto& [key, k] : *m_Grid[i][j]->GridObjects)
+				{
+					for(int a = -1; a <= 1; a ++)
+					{
+						for(int b = -1; b <= 1; b++)
+						{
+							if (m_Grid[i + a][j + b]->GridObjects->size() == 0) 
+								continue;
+
+							for (auto& [key_1, k_1] : *m_Grid[i + a][j + b]->GridObjects)
+							{
+								if(k == k_1)  
+									continue;
+
+								Vec2 hit_distance = Vec2(k->GetPosition() - (k_1)->GetPosition());
+								if (mathter::Length(hit_distance) < 0.2f)
+								{
+									ElasticCollisions(k, (k_1));
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	void PhysicsScene::FindCollisions()
@@ -142,7 +204,7 @@ namespace MGE {
 			temp.reserve((int)m_SceneWidth * 2 + 3);
 			for (int j = -(int)m_SceneWidth - 1; j <= (int)m_SceneWidth + 1; j++)
 			{
-				temp.push_back(CreateRef<Grid>(
+				temp.emplace_back(CreateRef<Grid>(
 					i, j, CreateRef<std::unordered_map<int, Ref<CirclePhyicsObject>>>()
 				));
 			}

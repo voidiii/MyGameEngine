@@ -2,6 +2,8 @@
 #include "PhysicsObject.h"
 #include <unordered_map>
 #include <utility>
+#include "nmmintrin.h" //SSE4.2, 128 bit operations (4 floats)
+#include "immintrin.h" //AVX2, 256 bit operations (8 floats)
 
 namespace MGE {
 
@@ -39,6 +41,7 @@ namespace MGE {
 
 
 		void FindCollisions();
+		void FindCollisions_mutithread(int start_X, int start_Y);
 		void ElasticCollisions(Ref<MGE::CirclePhyicsObject> i, Ref<MGE::CirclePhyicsObject> j);
 		inline int GetNumberOfObjects() { return m_NumberOfObjects; }
 		void CreateObjects(int& count);

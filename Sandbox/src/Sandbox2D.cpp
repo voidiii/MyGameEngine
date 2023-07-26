@@ -1,10 +1,11 @@
 #include "Sandbox2D.h"
 #include "imgui.h"
+#include <thread>
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
 Sandbox2D::Sandbox2D()
-	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f, true), m_PhysicsScene(5.0f, 30.0f, 500)
+	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f, true), m_PhysicsScene(10.0f, 30.0f, 2000)
 {
 }
 
@@ -60,9 +61,12 @@ void Sandbox2D::OnImGuiRender(MGE::Timestep ts)
 
 	ImGui::Begin("Settings");
 	ImGui::ColorEdit4("Square Color", (float*)(&m_SquareColor));
+	static float minFrameRate = 1.0f / ts.GetFrameRate();
+	minFrameRate = minFrameRate < 1.0f / ts.GetFrameRate() ? minFrameRate : 1.0f / ts.GetFrameRate();
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1.0f / ts.GetFrameRate(), (1.0f / ts.GetFrameRate()) > 120.0f ? 120.0f : (1.0f / ts.GetFrameRate()));
 
-	ImGui::Text("Sample object's speed: %.3f , %.3f", m_PhysicsScene.GetPhysicsObjects(0)->GetVelocity().x, m_PhysicsScene.GetPhysicsObjects(0)->GetVelocity().y);
+	ImGui::Text("Application lowest fps: %.3f", minFrameRate);
+	ImGui::Text("The number of CPU thread: %d", std::thread::hardware_concurrency());
 
 	ImGui::End();
 }
