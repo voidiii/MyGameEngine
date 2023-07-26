@@ -43,6 +43,7 @@ namespace MGE {
 		inline int GetNumberOfObjects() { return m_NumberOfObjects; }
 		void CreateObjects(int& count);
 		void GridManage();
+		void SetUpGrid();
 
 	private:
 		int m_NumberOfObjects;
