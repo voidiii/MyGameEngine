@@ -66,4 +66,67 @@ namespace MGE {
 		m_YLimit = yLimit;
 	}
 
+	// Perimeter of Convex hull for a given set of points
+
+	bool Compare_Vec2(Vec2 a, Vec2 b) 
+	{
+		return a.x < b.x || (a.x == b.x && a.y < b.y);
+
+	}
+
+	// Cross product of two vectors OA and OB
+	// returns positive for counter clockwise
+	// turn and negative for clockwise turn
+	float cross_product(Vec2 O, Vec2 A, Vec2 B)
+	{
+		return (A.x - O.x) * (B.y - O.y)
+			- (A.y - O.y) * (B.x - O.x);
+	}
+
+	// Returns a list of points on the convex hull
+	// in counter-clockwise order
+	std::vector<Vec2> convex_hull(std::vector<Vec2> A)
+	{
+		int n = A.size(), k = 0;
+
+		if (n <= 3)
+			return A;
+
+		std::vector<Vec2> ans;
+		ans.reserve(2 * n);
+		// Sort points lexicographically
+		sort(A.begin(), A.end(), Compare_Vec2);
+
+		// Build lower hull
+		for (int i = 0; i < n; ++i) {
+
+			// If the point at K-1 position is not a part
+			// of hull as vector from ans[k-2] to ans[k-1]
+			// and ans[k-2] to A[i] has a clockwise turn
+			while (k >= 2
+				&& cross_product(ans[k - 2],
+					ans[k - 1], A[i]) <= 0)
+				k--;
+			ans[k++] = A[i];
+		}
+
+		// Build upper hull
+		for (size_t i = n - 1, t = k + 1; i > 0; --i) {
+
+			// If the point at K-1 position is not a part
+			// of hull as vector from ans[k-2] to ans[k-1]
+			// and ans[k-2] to A[i] has a clockwise turn
+			while (k >= t
+				&& cross_product(ans[k - 2],
+					ans[k - 1], A[i - 1]) <= 0.0f)
+				k--;
+			ans[k++] = A[i - 1];
+		}
+
+		// Resize the array to desired size
+		ans.resize(k - 1);
+
+		return ans;
+	}
+
 }

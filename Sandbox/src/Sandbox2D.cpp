@@ -5,7 +5,7 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 
 Sandbox2D::Sandbox2D()
-	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f, true), m_PhysicsScene(10.0f, 30.0f, 2000)
+	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f, true), m_PhysicsScene(10.0f, 100.0f, 500)
 {
 }
 
@@ -41,7 +41,7 @@ void Sandbox2D::OnUpdate(MGE::Timestep ts)
 	}
 	{
 		// PROFILE_SCOPE("Renderer Draw");
-		MGE_PROFILE_FUNCTION();
+		MGE_PROFILE_SCOPE("physics update");
 		MGE::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
 		m_PhysicsScene.OnUpdate(ts);

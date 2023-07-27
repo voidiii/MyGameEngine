@@ -68,4 +68,6 @@ namespace MGE {
 		int m_uID;
 	};
 
+	std::vector<Vec2> convex_hull(std::vector<Vec2> A);
+
 }

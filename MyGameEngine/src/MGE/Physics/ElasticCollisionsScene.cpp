@@ -1,5 +1,5 @@
 #include "MGEpch.h"
-#include "PhysicsScene.h"
+#include "ElasticCollisionsScene.h"
 #include <thread>
 #include <mutex>
 
@@ -24,7 +24,7 @@ namespace MGE {
 	void PhysicsScene::CreateObjects(int& count)
 	{
 		m_CirclePhyicsObjectContainer.insert(std::make_pair(count, CreateRef<CirclePhyicsObject>(
-			Vec2{ rand() / double(RAND_MAX) * 25.0f,
+			Vec2{ ( - 2.0f * rand() / double(RAND_MAX) + 1.0f) * 90.0f,
 			rand() / double(RAND_MAX) * 5.0f },
 			Vec4{ 0.2f, 0.3f, 0.8f, 1.0f },
 			count
@@ -51,20 +51,20 @@ namespace MGE {
 		// FindCollisions();
 
 		std::vector<std::thread> threads;
-    	int numThreads = 20;
+		int numThreads = 20;
 		
 		for (int i = 0; i < numThreads / 2; ++i) {
-    	    threads.push_back(std::thread(&PhysicsScene::FindCollisions_mutithread, this,
+		    threads.push_back(std::thread(&PhysicsScene::FindCollisions_mutithread, this,
 								(int)(i * m_SceneWidth / (numThreads / 4) + 1),
 								(int)(m_SceneHeight / 2.0f + 1.0f)));
 			threads.push_back(std::thread(&PhysicsScene::FindCollisions_mutithread, this,
 								(int)(i * m_SceneWidth / (numThreads / 4) + 1),
 								1));
-    	}
+		}
 		
-    	for (auto& thread : threads) {
-    	    thread.join();
-    	}
+		for (auto& thread : threads) {
+		    thread.join();
+		}
 		
 		for (auto i : m_Grid) 
 		{
@@ -79,7 +79,8 @@ namespace MGE {
 
 	void PhysicsScene::ElasticCollisions(Ref<MGE::CirclePhyicsObject> i, Ref<MGE::CirclePhyicsObject> j) 
 	{
-
+		MGE_PROFILE_FUNCTION();
+		
 		Vec2 hit_distance = Vec2(i->GetPosition() - j->GetPosition());
 		Vec2 hit_direction = mathter::Normalize(hit_distance);
 

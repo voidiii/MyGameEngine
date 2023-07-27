@@ -340,7 +340,8 @@
     <ClInclude Include="src\MGE\Core\ProfilingTimer.h" />
     <ClInclude Include="src\MGE\Debug\Instrumentor.h" />
     <ClInclude Include="src\MGE\Physics\PhysicsObject.h" />
-    <ClInclude Include="src\MGE\Physics\PhysicsScene.h" />
+    <ClInclude Include="src\MGE\Physics\ElasticCollisionsScene.h" />
+    <ClInclude Include="src\MGE\Physics\PhysicsObject_Square.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">
@@ -422,7 +423,8 @@
     <ClCompile Include="src\MGE\Renderer\Renderer2D.cpp">
       <Filter>src\MGE\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\MGE\Physics\ElasticCollisionsScene.cpp" />
     <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp" />
-    <ClCompile Include="src\MGE\Physics\PhysicsScene.cpp" />
+    <ClCompile Include="src\MGE\Physics\PhysicsObject_Square.cpp" />
   </ItemGroup>
 </Project>

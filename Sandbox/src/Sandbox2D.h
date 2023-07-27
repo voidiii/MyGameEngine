@@ -3,7 +3,7 @@
 #include "MGE.h"
 #include "MathAlias.h"
 #include "MGE/Core/ProfilingTimer.h"
-#include "MGE/Physics/PhysicsScene.h"
+#include "MGE/Physics/ElasticCollisionsScene.h"
 
 
 class Sandbox2D : public MGE::Layer
