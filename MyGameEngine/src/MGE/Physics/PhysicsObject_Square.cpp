@@ -21,11 +21,12 @@ namespace MGE {
 
 	void PhysicsObject_Square::DrawPhysicsObject()
 	{
+		Renderer2D::DrawQuad(m_Position, Vec2(m_Length, m_Length), m_Color);
 	}
 
 	void PhysicsObject_Square::OnUpdate(Timestep ts)
 	{
-		std::vector<Vec2> ans = convex_hull(m_Vertices);
+		// std::vector<Vec2> ans = convex_hull(m_Vertices);
 	}
 
 	void PhysicsObject_Square::UpdateVelocity(Vec2 deltaVelocity)

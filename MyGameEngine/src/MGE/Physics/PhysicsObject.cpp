@@ -30,17 +30,13 @@ namespace MGE {
 
 	void CirclePhyicsObject::UpdatePosition(Vec2 DeltaPosition)
 	{
-		// DeltaPosition = on_Ground ? Vec2{ DeltaPosition.x, 0.0f } : DeltaPosition;
 		m_Position += DeltaPosition;
 	}
 
 	void CirclePhyicsObject::OnUpdate(Timestep ts)
 	{
 		on_Ground = m_Position.y < -m_YLimit;
-		// m_Position.y = on_Ground ? -m_YLimit : m_Position.y;
-
 		m_Gravity = on_Ground ? 0.0f : 9.8f;
-		// m_Velocity = on_Ground ? Vec2{ m_Velocity.x, 0.0f } : m_Velocity;
 
 		Vec2 FractionDirection = mathter::Length(m_Velocity) > 0.0f ? -mathter::Normalize(m_Velocity) : Vec2{0.0f, 0.0f};
 
@@ -56,7 +52,6 @@ namespace MGE {
 		}
 		
 		UpdateVelocity(m_Gravity * Vec2{ 0.0f, -1.0f } * ts + FractionDirection * FractionAccelaration * ts);
-
 		UpdatePosition(m_Velocity * ts);
 	}
 

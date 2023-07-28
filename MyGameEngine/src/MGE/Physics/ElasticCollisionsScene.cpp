@@ -48,7 +48,7 @@ namespace MGE {
 			i->OnUpdate(ts);
 		}
 		
-		// FindCollisions();
+		// FindCollisions(); single thread version
 
 		std::vector<std::thread> threads;
 		int numThreads = 20;
@@ -85,7 +85,6 @@ namespace MGE {
 		Vec2 hit_direction = mathter::Normalize(hit_distance);
 
 		float temp = mathter::Dot(Vec2(i->GetVelocity() - j->GetVelocity()), hit_distance);
-		// float temp_j = mathter::Dot(Vec2(-i->GetVelocity() + j->GetVelocity()), -hit_distance);
 
 		float mass_i = i->GetMass();
 		float mass_j = j->GetMass();
@@ -183,18 +182,6 @@ namespace MGE {
 				}
 			}
 		}
-		
-		// for (int i = 0; i < m_NumberOfObjects; i++)
-		// {
-		// 	for (int j = i + 1; j < m_NumberOfObjects; j++)
-		// 	{
-		// 		Vec2 hit_distance = Vec2(m_PhysicsObjects[i]->GetPosition() - m_PhysicsObjects[j]->GetPosition());
-		// 		if (mathter::Length(hit_distance) < 0.2f)
-		// 		{
-		// 			ElasticCollisions(m_PhysicsObjects[i], m_PhysicsObjects[j]);
-		// 		}
-		// 	}
-		// }
 	}
 
 	void PhysicsScene::GridManage()
