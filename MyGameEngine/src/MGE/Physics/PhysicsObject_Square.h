@@ -27,6 +27,9 @@ namespace MGE {
 
 		void SetMotionLimit(float xLimit, float yLimit);
 
+		inline int GetNumOfVertices() { return m_numOfVertices;  }
+		inline Vec2 GetVertices(int index) { return m_Vertices[index]; }
+
 	private:
 		Vec2 m_Position;
 		Vec4 m_Color;
@@ -39,6 +42,7 @@ namespace MGE {
 		float m_Gravity = 9.8f;
 		float m_XLimit, m_YLimit;
 		int m_UID;
+		int m_numOfVertices = 4;
 	};
 
 }
