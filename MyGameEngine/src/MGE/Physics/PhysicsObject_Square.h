@@ -19,6 +19,7 @@ namespace MGE {
 
 		inline float GetGravity() const { return m_Gravity; }
 		inline void SetGravity(float gravity) { m_Gravity = gravity; }
+		inline void SetColor(Vec4 color) { m_Color = color; }
 
 		virtual void OnUpdate(Timestep ts) override;
 		virtual void UpdateVelocity(Vec2 deltaVelocity) override;

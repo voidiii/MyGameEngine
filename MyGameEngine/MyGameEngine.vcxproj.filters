@@ -342,6 +342,7 @@
     <ClInclude Include="src\MGE\Physics\PhysicsObject.h" />
     <ClInclude Include="src\MGE\Physics\ElasticCollisionsScene.h" />
     <ClInclude Include="src\MGE\Physics\PhysicsObject_Square.h" />
+    <ClInclude Include="src\MGE\Physics\CollisionDetectionScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">
@@ -426,5 +427,6 @@
     <ClCompile Include="src\MGE\Physics\ElasticCollisionsScene.cpp" />
     <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp" />
     <ClCompile Include="src\MGE\Physics\PhysicsObject_Square.cpp" />
+    <ClCompile Include="src\MGE\Physics\CollisionDetectionScene.cpp" />
   </ItemGroup>
 </Project>

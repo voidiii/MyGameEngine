@@ -36,3 +36,6 @@ I studyed for SIMD today and realized that the best way to use SIMD is to use mu
 
 7/27/2023
 I realized that, neither of Spring or Pendulum shoud be my piority right now so I decided to try to implement Minkowski sum and GJK for collision detection for complex 2D polygon
+
+7/30/2023
+Done with GJK for collision detection, now in theroy any convex will be able to detect collision. I just need to find a better to resolve the collision, which I think I will have to implement rotation first

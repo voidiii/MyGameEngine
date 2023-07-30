@@ -14,7 +14,8 @@ namespace MGE {
 		inline Ref<MGE::PhysicsObject_Square> GetPhysicsObjects(int index) { return m_PhysicsObjects[index]; }
 
 
-		void FindCollisions(Ref<MGE::PhysicsObject_Square> Object_A, Ref<MGE::PhysicsObject_Square> Object_B);
+		bool FindCollisions(Ref<MGE::PhysicsObject_Square> Object_A, Ref<MGE::PhysicsObject_Square> Object_B);
+		void ResolveCollision(Ref<MGE::PhysicsObject_Square> i, Ref<MGE::PhysicsObject_Square> j);
 		inline int GetNumberOfObjects() { return m_NumberOfObjects; }
 
 	private:
@@ -23,7 +24,5 @@ namespace MGE {
 
 		float m_SceneWidth, m_SceneHeight;
 	};
-	};
-
 }
 

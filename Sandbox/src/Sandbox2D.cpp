@@ -5,7 +5,7 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 
 Sandbox2D::Sandbox2D()
-	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f, true), m_PhysicsScene(10.0f, 100.0f, 500)
+	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f, true), /* m_PhysicsScene(10.0f, 100.0f, 500) */ m_CollisionDetectionScene(10.0f, 100.0f, 50)
 {
 }
 
@@ -44,12 +44,9 @@ void Sandbox2D::OnUpdate(MGE::Timestep ts)
 		MGE_PROFILE_SCOPE("physics update");
 		MGE::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-		m_PhysicsScene.OnUpdate(ts);
+		// m_PhysicsScene.OnUpdate(ts);
+		m_CollisionDetectionScene.OnUpdate(ts);
 		
-		for (int i = 0; i < m_PhysicsScene.GetNumberOfObjects(); i++)
-		{
-			m_PhysicsScene.GetPhysicsObjects(i)->DrawPhysicsObject();
-		}
 		MGE::Renderer2D::EndScene();
 	}
 

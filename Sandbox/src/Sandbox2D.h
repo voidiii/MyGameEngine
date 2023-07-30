@@ -4,6 +4,7 @@
 #include "MathAlias.h"
 #include "MGE/Core/ProfilingTimer.h"
 #include "MGE/Physics/ElasticCollisionsScene.h"
+#include "MGE/Physics/CollisionDetectionScene.h"
 
 
 class Sandbox2D : public MGE::Layer
@@ -26,7 +27,8 @@ private:
 	MGE::Ref<MGE::Shader> m_FlatColorShader;
 	MGE::Ref<MGE::Texture2D> m_CheckerboardTexture;
 
-	MGE::PhysicsScene m_PhysicsScene;
+	// MGE::PhysicsScene m_PhysicsScene;
+	MGE::CollisionDetectionScene m_CollisionDetectionScene;
 
 	std::vector<MGE::ProfileResult> m_ProfileResults;
 

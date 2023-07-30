@@ -87,8 +87,8 @@ namespace MGE {
 		if (n <= 3)
 			return A;
 
-		std::vector<Vec2> ans;
-		ans.reserve(2 * n);
+		std::vector<Vec2> ans(2 * n);
+
 		// Sort points lexicographically
 		sort(A.begin(), A.end(), Compare_Vec2);
 
