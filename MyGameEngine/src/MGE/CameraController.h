@@ -27,12 +27,12 @@ namespace MGE {
 		bool OnWindowResized(WindowResizeEvent& e);
 	private:
 		float m_AspectRatio;
-		float m_ZoomLevel = 3.0f;
+		float m_ZoomLevel = 5.0f;
 		Camera m_Camera;
 
 		bool m_Rotation;
 
-		Vec3 m_CameraPosition = { 0.0f, -2.5f, 0.0f };
+		Vec3 m_CameraPosition = { 0.0f, -5.0f, 0.0f };
 		// Quat m_CameraRotation;
 		float radian = 0.0f;
 		float m_CameraTranslationSpeed = 5.0f, m_CameraRotationSpeed = 180.0f;

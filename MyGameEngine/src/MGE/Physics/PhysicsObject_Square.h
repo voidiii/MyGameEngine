@@ -42,6 +42,8 @@ namespace MGE {
 		bool on_Ground = false;
 		float m_Gravity = 9.8f;
 		float m_XLimit, m_YLimit;
+		float m_AngularVelocity = 0.0f;
+		float m_Angle = 3.1415926f / 4.0f;
 		int m_UID;
 		int m_numOfVertices = 4;
 	};

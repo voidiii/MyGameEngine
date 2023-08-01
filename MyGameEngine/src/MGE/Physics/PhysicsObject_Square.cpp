@@ -10,8 +10,8 @@ namespace MGE {
 
 		m_Vertices.push_back(Vec2(m_Length, m_Length));
 		m_Vertices.push_back(Vec2(-m_Length, m_Length));
-		m_Vertices.push_back(Vec2(m_Length, -m_Length));
 		m_Vertices.push_back(Vec2(-m_Length, -m_Length));
+		m_Vertices.push_back(Vec2(m_Length, -m_Length));
 		
 	}
 
@@ -21,7 +21,16 @@ namespace MGE {
 
 	void PhysicsObject_Square::DrawPhysicsObject()
 	{
-		Renderer2D::DrawQuad(m_Position, Vec2(m_Length, m_Length), m_Color);
+		Mat22 transform = mathter::Rotation(m_Angle);
+		std::vector<Vec3> vertices;
+		for (int i = 0; i < 4; i++)
+		{
+			vertices.emplace_back(Vec3(
+				m_Vertices[i].x * transform(0, 0) + m_Vertices[i].y * transform(0, 1),
+				m_Vertices[i].x * transform(1, 0) + m_Vertices[i].y * transform(1, 1),
+					0.0f));
+		}
+		Renderer2D::DrawQuad(m_Position, m_Color, vertices);
 	}
 
 	void PhysicsObject_Square::OnUpdate(Timestep ts)

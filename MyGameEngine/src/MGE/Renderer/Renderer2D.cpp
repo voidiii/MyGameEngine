@@ -165,32 +165,40 @@ namespace MGE {
 		}
 	}
 
-	void Renderer2D::DrawQuad(const Vec2& position, const Vec2& size, const Vec4& color)
+	void Renderer2D::DrawQuad(const Vec2& position, const Vec4& color, const std::vector<Vec3> vertices)
 	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, color);
+		DrawQuad({ position.x, position.y, 0.0f }, color, vertices);
 	}
 
-	void Renderer2D::DrawQuad(const Vec3& position, const Vec2& size, const Vec4& color)
+	void Renderer2D::DrawQuad(const Vec3& position, const Vec4& color, const std::vector<Vec3> vertices)
 	{
-		s_Data.QuadVertexBufferPtr->Position = position;
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Position = Vec3{ position.x + size.x , position.y, 0.0f };
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Position = Vec3{ position.x + size.x, position.y + size.y, 0.0f };
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Position = Vec3{ position.x, position.y + size.y, 0.0f };
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
-		s_Data.QuadVertexBufferPtr++;
+		for (int i = 0; i < 4; i++)
+		{
+			s_Data.QuadVertexBufferPtr->Position = Vec3{ position.x, position.y, 0.0f } + vertices[i];
+			s_Data.QuadVertexBufferPtr->Color = color;
+			s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
+			s_Data.QuadVertexBufferPtr++;
+		}
+		
+		// s_Data.QuadVertexBufferPtr->Position = Vec3{ position.x + size.x / 2.0f , position.y + size.y / 2.0f, 0.0f };
+		// s_Data.QuadVertexBufferPtr->Color = color;
+		// s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
+		// s_Data.QuadVertexBufferPtr++;
+		// 
+		// s_Data.QuadVertexBufferPtr->Position = Vec3{ position.x - size.x / 2.0f , position.y + size.y / 2.0f, 0.0f };
+		// s_Data.QuadVertexBufferPtr->Color = color;
+		// s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
+		// s_Data.QuadVertexBufferPtr++;
+		// 
+		// s_Data.QuadVertexBufferPtr->Position = Vec3{ position.x - size.x / 2.0f , position.y - size.y / 2.0f, 0.0f };
+		// s_Data.QuadVertexBufferPtr->Color = color;
+		// s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
+		// s_Data.QuadVertexBufferPtr++;
+		// 
+		// s_Data.QuadVertexBufferPtr->Position = Vec3{ position.x + size.x / 2.0f , position.y - size.y / 2.0f, 0.0f };
+		// s_Data.QuadVertexBufferPtr->Color = color;
+		// s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
+		// s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadIndexCount += 6;
 	}
