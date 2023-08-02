@@ -1,11 +1,19 @@
 #pragma once
 #include "PhysicsObject.h"
+#include "MGE/Core/ProfilingTimer.h"
+
 #include <unordered_map>
 #include <utility>
 #include "nmmintrin.h" //SSE4.2, 128 bit operations (4 floats)
 #include "immintrin.h" //AVX2, 256 bit operations (8 floats)
 
 namespace MGE {
+
+	struct ProfileResult
+	{
+		const char* Name;
+		float Time;
+	};
 
 	struct Grid
 	{
@@ -42,11 +50,17 @@ namespace MGE {
 
 		void FindCollisions();
 		void FindCollisions_mutithread(int start_X, int start_Y);
+		void FindCollisions_mutithread_Call();
+		void FindCollisions_BrutalForce();
+
 		void ElasticCollisions(Ref<MGE::CirclePhyicsObject> i, Ref<MGE::CirclePhyicsObject> j);
 		inline int GetNumberOfObjects() { return m_NumberOfObjects; }
+		inline void AddNumberOfObjects() { m_NumberOfObjects++;  }
 		void CreateObjects(int& count);
 		void GridManage();
 		void SetUpGrid();
+
+		inline std::vector<ProfileResult> GetProfileResult() const { return m_ProfileResults; }
 
 	private:
 		int m_NumberOfObjects;
@@ -59,6 +73,8 @@ namespace MGE {
 		std::unordered_set<int> m_CollisionUIDs;
 		
 		float m_SceneWidth, m_SceneHeight;
+
+		std::vector<ProfileResult> m_ProfileResults;
 	};
 
 }

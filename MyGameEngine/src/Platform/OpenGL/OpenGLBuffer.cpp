@@ -31,8 +31,6 @@ namespace MGE {
 
 	MGE::OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
 	{
-		MGE_PROFILE_FUNCTION();
-
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);

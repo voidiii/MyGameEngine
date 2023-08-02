@@ -10,8 +10,6 @@ namespace MGE {
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 		: m_Width(width), m_Height(height)
 	{
-		MGE_PROFILE_FUNCTION();
-
 		m_InternalFormat = GL_RGBA8;
 		m_DataFormat = GL_RGBA;
 
@@ -79,8 +77,6 @@ namespace MGE {
 
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
-		MGE_PROFILE_FUNCTION();
-
 		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
 		MGE_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);

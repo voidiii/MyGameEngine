@@ -35,7 +35,7 @@ namespace MGE {
 	class CirclePhyicsObject : public PhysicsObject
 	{
 	public:
-		CirclePhyicsObject(Vec2 Position, Vec4 Color, int uID);
+		CirclePhyicsObject(Vec2 Position, Vec4 Color, int uID, Vec2 Velocity);
 		virtual ~CirclePhyicsObject();
 
 		virtual void DrawPhysicsObject() override;
@@ -54,6 +54,7 @@ namespace MGE {
 		virtual void UpdatePosition(Vec2 DeltaPosition) override;
 		
 		void SetMotionLimit(float xLimit, float yLimit);
+		void ApplyMotionLimit();
 
 	private:
 		Vec2 m_Position;

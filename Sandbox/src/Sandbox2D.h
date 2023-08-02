@@ -27,8 +27,8 @@ private:
 	MGE::Ref<MGE::Shader> m_FlatColorShader;
 	MGE::Ref<MGE::Texture2D> m_CheckerboardTexture;
 
-	// MGE::PhysicsScene m_PhysicsScene;
-	MGE::CollisionDetectionScene m_CollisionDetectionScene;
+	MGE::PhysicsScene m_PhysicsScene;
+	// MGE::CollisionDetectionScene m_CollisionDetectionScene;
 
 	std::vector<MGE::ProfileResult> m_ProfileResults;
 
