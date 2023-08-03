@@ -10,3 +10,6 @@
 [submodule "MyGameEngine/src/MGE/Math/Mather"]
 	path = MyGameEngine/src/MGE/Math/Mather
 	url = https://github.com/voidiii/Mathter.git
+[submodule "MyGameEngine/vendor/optick"]
+	path = MyGameEngine/vendor/optick
+	url = https://github.com/voidiii/optick.git

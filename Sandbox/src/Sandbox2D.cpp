@@ -5,7 +5,7 @@
 #include "Platform/OpenGL/OpenGLShader.h"
 
 Sandbox2D::Sandbox2D()
-	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f, true), m_PhysicsScene(10.0f, 10.0f, 500) /* m_CollisionDetectionScene(10.0f, 100.0f, 50) */
+	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f, true), m_PhysicsScene(20.0f, 50.0f, 500) /* m_CollisionDetectionScene(10.0f, 100.0f, 50) */
 {
 }
 

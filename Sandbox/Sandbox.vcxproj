@@ -79,14 +79,13 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IMGUI_API=__declspec(dllexport);MGE_PLATFORM_WINDOWS;MGE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\MyGameEngine\vendor\spdlog\include;..\MyGameEngine\src;..\MyGameEngine\vendor\Math\Mather\include\Mathter;..\MyGameEngine\vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\MyGameEngine\vendor\spdlog\include;..\MyGameEngine\src;..\MyGameEngine\vendor\Math\Mather\include\Mathter;..\MyGameEngine\vendor\ImGui;..\MyGameEngine\vendor\optick\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -98,13 +97,14 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IMGUI_API=__declspec(dllexport);MGE_PLATFORM_WINDOWS;MGE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\MyGameEngine\vendor\spdlog\include;..\MyGameEngine\src;..\MyGameEngine\vendor\Math\Mather\include\Mathter;..\MyGameEngine\vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\MyGameEngine\vendor\spdlog\include;..\MyGameEngine\src;..\MyGameEngine\vendor\Math\Mather\include\Mathter;..\MyGameEngine\vendor\ImGui;..\MyGameEngine\vendor\optick\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,7 +116,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IMGUI_API=__declspec(dllexport);MGE_PLATFORM_WINDOWS;MGE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\MyGameEngine\vendor\spdlog\include;..\MyGameEngine\src;..\MyGameEngine\vendor\Math\Mather\include\Mathter;..\MyGameEngine\vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\MyGameEngine\vendor\spdlog\include;..\MyGameEngine\src;..\MyGameEngine\vendor\Math\Mather\include\Mathter;..\MyGameEngine\vendor\ImGui;..\MyGameEngine\vendor\optick\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -130,6 +130,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Sandbox2D.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="src\Sandbox2D.cpp" />
     <ClCompile Include="src\SandboxApp.cpp" />
   </ItemGroup>
@@ -137,17 +140,6 @@
     <ProjectReference Include="..\MyGameEngine\MyGameEngine.vcxproj">
       <Project>{FBF672FC-E759-02A1-90DF-3A577C21CE23}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\Sandbox2D.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="assets\shaders\FlatColor.glsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\Renderer2D_Quad.glsl" />
-    <None Include="assets\shaders\Renderer2D_Circle.glsl" />
-    <None Include="assets\shaders\Renderer2D_Quad.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

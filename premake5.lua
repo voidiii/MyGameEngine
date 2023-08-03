@@ -20,6 +20,7 @@ IncludeDir["Glad"] = "MyGameEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "MyGameEngine/vendor/ImGui"
 IncludeDir["Mathter"] = "MyGameEngine/vendor/Math/Mather/include/Mathter" -- this is what I added for Mather
 IncludeDir["stb_image"] = "MyGameEngine/vendor/stb_image"
+IncludeDir["optick"] = "MyGameEngine/vendor/optick/src"
 
 include "MyGameEngine/vendor/GLFW"
 include "MyGameEngine/vendor/Glad"
@@ -56,7 +57,8 @@ project "MyGameEngine"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.Mathter}", -- this is what I added for Mather
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.optick}"
 	}
 
 	links 
@@ -116,7 +118,8 @@ project "Sandbox"
 		"MyGameEngine/vendor/spdlog/include",
 		"MyGameEngine/src",
 		"%{IncludeDir.Mathter}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.optick}"
 	}
 
 	links

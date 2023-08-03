@@ -77,14 +77,13 @@
       <PrecompiledHeaderFile>MGEpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IMGUI_API=__declspec(dllexport);MGE_BUILD_DLL;MGE_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;MGE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include\Mathter;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include\Mathter;vendor\stb_image;vendor\optick\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -100,13 +99,14 @@
       <PrecompiledHeaderFile>MGEpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IMGUI_API=__declspec(dllexport);MGE_BUILD_DLL;MGE_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;MGE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include\Mathter;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include\Mathter;vendor\stb_image;vendor\optick\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -122,7 +122,7 @@
       <PrecompiledHeaderFile>MGEpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IMGUI_API=__declspec(dllexport);MGE_BUILD_DLL;MGE_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;MGE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include\Mathter;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include\Mathter;vendor\stb_image;vendor\optick\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -139,18 +139,13 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\MGE\Physics\CollisionDetectionScene.h" />
-    <ClInclude Include="src\MGE\Physics\PhysicsObject_Square.h" />
-    <ClInclude Include="src\MGE\Physics\ElasticCollisionsScene.h" />
-    <ClInclude Include="src\MGE\Core\ProfilingTimer.h" />
-    <ClInclude Include="src\MGE\Debug\Instrumentor.h" />
-    <ClInclude Include="src\MGE\Physics\PhysicsObject.h" />
-    <ClInclude Include="src\MGE\Renderer\Renderer2D.h" />
     <ClInclude Include="src\MGE.h" />
     <ClInclude Include="src\MGE\Application.h" />
     <ClInclude Include="src\MGE\CameraController.h" />
     <ClInclude Include="src\MGE\Core.h" />
+    <ClInclude Include="src\MGE\Core\ProfilingTimer.h" />
     <ClInclude Include="src\MGE\Core\Timestep.h" />
+    <ClInclude Include="src\MGE\Debug\Instrumentor.h" />
     <ClInclude Include="src\MGE\EntryPoint.h" />
     <ClInclude Include="src\MGE\Event\ApplicationEvent.h" />
     <ClInclude Include="src\MGE\Event\Event.h" />
@@ -163,11 +158,16 @@
     <ClInclude Include="src\MGE\LayerStack.h" />
     <ClInclude Include="src\MGE\Log.h" />
     <ClInclude Include="src\MGE\MouseButtonCodes.h" />
+    <ClInclude Include="src\MGE\Physics\CollisionDetectionScene.h" />
+    <ClInclude Include="src\MGE\Physics\ElasticCollisionsScene.h" />
+    <ClInclude Include="src\MGE\Physics\PhysicsObject.h" />
+    <ClInclude Include="src\MGE\Physics\PhysicsObject_Square.h" />
     <ClInclude Include="src\MGE\Renderer\Buffer.h" />
     <ClInclude Include="src\MGE\Renderer\Camera.h" />
     <ClInclude Include="src\MGE\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\MGE\Renderer\RenderCommand.h" />
     <ClInclude Include="src\MGE\Renderer\Renderer.h" />
+    <ClInclude Include="src\MGE\Renderer\Renderer2D.h" />
     <ClInclude Include="src\MGE\Renderer\RendererAPI.h" />
     <ClInclude Include="src\MGE\Renderer\Shader.h" />
     <ClInclude Include="src\MGE\Renderer\Texture.h" />
@@ -236,11 +236,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\MGE\Physics\CollisionDetectionScene.cpp" />
-    <ClCompile Include="src\MGE\Physics\PhysicsObject_Square.cpp" />
-    <ClCompile Include="src\MGE\Physics\ElasticCollisionsScene.cpp" />
-    <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp" />
-    <ClCompile Include="src\MGE\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\MGE\Application.cpp" />
     <ClCompile Include="src\MGE\CameraController.cpp" />
     <ClCompile Include="src\MGE\ImGui\ImGuiBuild.cpp" />
@@ -248,10 +243,15 @@
     <ClCompile Include="src\MGE\Layer.cpp" />
     <ClCompile Include="src\MGE\LayerStack.cpp" />
     <ClCompile Include="src\MGE\Log.cpp" />
+    <ClCompile Include="src\MGE\Physics\CollisionDetectionScene.cpp" />
+    <ClCompile Include="src\MGE\Physics\ElasticCollisionsScene.cpp" />
+    <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp" />
+    <ClCompile Include="src\MGE\Physics\PhysicsObject_Square.cpp" />
     <ClCompile Include="src\MGE\Renderer\Buffer.cpp" />
     <ClCompile Include="src\MGE\Renderer\Camera.cpp" />
     <ClCompile Include="src\MGE\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\MGE\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\MGE\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\MGE\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\MGE\Renderer\Shader.cpp" />
     <ClCompile Include="src\MGE\Renderer\Texture.cpp" />

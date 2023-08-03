@@ -230,10 +230,12 @@ namespace MGE {
 
 		Vec3 QuadVertexPositions[4];
 
-		QuadVertexPositions[0] = { -0.1f, -0.1f, 0.0f };
-		QuadVertexPositions[1] = { 0.1f, -0.1f, 0.0f };
-		QuadVertexPositions[2] = { 0.1f,  0.1f, 0.0f };
-		QuadVertexPositions[3] = { -0.1f,  0.1f, 0.0f };
+		float radius = 0.5f;
+
+		QuadVertexPositions[0] = { -radius, -radius, 0.0f };
+		QuadVertexPositions[1] = { radius, -radius, 0.0f };
+		QuadVertexPositions[2] = { radius,  radius, 0.0f };
+		QuadVertexPositions[3] = { -radius,  radius, 0.0f };
 
 		for (size_t i = 0; i < 4; i++)
 		{

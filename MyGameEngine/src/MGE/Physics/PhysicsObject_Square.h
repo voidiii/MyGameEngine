@@ -6,14 +6,14 @@ namespace MGE {
 	class PhysicsObject_Square : public PhysicsObject
 	{
 	public:
-		PhysicsObject_Square(Vec2 Position, Vec4 Color, int uID);
+		PhysicsObject_Square(Vec2_Physics Position, Vec4 Color, int uID);
 		virtual ~PhysicsObject_Square();
 
 		virtual void DrawPhysicsObject() override;
-		inline virtual Vec2 GetPosition() const { return m_Position; }
+		inline virtual Vec2_Physics GetPosition() const { return m_Position; }
 
 		inline Vec2 GetVelocity() const { return m_Velocity; }
-		inline float GetMass() const { return m_Mass; }
+		// inline float GetMass() const { return m_Mass; }
 		inline float GetUID() const { return m_UID; }
 		inline float GetLength() const { return m_Length; }
 
@@ -22,9 +22,9 @@ namespace MGE {
 		inline void SetColor(Vec4 color) { m_Color = color; }
 
 		virtual void OnUpdate(Timestep ts) override;
-		virtual void UpdateVelocity(Vec2 deltaVelocity) override;
-		virtual void ChangeVelocity(Vec2 newVelocity) override;
-		virtual void UpdatePosition(Vec2 DeltaPosition) override;
+		virtual void UpdateVelocity(Vec2_Physics deltaVelocity) override;
+		virtual void ChangeVelocity(Vec2_Physics newVelocity) override;
+		virtual void UpdatePosition(Vec2_Physics DeltaPosition) override;
 
 		void SetMotionLimit(float xLimit, float yLimit);
 
@@ -32,13 +32,13 @@ namespace MGE {
 		inline Vec2 GetVertices(int index) { return m_Vertices[index]; }
 
 	private:
-		Vec2 m_Position;
+		Vec2_Physics m_Position;
 		Vec4 m_Color;
-		Vec2 m_MassCenter;
-		Vec2 m_Velocity = { 0.0f, 0.0f };
+		Vec2_Physics m_MassCenter;
+		Vec2_Physics m_Velocity = { 0.0f, 0.0f };
 		std::vector<Vec2> m_Vertices;
 		float m_Length = 0.1f;
-		float m_Mass = 1.0f;
+		// float m_Mass = 1.0f;
 		bool on_Ground = false;
 		float m_Gravity = 9.8f;
 		float m_XLimit, m_YLimit;

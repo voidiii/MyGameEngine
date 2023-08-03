@@ -17,13 +17,13 @@ namespace MGE {
 
 	struct Grid
 	{
-		Grid(float x, float y, Ref<std::unordered_map<int, Ref<CirclePhyicsObject>>> g)
-			: x(x), y(y), GridObjects(g)
+		Grid(float x, float y)
+			: x(x), y(y)
 		{
 		}
 
 		float x, y;
-		Ref<std::unordered_map<int, Ref<CirclePhyicsObject>>> GridObjects;
+		std::vector<int> object_id;
 	};
 
 	struct CoordinatesWithUID
@@ -45,7 +45,7 @@ namespace MGE {
 
 		void OnUpdate(Timestep ts);
 		
-		inline Ref<MGE::CirclePhyicsObject> GetPhysicsObjects(int index) { return m_PhysicsObjects[index]; }
+		inline CirclePhyicsObject* GetPhysicsObjects(int index) { return m_PhysicsObjects[index]; }
 
 
 		void FindCollisions();
@@ -53,7 +53,7 @@ namespace MGE {
 		void FindCollisions_mutithread_Call();
 		void FindCollisions_BrutalForce();
 
-		void ElasticCollisions(Ref<MGE::CirclePhyicsObject> i, Ref<MGE::CirclePhyicsObject> j);
+		void ElasticCollisions(CirclePhyicsObject* i, CirclePhyicsObject* j);
 		inline int GetNumberOfObjects() { return m_NumberOfObjects; }
 		inline void AddNumberOfObjects() { m_NumberOfObjects++;  }
 		void CreateObjects(int& count);
@@ -64,11 +64,11 @@ namespace MGE {
 
 	private:
 		int m_NumberOfObjects;
-		std::vector<Ref<MGE::CirclePhyicsObject>> m_PhysicsObjects;
+		std::vector<CirclePhyicsObject*> m_PhysicsObjects;
 		std::vector<std::vector<Ref<Grid>>> m_Grid;
 
 		std::unordered_map<int, Ref<CoordinatesWithUID>> m_CoordinatesWithUID;
-		std::unordered_map<int, Ref<MGE::CirclePhyicsObject>> m_CirclePhyicsObjectContainer;
+		std::unordered_map<int, CirclePhyicsObject> m_CirclePhyicsObjectContainer;
 
 		std::unordered_set<int> m_CollisionUIDs;
 		

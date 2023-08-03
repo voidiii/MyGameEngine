@@ -10,11 +10,17 @@
     <Filter Include="src\MGE\Core">
       <UniqueIdentifier>{ED45CEB9-D9A8-5D5E-822E-96146E7029E1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\MGE\Debug">
+      <UniqueIdentifier>{AB5EA3F3-171F-1F2A-E059-68A74CD96306}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\MGE\Event">
       <UniqueIdentifier>{86D5BEF3-F295-3A2A-BBD0-83A727507F06}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\MGE\ImGui">
       <UniqueIdentifier>{5FC901F4-CB89-7D2A-94C4-C6A70044C206}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\MGE\Physics">
+      <UniqueIdentifier>{E7384F0E-53C4-BCD2-5CD5-3FC7C8DF18D3}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\MGE\Renderer">
       <UniqueIdentifier>{BB2711AF-A720-3001-D052-1586BCAA0F0D}</UniqueIdentifier>
@@ -78,11 +84,20 @@
     <ClInclude Include="src\MGE\Application.h">
       <Filter>src\MGE</Filter>
     </ClInclude>
+    <ClInclude Include="src\MGE\CameraController.h">
+      <Filter>src\MGE</Filter>
+    </ClInclude>
     <ClInclude Include="src\MGE\Core.h">
       <Filter>src\MGE</Filter>
     </ClInclude>
+    <ClInclude Include="src\MGE\Core\ProfilingTimer.h">
+      <Filter>src\MGE\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\MGE\Core\Timestep.h">
       <Filter>src\MGE\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Debug\Instrumentor.h">
+      <Filter>src\MGE\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\EntryPoint.h">
       <Filter>src\MGE</Filter>
@@ -120,6 +135,18 @@
     <ClInclude Include="src\MGE\MouseButtonCodes.h">
       <Filter>src\MGE</Filter>
     </ClInclude>
+    <ClInclude Include="src\MGE\Physics\CollisionDetectionScene.h">
+      <Filter>src\MGE\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Physics\ElasticCollisionsScene.h">
+      <Filter>src\MGE\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Physics\PhysicsObject.h">
+      <Filter>src\MGE\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Physics\PhysicsObject_Square.h">
+      <Filter>src\MGE\Physics</Filter>
+    </ClInclude>
     <ClInclude Include="src\MGE\Renderer\Buffer.h">
       <Filter>src\MGE\Renderer</Filter>
     </ClInclude>
@@ -133,6 +160,9 @@
       <Filter>src\MGE\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\Renderer\Renderer.h">
+      <Filter>src\MGE\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Renderer\Renderer2D.h">
       <Filter>src\MGE\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\Renderer\RendererAPI.h">
@@ -333,19 +363,12 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\MGE\CameraController.h" />
-    <ClInclude Include="src\MGE\Renderer\Renderer2D.h">
-      <Filter>src\MGE\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MGE\Core\ProfilingTimer.h" />
-    <ClInclude Include="src\MGE\Debug\Instrumentor.h" />
-    <ClInclude Include="src\MGE\Physics\PhysicsObject.h" />
-    <ClInclude Include="src\MGE\Physics\ElasticCollisionsScene.h" />
-    <ClInclude Include="src\MGE\Physics\PhysicsObject_Square.h" />
-    <ClInclude Include="src\MGE\Physics\CollisionDetectionScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">
+      <Filter>src\MGE</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MGE\CameraController.cpp">
       <Filter>src\MGE</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\ImGui\ImGuiBuild.cpp">
@@ -363,6 +386,18 @@
     <ClCompile Include="src\MGE\Log.cpp">
       <Filter>src\MGE</Filter>
     </ClCompile>
+    <ClCompile Include="src\MGE\Physics\CollisionDetectionScene.cpp">
+      <Filter>src\MGE\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MGE\Physics\ElasticCollisionsScene.cpp">
+      <Filter>src\MGE\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp">
+      <Filter>src\MGE\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MGE\Physics\PhysicsObject_Square.cpp">
+      <Filter>src\MGE\Physics</Filter>
+    </ClCompile>
     <ClCompile Include="src\MGE\Renderer\Buffer.cpp">
       <Filter>src\MGE\Renderer</Filter>
     </ClCompile>
@@ -373,6 +408,9 @@
       <Filter>src\MGE\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\Renderer\Renderer.cpp">
+      <Filter>src\MGE\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MGE\Renderer\Renderer2D.cpp">
       <Filter>src\MGE\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\Renderer\RendererAPI.cpp">
@@ -420,13 +458,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\MGE\CameraController.cpp" />
-    <ClCompile Include="src\MGE\Renderer\Renderer2D.cpp">
-      <Filter>src\MGE\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MGE\Physics\ElasticCollisionsScene.cpp" />
-    <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp" />
-    <ClCompile Include="src\MGE\Physics\PhysicsObject_Square.cpp" />
-    <ClCompile Include="src\MGE\Physics\CollisionDetectionScene.cpp" />
   </ItemGroup>
 </Project>

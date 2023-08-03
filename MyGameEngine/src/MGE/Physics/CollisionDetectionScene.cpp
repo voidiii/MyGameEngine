@@ -3,9 +3,9 @@
 
 namespace MGE {
 
-	Vec2 support(const std::vector<Vec2> Convexhull, const Vec2 direction)
+	Vec2_Physics support(const std::vector<Vec2_Physics> Convexhull, const Vec2_Physics direction)
 	{
-		Vec2 result = Convexhull[0];
+		Vec2_Physics result = Convexhull[0];
 		float max = mathter::Dot(Convexhull[0], direction);
 		for (auto i : Convexhull)
 		{
@@ -15,12 +15,12 @@ namespace MGE {
 		return result;
 	}
 
-	bool lineCase(std::vector<Vec2>& simplex, Vec2& direction)
+	bool lineCase(std::vector<Vec2_Physics>& simplex, Vec2_Physics& direction)
 	{
-		Vec2 A = simplex[0];
-		Vec2 B = simplex[1];
-		Vec2 AB = B - A;
-		Vec2 AO = -A;
+		Vec2_Physics A = simplex[0];
+		Vec2_Physics B = simplex[1];
+		Vec2_Physics AB = B - A;
+		Vec2_Physics AO = -A;
 
 		Vec3 temp = mathter::Cross(mathter::Cross(Vec3(AB.x, AB.y, 0.0f), Vec3(AO.x, AO.y, 0.0f)), Vec3(AB.x, AB.y, 0.0f));
 
@@ -30,13 +30,13 @@ namespace MGE {
 		return false;
 	}
 
-	bool triangleCase(std::vector<Vec2>& simplex, Vec2& direction)
+	bool triangleCase(std::vector<Vec2_Physics>& simplex, Vec2_Physics& direction)
 	{
-		Vec2 C = simplex[0];
-		Vec2 B = simplex[1];
-		Vec2 A = simplex[2]; // make sure simlex[2] is always the newly added point and A is set to that point
+		Vec2_Physics C = simplex[0];
+		Vec2_Physics B = simplex[1];
+		Vec2_Physics A = simplex[2]; // make sure simlex[2] is always the newly added point and A is set to that point
 
-		Vec2 AB, AC, AO;
+		Vec2_Physics AB, AC, AO;
 		AB = B - A;
 		AC = C - A;
 		AO = -A;
@@ -44,8 +44,8 @@ namespace MGE {
 		Vec3 ABperp_temp = mathter::Cross(mathter::Cross(Vec3(AC.x, AC.y, 0.0f), Vec3(AB.x, AB.y, 0.0f)), Vec3(AB.x, AB.y, 0.0f));
 		Vec3 ACperp_temp = mathter::Cross(mathter::Cross(Vec3(AB.x, AB.y, 0.0f), Vec3(AC.x, AC.y, 0.0f)), Vec3(AC.x, AC.y, 0.0f));
 
-		Vec2 ABperp = Vec2(ABperp_temp.x, ABperp_temp.y);
-		Vec2 ACperp = Vec2(ACperp_temp.x, ACperp_temp.y);
+		Vec2_Physics ABperp = Vec2_Physics(ABperp_temp.x, ABperp_temp.y);
+		Vec2_Physics ACperp = Vec2_Physics(ACperp_temp.x, ACperp_temp.y);
 
 		if (mathter::Dot(ABperp, AO) > 0.0f)
 		{
@@ -67,7 +67,7 @@ namespace MGE {
 		return true;
 	}
 
-	bool handleSimplex(std::vector<Vec2>& simplex, Vec2& direction)
+	bool handleSimplex(std::vector<Vec2_Physics>& simplex, Vec2_Physics& direction)
 	{
 		if (simplex.size() == 2) return lineCase(simplex, direction);
 
@@ -113,28 +113,31 @@ namespace MGE {
 
 	bool CollisionDetectionScene::FindCollisions(Ref<MGE::PhysicsObject_Square> Object_A, Ref<MGE::PhysicsObject_Square> Object_B)
 	{
-		std::vector<Vec2> Minkowski_sub;
-		std::vector<Vec2> Result_Convexhull;
+		std::vector<Vec2_Physics> Minkowski_sub;
+		std::vector<Vec2_Physics> Result_Convexhull;
 		Minkowski_sub.reserve(Object_A->GetNumOfVertices() * Object_B->GetNumOfVertices());
 
 		for (int i = 0; i < Object_A->GetNumOfVertices(); i++)
 		{
 			for (int j = 0; j < Object_B->GetNumOfVertices(); j++)
 			{
-				Minkowski_sub.push_back(Object_A->GetVertices(i) + Object_A->GetPosition() - Object_B->GetVertices(j) - Object_B->GetPosition());
+				Minkowski_sub.push_back(Vec2_Physics{
+					Object_A->GetVertices(i).x + Object_A->GetPosition().x - Object_B->GetVertices(j).x - Object_B->GetPosition().x, 
+					Object_A->GetVertices(i).y + Object_A->GetPosition().y - Object_B->GetVertices(j).y - Object_B->GetPosition().y
+				});
 			}
 		}
 
 		Result_Convexhull = convex_hull(Minkowski_sub);
 
-		Vec2 direction = mathter::Normalize(Object_A->GetPosition() - Object_B->GetPosition());
-		std::vector<Vec2> simplex;
+		Vec2_Physics direction = mathter::Normalize(Object_A->GetPosition() - Object_B->GetPosition());
+		std::vector<Vec2_Physics> simplex;
 		simplex.push_back(support(Result_Convexhull, direction));
 		direction = -simplex[0];
 
 		while (true)
 		{
-			Vec2 A = support(Result_Convexhull, direction);
+			Vec2_Physics A = support(Result_Convexhull, direction);
 			if (mathter::Dot(A, direction) < 0)
 			{
 				return false;
@@ -153,24 +156,17 @@ namespace MGE {
 		Vec2 hit_direction = mathter::Normalize(hit_distance);
 
 		float temp = mathter::Dot(Vec2(i->GetVelocity() - j->GetVelocity()), hit_distance);
-
-		float mass_i = i->GetMass();
-		float mass_j = j->GetMass();
-
-		Vec2 v_i = i->GetVelocity();
-		Vec2 v_j = j->GetVelocity();
-
-		Vec2 delta_v = v_i - v_j;
-		Vec2 delta_x = hit_distance;
+		
+		// float mass_i = i->GetMass();
+		// float mass_j = j->GetMass();
+		
 		float delta_x_square = mathter::Length(hit_distance) * mathter::Length(hit_distance);
-
-		Vec2 new_v_temp = ((2.0f * mass_j) / (mass_i + mass_j)) * (temp) / (delta_x_square) * (hit_distance);
-
-		Vec2 new_v_i = v_i - new_v_temp;
-		Vec2 new_v_j = v_j + new_v_temp;
-
-		i->ChangeVelocity(new_v_i);
-		j->ChangeVelocity(new_v_j);
+		
+		// Vec2 new_v_temp = ((2.0f * mass_j) / (mass_i + mass_j)) * (temp) / (delta_x_square) * (hit_distance); // ignore mass for now
+		Vec2 new_v_temp = (temp) / (delta_x_square) * (hit_distance);
+		
+		i->UpdateVelocity(-new_v_temp);
+		j->UpdateVelocity(new_v_temp);
 
 		i->UpdatePosition((0.2f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
 		j->UpdatePosition(-(0.2f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
