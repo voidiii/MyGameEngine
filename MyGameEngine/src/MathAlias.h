@@ -9,7 +9,7 @@
 namespace MGE
 {
     using Vec2 = mathter::Vector<float, 2, true>;
-    using Vec2_Physics = mathter::Vector<float, 2, false > ;
+    using Vec2_Physics = mathter::Vector<float, 2, true > ;
     using Vec3 = mathter::Vector<float, 3, true>;
     using Vec4 = mathter::Vector<float, 4, true>;
     using Mat22 = mathter::Matrix<float, 2, 2, mathter::eMatrixOrder::PRECEDE_VECTOR, mathter::eMatrixLayout::COLUMN_MAJOR, false>;

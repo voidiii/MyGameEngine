@@ -6,6 +6,7 @@
 #include <utility>
 #include "nmmintrin.h" //SSE4.2, 128 bit operations (4 floats)
 #include "immintrin.h" //AVX2, 256 bit operations (8 floats)
+#include "MGE/Core/ThreadPool.h"
 
 namespace MGE {
 
@@ -41,7 +42,9 @@ namespace MGE {
 	{
 	public:
 		PhysicsScene(float height, float width, int numberOfObjects);
-		~PhysicsScene() {}
+		~PhysicsScene() {
+			m_ThreadPool.Stop();
+		}
 
 		void OnUpdate(Timestep ts);
 		
@@ -52,8 +55,11 @@ namespace MGE {
 		void FindCollisions_mutithread(int start_X, int start_Y);
 		void FindCollisions_mutithread_Call();
 		void FindCollisions_BrutalForce();
+		void FindCollisions_GridHandling(int i, int j);
 
 		void ElasticCollisions(CirclePhyicsObject* i, CirclePhyicsObject* j);
+		void ElasticCollisions_Verlet(CirclePhyicsObject* i, CirclePhyicsObject* j);
+
 		inline int GetNumberOfObjects() { return m_NumberOfObjects; }
 		inline void AddNumberOfObjects() { m_NumberOfObjects++;  }
 		void CreateObjects(int& count);
@@ -75,6 +81,8 @@ namespace MGE {
 		float m_SceneWidth, m_SceneHeight;
 
 		std::vector<ProfileResult> m_ProfileResults;
+
+		ThreadPool m_ThreadPool;
 	};
 
 }

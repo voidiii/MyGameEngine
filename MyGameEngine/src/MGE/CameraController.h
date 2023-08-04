@@ -27,7 +27,7 @@ namespace MGE {
 		bool OnWindowResized(WindowResizeEvent& e);
 	private:
 		float m_AspectRatio;
-		float m_ZoomLevel = 5.0f;
+		float m_ZoomLevel = 50.0f;
 		Camera m_Camera;
 
 		bool m_Rotation;

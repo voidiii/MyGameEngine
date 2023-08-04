@@ -60,22 +60,32 @@ namespace MGE {
 		virtual void UpdateVelocity(Vec2_Physics deltaVelocity) override;
 		virtual void ChangeVelocity(Vec2_Physics newVelocity) override;
 		virtual void UpdatePosition(Vec2_Physics DeltaPosition) override;
+
+		void SetCurrentPosition(Vec2_Physics Position) { m_Position = Position; }
+
+		void OnUpdate_Verlet(Timestep ts);
+		void ApplyMotionLimit_Verlet();
 		
 		void SetMotionLimit(float xLimit, float yLimit);
 		void ApplyMotionLimit();
 		void AddSkipFrame() { m_SkipFrame++; }
+		void AddSkipFrameUppperLimit() { m_SkipFrameUpperLimit++; }
 		int GetSkipFrame() const { return m_SkipFrame; }
+		int GetSkipFrameUppperLimit() const { return m_SkipFrameUpperLimit; }
 		void ResetSkipFrame() { m_SkipFrame = 0; }
+		void ResetSkipFrameUppperLimit() { m_SkipFrameUpperLimit = 4; }
 
 	private:
 		Vec2_Physics m_Position;
+		Vec2_Physics m_LastPosition;
 		Vec2_Physics m_Velocity = { 0.0f, 0.0f };
 		float m_radius = 0.5f;
 		// float m_mass = 1.0f;
-		float m_Gravity = 9.8f;
+		// float m_Gravity = 40.0f;
 		float m_XLimit, m_YLimit;
 		int m_uID;
 		int m_SkipFrame = 0;
+		int m_SkipFrameUpperLimit = 4;
 	};
 
 	std::vector<Vec2_Physics> convex_hull(std::vector<Vec2_Physics> A);

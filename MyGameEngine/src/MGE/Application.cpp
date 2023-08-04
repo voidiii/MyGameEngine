@@ -59,7 +59,7 @@ namespace MGE {
 
 		while (m_Running) {
 			float time = (float)glfwGetTime();
-			Timestep timestep = time - m_LastFrameTime; //1.0f / 30.0f;
+			Timestep timestep = time - m_LastFrameTime; // 1.0f / 60.0f;
 			timestep.SetFrameRate(time - m_LastFrameTime);
 			m_LastFrameTime = time;
 

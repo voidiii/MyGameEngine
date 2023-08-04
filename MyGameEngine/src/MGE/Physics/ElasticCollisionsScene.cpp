@@ -2,6 +2,8 @@
 #include "ElasticCollisionsScene.h"
 #include <thread>
 
+std::mutex mtx;
+
 namespace MGE {
 	
 	PhysicsScene::PhysicsScene(float height, float width, int numberOfObjects)
@@ -9,19 +11,21 @@ namespace MGE {
 	{
 		m_Grid.reserve((int)m_SceneHeight * 2 + 3);
 		GridManage();
+
+		m_ThreadPool.Start();
 	}
 
 	void PhysicsScene::CreateObjects(int& count)
 	{
 		m_CirclePhyicsObjectContainer.insert(std::make_pair(count, CirclePhyicsObject(
-			Vec2_Physics{ 0.0f, 9.0f },
+			Vec2_Physics{ 0.0f, 45.0f - 2 * (float)(count % 4)},
 			count,
 			Vec2_Physics{ 15.0f, 0.0f }
 		)));
 
 		// TODO: aabb collision detection
 		m_CirclePhyicsObjectContainer[count].SetMotionLimit(m_SceneWidth, m_SceneHeight);
-		m_PhysicsObjects.push_back(&m_CirclePhyicsObjectContainer[count]);
+		//m_PhysicsObjects.push_back(&m_CirclePhyicsObjectContainer[count]);
 	}
 
 	void PhysicsScene::OnUpdate(Timestep ts)
@@ -31,38 +35,37 @@ namespace MGE {
 		static int count = 0;
 		static int frame = 0;
 
-		if (frame == 5)
+		if (frame == 4)
 		{
 			frame = 0;
-			CreateObjects(count);
-			AddNumberOfObjects();
-			count++;
+			for (int i = 0; i < 4; i++)
+			{
+				CreateObjects(count);
+				AddNumberOfObjects();
+				count++;
+			}
 		}
 		frame++;
-		SetUpGrid();
 		
 		{
 			PROFILE_SCOPE("Collision handle");
 			for (int i = 0; i < 8; i++)
-			{
-				for (auto& [i, j] : m_CirclePhyicsObjectContainer)
+			{	
+				for (auto i : m_Grid)
 				{
-					j.OnUpdate(ts / 8.0f);
+					for (auto j : i)
+					{
+						j->object_id.clear();
+					}
 				}
-				
-				if (m_NumberOfObjects < 600)
-				{
-					FindCollisions(); //single thread version
-				}
-				else 
-				{
-					FindCollisions_mutithread_Call();
-				}
-				
+
+				SetUpGrid();
+				// FindCollisions(); //single thread version
+				FindCollisions_mutithread_Call();
 				// FindCollisions_BrutalForce();
-				for (auto& [i, j] : m_CirclePhyicsObjectContainer)
+				for (auto& [k, j] : m_CirclePhyicsObjectContainer)
 				{
-					j.ApplyMotionLimit();
+					j.OnUpdate_Verlet(ts/8.0f );
 				}
 			}
 		}
@@ -73,18 +76,11 @@ namespace MGE {
 				j.DrawPhysicsObject();
 			}
 		}
-		
-		for (auto i : m_Grid) 
-		{
-			for (auto j : i) 
-			{
-				j->object_id.clear();
-			}
-		}
 	}
 
 	void PhysicsScene::ElasticCollisions(CirclePhyicsObject* i, CirclePhyicsObject* j)
 	{	
+		mtx.lock(); // lock the mutex
 		Vec2_Physics hit_distance = Vec2_Physics(i->GetPosition() - j->GetPosition());
 		Vec2_Physics hit_direction = mathter::Normalize(hit_distance);
 
@@ -105,49 +101,18 @@ namespace MGE {
 		j->UpdatePosition(-(i->GetRadius() * 2.0f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
 	}
 
-	void PhysicsScene::FindCollisions_mutithread(int start_X, int start_Y)
-	{
-		for (int i = start_Y; i <= (int)(start_Y + m_SceneHeight); i++)
-		{
-			for (int j = start_X; j <= (int)(start_X + m_SceneWidth / 2.0f); j++)
-			{
-				/* loop through the 2-D grid vector */
-				if (m_Grid[i][j]->object_id.size() == 0)
-					continue; 
+	void PhysicsScene::ElasticCollisions_Verlet(CirclePhyicsObject* i, CirclePhyicsObject* j)
+	{	
+		//mtx.lock(); // lock the mutex
+		Vec2_Physics hit_distance = Vec2_Physics(i->GetPosition() - j->GetPosition());
 
-				for (auto uid : m_Grid[i][j]->object_id)
-				{
-					for(int a = -1; a <= 1; a ++)
-					{
-						for(int b = -1; b <= 1; b++)
-						{
-							if (m_Grid[i + a][j + b]->object_id.size() == 0)
-							{
-								continue;
-							}
+		if (mathter::Length(hit_distance) < 0.0001f) return;
 
-							if (mathter::Length(m_CirclePhyicsObjectContainer[uid].GetVelocity()) < 0.1f && m_CirclePhyicsObjectContainer[uid].GetSkipFrame() < 4)
-							{
-								m_CirclePhyicsObjectContainer[uid].AddSkipFrame();
-								continue;
-							}
+		Vec2_Physics hit_direction = mathter::Normalize(hit_distance);
 
-							for (auto uid_1 : m_Grid[i + a][j + b]->object_id)
-							{
-								if(uid_1 == uid)
-									continue;
-
-								Vec2_Physics hit_distance = Vec2_Physics(m_CirclePhyicsObjectContainer[uid].GetPosition() - m_CirclePhyicsObjectContainer[uid_1].GetPosition());
-								if (mathter::Length(hit_distance) < m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f)
-								{
-									ElasticCollisions(&m_CirclePhyicsObjectContainer[uid], &m_CirclePhyicsObjectContainer[uid_1]);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		i->SetCurrentPosition(i->GetPosition() + (i->GetRadius() * 2.0f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
+		j->SetCurrentPosition(j->GetPosition() - (j->GetRadius() * 2.0f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
+		//mtx.unlock();
 	}
 
 	void PhysicsScene::FindCollisions()
@@ -175,17 +140,17 @@ namespace MGE {
 								if(uid_1 == uid)
 									continue;
 								
-								if (mathter::Length(m_CirclePhyicsObjectContainer[uid].GetVelocity()) < 0.1f && m_CirclePhyicsObjectContainer[uid].GetSkipFrame() < 4)
-								{
-									m_CirclePhyicsObjectContainer[uid].AddSkipFrame();
-									continue;
-								}
+								// if (mathter::Length(m_CirclePhyicsObjectContainer[uid].GetVelocity()) < 0.1f && m_CirclePhyicsObjectContainer[uid].GetSkipFrame() < 4)
+								// {
+								// 	m_CirclePhyicsObjectContainer[uid].AddSkipFrame();
+								// 	continue;
+								// }
 
 								Vec2_Physics hit_distance = Vec2_Physics(m_CirclePhyicsObjectContainer[uid].GetPosition() - m_CirclePhyicsObjectContainer[uid_1].GetPosition());
 								if (mathter::Length(hit_distance) < m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f)
 								{
-									m_CirclePhyicsObjectContainer[uid].ResetSkipFrame();
-									ElasticCollisions(&m_CirclePhyicsObjectContainer[uid], &m_CirclePhyicsObjectContainer[uid_1]);
+									//m_CirclePhyicsObjectContainer[uid].ResetSkipFrame();
+									ElasticCollisions_Verlet(&m_CirclePhyicsObjectContainer[uid], &m_CirclePhyicsObjectContainer[uid_1]);
 								}
 							}
 						}
@@ -195,6 +160,36 @@ namespace MGE {
 		}
 	}
 
+	void PhysicsScene::FindCollisions_GridHandling(int i, int j)
+	{
+		for (auto uid : m_Grid[i][j]->object_id)
+		{
+			for (int a = -1; a <= 1; a++)
+			{
+				for (int b = -1; b <= 1; b++)
+				{
+					if (m_Grid[i + a][j + b]->object_id.size() == 0)
+					{
+						continue;
+					}
+
+					for (auto uid_1 : m_Grid[i + a][j + b]->object_id)
+					{
+						if (uid_1 == uid)
+							continue;
+
+						Vec2_Physics hit_distance = Vec2_Physics(m_CirclePhyicsObjectContainer[uid].GetPosition() - m_CirclePhyicsObjectContainer[uid_1].GetPosition());
+						if (mathter::Length(hit_distance) < m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f)
+						{
+							ElasticCollisions_Verlet(&m_CirclePhyicsObjectContainer[uid], &m_CirclePhyicsObjectContainer[uid_1]);
+						}
+					}
+				}
+			}
+		}
+		
+	}
+	
 	void PhysicsScene::GridManage()
 	{
 		for (int i = -(int)m_SceneHeight - 1; i <= (int)m_SceneHeight + 1; i++)
@@ -224,46 +219,49 @@ namespace MGE {
 			int x = (int)(object.GetPosition().x + m_SceneWidth + 1);
 			int y = (int)(object.GetPosition().y + m_SceneHeight + 1);
 
-			y = (y > 5) ? 5 : y;
+			// y = (y > 5) ? 5 : y;
 
-			m_Grid[y][x]->object_id.push_back(i);
+			m_Grid[y][x]->object_id.emplace_back(i);
 		}
 	}
 
 	void PhysicsScene::FindCollisions_mutithread_Call()
 	{	
-		std::vector<std::thread> threads;
-		int numThreads = 8;
-
-		threads.push_back(std::thread(&PhysicsScene::FindCollisions_mutithread, this,
-			(int)( m_SceneWidth + 1),
-			(int)(m_SceneHeight / 2.0f + 1.0f)));
-
-		for (int i = 0; i < 4; ++i) { 
-			threads.push_back(std::thread(&PhysicsScene::FindCollisions_mutithread, this,
-				(int)(i * m_SceneWidth / (numThreads / 4) + 1),
-				1 
-			));
+		for(int i = 1; i < m_Grid.size() - 1; i ++)
+		{ 	
+			m_ThreadPool.QueueJob([this, i]() {
+				for (int j = 1; j < m_Grid[i].size() - 1; j++)
+				{
+					FindCollisions_GridHandling(i, j);
+				}
+			});
 		}
-		for (auto& thread : threads) {
-			PROFILE_SCOPE("thread join");
-			thread.join();
+
+		while (m_ThreadPool.busy()) 
+		{
+			continue;
 		}
 	}
 
 	void PhysicsScene::FindCollisions_BrutalForce()
 	{
-		// for (int i = 0; i < m_NumberOfObjects - 1; i++)
-		// {
-		// 	for (int j = i + 1; j < m_NumberOfObjects; j++)
-		// 	{
-		// 		Vec2 hit_distance = Vec2(m_PhysicsObjects[i].GetPosition() - m_PhysicsObjects[j].GetPosition());
-		// 		if (mathter::Length(hit_distance) < 0.2f)
-		// 		{
-		// 			ElasticCollisions(&m_PhysicsObjects[i], &m_PhysicsObjects[j]);
-		// 		}
-		// 	}
-		// }
+		for (auto& [key_i, object_i] : m_CirclePhyicsObjectContainer)
+		{
+			for (auto& [key_j, object_j] : m_CirclePhyicsObjectContainer)
+			{
+				if (key_i == key_j) continue;
+
+				float X = object_i.GetPosition().x - object_j.GetPosition().x;
+				float Y = object_i.GetPosition().y - object_j.GetPosition().y;
+
+
+				float hit_distance = X*X + Y*Y;
+				if (hit_distance < 1.0f)
+				{
+					ElasticCollisions_Verlet(&object_i, &object_j);
+				}
+			}
+		}
 	}
 
 }
