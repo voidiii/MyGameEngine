@@ -227,10 +227,10 @@ namespace MGE {
 
 	void PhysicsScene::FindCollisions_mutithread_Call()
 	{	
-		for(int i = 1; i < m_Grid.size() - 1; i ++)
+		for(int j = 1; j < m_Grid[0].size() - 1; j++)
 		{ 	
-			m_ThreadPool.QueueJob([this, i]() {
-				for (int j = 1; j < m_Grid[i].size() - 1; j++)
+			m_ThreadPool.QueueJob([this, j]() {
+				for (int i = 1; i < m_Grid.size() - 1; i ++)
 				{
 					FindCollisions_GridHandling(i, j);
 				}
