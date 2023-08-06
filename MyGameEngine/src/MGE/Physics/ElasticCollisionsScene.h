@@ -73,12 +73,13 @@ namespace MGE {
 		std::vector<CirclePhyicsObject*> m_PhysicsObjects;
 		std::vector<std::vector<Ref<Grid>>> m_Grid;
 
-		std::unordered_map<int, Ref<CoordinatesWithUID>> m_CoordinatesWithUID;
+		// std::unordered_map<int, Scope<CoordinatesWithUID>> m_CoordinatesWithUID;
 		std::unordered_map<int, CirclePhyicsObject> m_CirclePhyicsObjectContainer;
 
 		std::unordered_set<int> m_CollisionUIDs;
 		
 		float m_SceneWidth, m_SceneHeight;
+		int m_int_width, m_int_height;
 
 		std::vector<ProfileResult> m_ProfileResults;
 

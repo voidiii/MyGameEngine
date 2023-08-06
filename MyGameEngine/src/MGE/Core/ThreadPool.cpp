@@ -43,7 +43,7 @@ bool MGE::ThreadPool::busy()
 
 void MGE::ThreadPool::ThreadLoop()
 {
-    while (true) {
+    while (!m_pause) {
         std::function<void()> job;
         {
             std::unique_lock<std::mutex> lock(queue_mutex);
@@ -59,3 +59,12 @@ void MGE::ThreadPool::ThreadLoop()
         job();
     }
 }
+void MGE::ThreadPool::pause()
+{
+    m_pause = true;
+}
+void MGE::ThreadPool::resume()
+{
+    m_pause = false;
+}
+

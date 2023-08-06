@@ -42,3 +42,6 @@ Done with GJK for collision detection, now in theroy any convex will be able to 
 
 8/2/2023
 Added the rotation for square and realized the performance of the circle collision detection has a huge flaw so decided to add sub-steps to smooth things a bit. But it couldnt hold much more balls in the scene. On youtube there is this one guy who can do the collision scene for 3000 balls with 10 sub-steps. Damn. 
+
+8/6/2023
+Feels like I have done everything I can with this scene and I just cant figure out a way to further improve this. 

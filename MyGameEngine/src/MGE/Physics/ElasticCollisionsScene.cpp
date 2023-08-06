@@ -9,7 +9,10 @@ namespace MGE {
 	PhysicsScene::PhysicsScene(float height, float width, int numberOfObjects)
 		: m_SceneHeight(height), m_SceneWidth(width), m_NumberOfObjects(0)
 	{
-		m_Grid.reserve((int)m_SceneHeight * 2 + 3);
+		m_int_width = f_toint32(m_SceneWidth);
+		m_int_height = f_toint32(m_SceneHeight);
+		
+		m_Grid.reserve(m_int_height * 2 + 3);
 		GridManage();
 
 		m_ThreadPool.Start();
@@ -18,9 +21,9 @@ namespace MGE {
 	void PhysicsScene::CreateObjects(int& count)
 	{
 		m_CirclePhyicsObjectContainer.insert(std::make_pair(count, CirclePhyicsObject(
-			Vec2_Physics{ 0.0f, 45.0f - 2 * (float)(count % 4)},
+			std::move(Vec2_Physics{ 0.0f, 45.0f - 2 * (float)(count % 4)}),
 			count,
-			Vec2_Physics{ 15.0f, 0.0f }
+			std::move(Vec2_Physics{ 15.0f, 0.0f })
 		)));
 
 		// TODO: aabb collision detection
@@ -46,14 +49,14 @@ namespace MGE {
 			}
 		}
 		frame++;
-		
+		m_ThreadPool.resume();
 		{
 			PROFILE_SCOPE("Collision handle");
 			for (int i = 0; i < 8; i++)
 			{	
-				for (auto i : m_Grid)
+				for (const auto& grid : m_Grid)
 				{
-					for (auto j : i)
+					for (const auto& j : grid)
 					{
 						j->object_id.clear();
 					}
@@ -69,6 +72,7 @@ namespace MGE {
 				}
 			}
 		}
+		m_ThreadPool.pause();
 		{
 			PROFILE_SCOPE("Drawing");
 			for (auto& [i, j] : m_CirclePhyicsObjectContainer)
@@ -80,7 +84,7 @@ namespace MGE {
 
 	void PhysicsScene::ElasticCollisions(CirclePhyicsObject* i, CirclePhyicsObject* j)
 	{	
-		mtx.lock(); // lock the mutex
+		// mtx.lock(); // lock the mutex
 		Vec2_Physics hit_distance = Vec2_Physics(i->GetPosition() - j->GetPosition());
 		Vec2_Physics hit_direction = mathter::Normalize(hit_distance);
 
@@ -118,15 +122,15 @@ namespace MGE {
 	void PhysicsScene::FindCollisions()
 	{
 		
-		for (int i = 1; i <= (int)(m_SceneHeight * 2); i++)
+		for (int i = 1; i <= (m_int_height * 2); i++)
 		{
-			for (int j = 1; j <= (int)(m_SceneWidth * 2); j++)
+			for (int j = 1; j <= (m_int_height * 2); j++)
 			{
 				/* loop through the 2-D grid vector */
 				if (m_Grid[i][j]->object_id.size() == 0)
 					continue; 
 
-				for (auto uid : m_Grid[i][j]->object_id)
+				for (const auto& uid : m_Grid[i][j]->object_id)
 				{
 					for(int a = -1; a <= 1; a ++)
 					{
@@ -135,7 +139,7 @@ namespace MGE {
 							if (m_Grid[i + a][j + b]->object_id.size() == 0)
 								continue;
 
-							for (auto uid_1 : m_Grid[i + a][j + b]->object_id)
+							for (const auto& uid_1 : m_Grid[i + a][j + b]->object_id)
 							{
 								if(uid_1 == uid)
 									continue;
@@ -162,7 +166,9 @@ namespace MGE {
 
 	void PhysicsScene::FindCollisions_GridHandling(int i, int j)
 	{
-		for (auto uid : m_Grid[i][j]->object_id)
+		// if (i >= m_Grid.size() - 1 || j >= m_Grid[0].size() - 1) return;
+		
+		for (const auto& uid : m_Grid[i][j]->object_id)
 		{
 			for (int a = -1; a <= 1; a++)
 			{
@@ -173,13 +179,19 @@ namespace MGE {
 						continue;
 					}
 
-					for (auto uid_1 : m_Grid[i + a][j + b]->object_id)
+					for (const auto& uid_1 : m_Grid[i + a][j + b]->object_id)
 					{
 						if (uid_1 == uid)
 							continue;
 
-						Vec2_Physics hit_distance = Vec2_Physics(m_CirclePhyicsObjectContainer[uid].GetPosition() - m_CirclePhyicsObjectContainer[uid_1].GetPosition());
-						if (mathter::Length(hit_distance) < m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f)
+						//Vec2_Physics hit_distance = Vec2_Physics(m_CirclePhyicsObjectContainer[uid].GetPosition() - m_CirclePhyicsObjectContainer[uid_1].GetPosition());
+
+						float X = m_CirclePhyicsObjectContainer[uid].GetPosition().x - m_CirclePhyicsObjectContainer[uid_1].GetPosition().x;
+						float Y = m_CirclePhyicsObjectContainer[uid].GetPosition().y - m_CirclePhyicsObjectContainer[uid_1].GetPosition().y;
+						
+						
+						float hit_distance = X * X + Y * Y;
+						if (hit_distance <  m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f)
 						{
 							ElasticCollisions_Verlet(&m_CirclePhyicsObjectContainer[uid], &m_CirclePhyicsObjectContainer[uid_1]);
 						}
@@ -192,11 +204,12 @@ namespace MGE {
 	
 	void PhysicsScene::GridManage()
 	{
-		for (int i = -(int)m_SceneHeight - 1; i <= (int)m_SceneHeight + 1; i++)
+		for (int i = -m_int_height - 1; i <= m_int_height + 1; i++)
 		{
+			
 			std::vector<Ref<Grid>> temp;
-			temp.reserve((int)m_SceneWidth * 2 + 3);
-			for (int j = -(int)m_SceneWidth - 1; j <= (int)m_SceneWidth + 1; j++)
+			temp.reserve(m_int_width * 2 + 3);
+			for (int j = -m_int_width - 1; j <= m_int_width + 1; j++)
 			{
 				temp.emplace_back(CreateRef<Grid>(
 					i, j
@@ -214,10 +227,10 @@ namespace MGE {
 	*/
 	void PhysicsScene::SetUpGrid() 
 	{
-		for(auto [i, object] : m_CirclePhyicsObjectContainer)
+		for(const auto& [i, object] : m_CirclePhyicsObjectContainer)
 		{
-			int x = (int)(object.GetPosition().x + m_SceneWidth + 1);
-			int y = (int)(object.GetPosition().y + m_SceneHeight + 1);
+			int x = f_toint32(object.GetPosition().x + m_SceneWidth + 1);
+			int y = f_toint32(object.GetPosition().y + m_SceneHeight + 1);
 
 			// y = (y > 5) ? 5 : y;
 
@@ -227,10 +240,10 @@ namespace MGE {
 
 	void PhysicsScene::FindCollisions_mutithread_Call()
 	{	
-		for(int j = 1; j < m_Grid[0].size() - 1; j++)
+		for(int j = 1; j < m_int_width * 2 + 2; j++)
 		{ 	
 			m_ThreadPool.QueueJob([this, j]() {
-				for (int i = 1; i < m_Grid.size() - 1; i ++)
+				for (int i = 1; i < m_int_height * 2 + 2; i ++)
 				{
 					FindCollisions_GridHandling(i, j);
 				}
@@ -241,6 +254,36 @@ namespace MGE {
 		{
 			continue;
 		}
+
+		//for (int j = 1; j < m_Grid[0].size() - 1; j++)
+		//{
+		//	m_ThreadPool.QueueJob([this, j]() {
+		//		for (int i = 2; i < m_Grid.size() - 1; i += 3)
+		//		{
+		//			FindCollisions_GridHandling(i, j);
+		//		}
+		//		});
+		//}
+		
+		//while (m_ThreadPool.busy())
+		//{
+		//	continue;
+		//}
+		
+		//for (int j = 1; j < m_Grid[0].size() - 1; j++)
+		//{
+		//	m_ThreadPool.QueueJob([this, j]() {
+		//		for (int i = 3; i < m_Grid.size() - 1; i += 3)
+		//		{
+		//			FindCollisions_GridHandling(i, j);
+		//		}
+		//		});
+		//}
+		//
+		//while (m_ThreadPool.busy())
+		//{
+		//	continue;
+		//}
 	}
 
 	void PhysicsScene::FindCollisions_BrutalForce()
