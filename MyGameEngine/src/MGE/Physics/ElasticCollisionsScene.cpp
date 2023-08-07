@@ -16,15 +16,16 @@ namespace MGE {
 		GridManage();
 
 		m_ThreadPool.Start();
+		m_CirclePhyicsObjectContainer.reserve(5000);
 	}
 
 	void PhysicsScene::CreateObjects(int& count)
 	{
-		m_CirclePhyicsObjectContainer.insert(std::make_pair(count, CirclePhyicsObject(
+		m_CirclePhyicsObjectContainer.emplace_back( CirclePhyicsObject(
 			std::move(Vec2_Physics{ 0.0f, 45.0f - 2 * (float)(count % 4)}),
 			count,
 			std::move(Vec2_Physics{ 15.0f, 0.0f })
-		)));
+		));
 
 		// TODO: aabb collision detection
 		m_CirclePhyicsObjectContainer[count].SetMotionLimit(m_SceneWidth, m_SceneHeight);
@@ -66,7 +67,7 @@ namespace MGE {
 				// FindCollisions(); //single thread version
 				FindCollisions_mutithread_Call();
 				// FindCollisions_BrutalForce();
-				for (auto& [k, j] : m_CirclePhyicsObjectContainer)
+				for (auto& j : m_CirclePhyicsObjectContainer)
 				{
 					j.OnUpdate_Verlet(ts/8.0f );
 				}
@@ -75,7 +76,7 @@ namespace MGE {
 		m_ThreadPool.pause();
 		{
 			PROFILE_SCOPE("Drawing");
-			for (auto& [i, j] : m_CirclePhyicsObjectContainer)
+			for (auto& j : m_CirclePhyicsObjectContainer)
 			{
 				j.DrawPhysicsObject();
 			}
@@ -206,7 +207,6 @@ namespace MGE {
 	{
 		for (int i = -m_int_height - 1; i <= m_int_height + 1; i++)
 		{
-			
 			std::vector<Ref<Grid>> temp;
 			temp.reserve(m_int_width * 2 + 3);
 			for (int j = -m_int_width - 1; j <= m_int_width + 1; j++)
@@ -227,14 +227,14 @@ namespace MGE {
 	*/
 	void PhysicsScene::SetUpGrid() 
 	{
-		for(const auto& [i, object] : m_CirclePhyicsObjectContainer)
+		for(const auto& object : m_CirclePhyicsObjectContainer)
 		{
 			int x = f_toint32(object.GetPosition().x + m_SceneWidth + 1);
 			int y = f_toint32(object.GetPosition().y + m_SceneHeight + 1);
 
 			// y = (y > 5) ? 5 : y;
 
-			m_Grid[y][x]->object_id.emplace_back(i);
+			m_Grid[y][x]->object_id.emplace_back(object.GetUID());
 		}
 	}
 
@@ -288,11 +288,11 @@ namespace MGE {
 
 	void PhysicsScene::FindCollisions_BrutalForce()
 	{
-		for (auto& [key_i, object_i] : m_CirclePhyicsObjectContainer)
+		for (auto& object_i : m_CirclePhyicsObjectContainer)
 		{
-			for (auto& [key_j, object_j] : m_CirclePhyicsObjectContainer)
+			for (auto& object_j : m_CirclePhyicsObjectContainer)
 			{
-				if (key_i == key_j) continue;
+				if (object_i.GetUID() == object_j.GetUID()) continue;
 
 				float X = object_i.GetPosition().x - object_j.GetPosition().x;
 				float Y = object_i.GetPosition().y - object_j.GetPosition().y;

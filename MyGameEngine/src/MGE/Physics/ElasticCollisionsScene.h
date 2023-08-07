@@ -74,7 +74,7 @@ namespace MGE {
 		std::vector<std::vector<Ref<Grid>>> m_Grid;
 
 		// std::unordered_map<int, Scope<CoordinatesWithUID>> m_CoordinatesWithUID;
-		std::unordered_map<int, CirclePhyicsObject> m_CirclePhyicsObjectContainer;
+		std::vector<CirclePhyicsObject> m_CirclePhyicsObjectContainer;
 
 		std::unordered_set<int> m_CollisionUIDs;
 		
