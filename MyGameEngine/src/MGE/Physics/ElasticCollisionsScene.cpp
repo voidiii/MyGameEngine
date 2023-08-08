@@ -16,7 +16,7 @@ namespace MGE {
 		GridManage();
 
 		m_ThreadPool.Start();
-		m_CirclePhyicsObjectContainer.reserve(5000);
+		m_CirclePhyicsObjectContainer.reserve(10000);
 	}
 
 	void PhysicsScene::CreateObjects(int& count)
@@ -185,14 +185,14 @@ namespace MGE {
 						if (uid_1 == uid)
 							continue;
 
-						//Vec2_Physics hit_distance = Vec2_Physics(m_CirclePhyicsObjectContainer[uid].GetPosition() - m_CirclePhyicsObjectContainer[uid_1].GetPosition());
+						Vec2_Physics hit_distance = Vec2_Physics(m_CirclePhyicsObjectContainer[uid].GetPosition() - m_CirclePhyicsObjectContainer[uid_1].GetPosition());
 
-						float X = m_CirclePhyicsObjectContainer[uid].GetPosition().x - m_CirclePhyicsObjectContainer[uid_1].GetPosition().x;
-						float Y = m_CirclePhyicsObjectContainer[uid].GetPosition().y - m_CirclePhyicsObjectContainer[uid_1].GetPosition().y;
-						
-						
-						float hit_distance = X * X + Y * Y;
-						if (hit_distance <  m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f)
+						//float X = m_CirclePhyicsObjectContainer[uid].GetPosition().x - m_CirclePhyicsObjectContainer[uid_1].GetPosition().x;
+						//float Y = m_CirclePhyicsObjectContainer[uid].GetPosition().y - m_CirclePhyicsObjectContainer[uid_1].GetPosition().y;
+						//
+						//
+						//float hit_distance = X * X + Y * Y;
+						if (mathter::Length(hit_distance) <  m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f)
 						{
 							ElasticCollisions_Verlet(&m_CirclePhyicsObjectContainer[uid], &m_CirclePhyicsObjectContainer[uid_1]);
 						}

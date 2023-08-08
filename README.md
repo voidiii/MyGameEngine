@@ -45,3 +45,15 @@ Added the rotation for square and realized the performance of the circle collisi
 
 8/6/2023
 Feels like I have done everything I can with this scene and I just cant figure out a way to further improve this. 
+
+8/8/2023
+Basic implementation of the balls collision scene
+Optimaztion methods:
+    1, Space division, use m_Grid in the scene to store info of postion of balls to reduce the number of collision check
+    2, Use Thread pool to assgin tasks to different thread, go through m_Grid colume by colume for task-balancing
+    3, Use std::vector for cache friendly
+    4, Substep for soomther perfermance 
+    5, Use Verlet intergation, faster performance than classic Newton
+
+Optimaztion Abstraction:
+![alt text](https://github.com/voidiii/MyGameEngine/blob/main/CodeStructNotebook/Grid.jpg?raw=true)
