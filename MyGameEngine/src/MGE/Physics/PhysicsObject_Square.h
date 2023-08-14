@@ -3,6 +3,35 @@
 
 namespace MGE {
 
+	// Box vertex and edge numbering:
+	//
+	//        ^ y
+	//        |
+	//        e1
+	//   v2 ------ v1
+	//    |        |
+	// e2 |        | e4  --> x
+	//    |        |
+	//   v3 ------ v4
+	//        e3
+
+	enum Axis
+	{
+		FACE_A_X,
+		FACE_A_Y,
+		FACE_B_X,
+		FACE_B_Y
+	};
+
+	enum EdgeNumbers
+	{
+		NO_EDGE = 0,
+		EDGE1,
+		EDGE2,
+		EDGE3,
+		EDGE4
+	};
+
 	class PhysicsObject_Square : public PhysicsObject
 	{
 	public:
@@ -31,6 +60,11 @@ namespace MGE {
 		inline int GetNumOfVertices() { return m_numOfVertices;  }
 		inline Vec2 GetVertices(int index) { return m_Vertices[index]; }
 
+		void AddForce(const Vec2& f)
+		{
+			m_Force += f;
+		}
+
 	private:
 		Vec2_Physics m_Position;
 		Vec4 m_Color;
@@ -42,8 +76,13 @@ namespace MGE {
 		bool on_Ground = false;
 		float m_Gravity = 9.8f;
 		float m_XLimit, m_YLimit;
+
+		Vec2_Physics m_Force;
+		float m_Torque;
+
 		float m_AngularVelocity = 0.0f;
 		float m_Angle = 3.1415926f / 4.0f;
+
 		int m_UID;
 		int m_numOfVertices = 4;
 	};

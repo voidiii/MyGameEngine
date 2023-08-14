@@ -1,5 +1,5 @@
 #include "MGEpch.h"
-#include "ElasticCollisionsScene.h"
+#include "BallScene.h"
 #include <thread>
 
 std::mutex mtx;

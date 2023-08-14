@@ -138,7 +138,7 @@
     <ClInclude Include="src\MGE\Physics\CollisionDetectionScene.h">
       <Filter>src\MGE\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\MGE\Physics\ElasticCollisionsScene.h">
+    <ClInclude Include="src\MGE\Physics\BallScene.h">
       <Filter>src\MGE\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\Physics\PhysicsObject.h">
@@ -364,6 +364,7 @@
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\Core\ThreadPool.h" />
+    <ClInclude Include="src\MGE\Physics\Collision.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">
@@ -390,7 +391,7 @@
     <ClCompile Include="src\MGE\Physics\CollisionDetectionScene.cpp">
       <Filter>src\MGE\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="src\MGE\Physics\ElasticCollisionsScene.cpp">
+    <ClCompile Include="src\MGE\Physics\BallScene.cpp">
       <Filter>src\MGE\Physics</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp">
@@ -460,5 +461,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\Core\ThreadPool.cpp" />
+    <ClCompile Include="src\MGE\Physics\Collision.cpp" />
   </ItemGroup>
 </Project>

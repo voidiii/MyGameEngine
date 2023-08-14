@@ -3,6 +3,9 @@
 
 namespace MGE {
 
+	typedef std::map<CollisionKey, Arbiter>::iterator ArbIter;
+	typedef std::pair<CollisionKey, Arbiter> ArbPair;
+
 	Vec2_Physics support(const std::vector<Vec2_Physics> Convexhull, const Vec2_Physics direction)
 	{
 		Vec2_Physics result = Convexhull[0];
@@ -88,28 +91,6 @@ namespace MGE {
 		}
 	}
 
-	void CollisionDetectionScene::OnUpdate(Timestep ts)
-	{
-		for (int i = 0; i < m_NumberOfObjects - 1; i++)
-		{
-			for (int j = i + 1; j < m_NumberOfObjects; j++)
-			{
-				if (FindCollisions(m_PhysicsObjects[i], m_PhysicsObjects[j]))
-				{
-					ResolveCollision(m_PhysicsObjects[i], m_PhysicsObjects[j]);
-				}
-			}
-		}
-		
-		for (int i = 0; i < m_NumberOfObjects; i++)
-		{
-			m_PhysicsObjects[i]->OnUpdate(ts);
-		}
-		for (int i = 0; i < m_NumberOfObjects; i++)
-		{
-			m_PhysicsObjects[i]->DrawPhysicsObject();
-		}
-	}
 
 	bool CollisionDetectionScene::FindCollisions(Ref<MGE::PhysicsObject_Square> Object_A, Ref<MGE::PhysicsObject_Square> Object_B)
 	{
@@ -173,4 +154,75 @@ namespace MGE {
 
 	}
 
+#if 1
+	void CollisionDetectionScene::OnUpdate(Timestep ts)
+	{
+		BroadPhase();
+
+		for (int i = 0; i < m_NumberOfObjects; i++)
+		{
+			m_PhysicsObjects[i]->OnUpdate(ts);
+		}
+		for (int i = 0; i < m_NumberOfObjects; i++)
+		{
+			m_PhysicsObjects[i]->DrawPhysicsObject();
+		}
+	}
+#endif
+
+	void CollisionDetectionScene::BroadPhase()
+	{
+		for (int i = 0; i < m_NumberOfObjects - 1; i++)
+		{
+			for (int j = i + 1; j < m_NumberOfObjects; j++)
+			{
+				Arbiter newArb(m_PhysicsObjects[i], m_PhysicsObjects[j]);
+				CollisionKey key(m_PhysicsObjects[i], m_PhysicsObjects[j]);
+				
+				// if two object has contacts 
+				if (newArb.numContacts > 0)
+				{
+					ArbIter iter = m_CollisionContainer.find(key);
+					if (iter == m_CollisionContainer.end())
+					{
+						m_CollisionContainer.insert(ArbPair(key, newArb));
+					}
+					else
+					{
+						iter->second.Update(newArb.CollisionPoints, newArb.numContacts);
+					}
+				}
+				else
+				{
+					m_CollisionContainer.erase(key);
+				}
+			}
+		}
+	}
+
+#if Old_Version
+	
+	void CollisionDetectionScene::OnUpdate(Timestep ts)
+	{
+		for (int i = 0; i < m_NumberOfObjects - 1; i++)
+		{
+			for (int j = i + 1; j < m_NumberOfObjects; j++)
+			{
+				if (FindCollisions(m_PhysicsObjects[i], m_PhysicsObjects[j]))
+				{
+					ResolveCollision(m_PhysicsObjects[i], m_PhysicsObjects[j]);
+				}
+			}
+		}
+		
+		for (int i = 0; i < m_NumberOfObjects; i++)
+		{
+			m_PhysicsObjects[i]->OnUpdate(ts);
+		}
+		for (int i = 0; i < m_NumberOfObjects; i++)
+		{
+			m_PhysicsObjects[i]->DrawPhysicsObject();
+		}
+	}
+#endif
 }

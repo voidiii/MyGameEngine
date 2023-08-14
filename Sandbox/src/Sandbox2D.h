@@ -3,7 +3,7 @@
 #include "MGE.h"
 #include "MathAlias.h"
 #include "MGE/Core/ProfilingTimer.h"
-#include "MGE/Physics/ElasticCollisionsScene.h"
+#include "MGE/Physics/BallScene.h"
 #include "MGE/Physics/CollisionDetectionScene.h"
 
 
