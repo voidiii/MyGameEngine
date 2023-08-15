@@ -60,13 +60,18 @@ namespace MGE {
 		inline int GetNumOfVertices() { return m_numOfVertices;  }
 		inline Vec2 GetVertices(int index) { return m_Vertices[index]; }
 
+		void ApplyMotionLimit_Verlet();
+
 		void AddForce(const Vec2& f)
 		{
 			m_Force += f;
 		}
 
+		void SetCurrentPosition(Vec2_Physics Position) { m_Position = Position; }
+
 	private:
 		Vec2_Physics m_Position;
+		Vec2_Physics m_LastPosition;
 		Vec4 m_Color;
 		Vec2_Physics m_MassCenter;
 		Vec2_Physics m_Velocity = { 0.0f, 0.0f };
@@ -81,7 +86,7 @@ namespace MGE {
 		float m_Torque;
 
 		float m_AngularVelocity = 0.0f;
-		float m_Angle = 3.1415926f / 4.0f;
+		float m_Angle = 0.0f;
 
 		int m_UID;
 		int m_numOfVertices = 4;

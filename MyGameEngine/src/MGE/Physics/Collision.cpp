@@ -5,7 +5,7 @@ namespace MGE {
 
 	int Collide(Collision* collision_points, Ref<PhysicsObject_Square> b1, Ref<PhysicsObject_Square> b2)
 	{
-		
+		return -1;
 	}
 
 	Arbiter::Arbiter(Ref<PhysicsObject_Square> b1, Ref<PhysicsObject_Square> b2)
@@ -24,6 +24,18 @@ namespace MGE {
 		numContacts = Collide(CollisionPoints, body1, body2);
 
 		// friction = sqrtf(body1->friction * body2->friction);
+	}
+
+	void Arbiter::Update(Collision* contacts, int numContacts)
+	{
+	}
+
+	void Arbiter::PreStep(float inv_dt)
+	{
+	}
+
+	void Arbiter::ApplyImpulse()
+	{
 	}
 
 }

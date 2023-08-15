@@ -57,3 +57,6 @@ Optimaztion methods:
 
 Optimaztion Abstraction:
 ![alt text](https://github.com/voidiii/MyGameEngine/blob/main/CodeStructNotebook/Grid.jpg?raw=true)
+
+8/15/2023
+Trying to implement EPA, doesnt look like it can be stable, need more work. 

@@ -4,7 +4,7 @@
 namespace MGE {
 
 	PhysicsObject_Square::PhysicsObject_Square(Vec2_Physics Position, Vec4 Color, int uID)
-		: m_Position(Position), m_Color(Color), m_UID(uID)
+		: m_Position(Position), m_Color(Color), m_UID(uID), m_LastPosition(Vec2_Physics{ Position.x , Position.y })
 	{
 		m_Vertices.reserve(4);
 
@@ -35,24 +35,10 @@ namespace MGE {
 
 	void PhysicsObject_Square::OnUpdate(Timestep ts)
 	{
-		on_Ground = m_Position.y < -m_YLimit;
-		m_Gravity = on_Ground ? 0.0f : 9.8f;
-
-		Vec2_Physics FractionDirection = mathter::Length(m_Velocity) > 0.0f ? -mathter::Normalize(m_Velocity) : Vec2_Physics{ 0.0f, 0.0f };
-
-		float FractionAccelaration = 2.0f; // fraction 
-
-		if (std::abs(m_Position.x) > m_XLimit) {
-			ChangeVelocity(Vec2_Physics{ -0.9f * m_Velocity.x, m_Velocity.y });
-		}
-
-		if (m_Position.y < -m_YLimit) {
-			ChangeVelocity(Vec2_Physics{ m_Velocity.x, 0.9f * (-m_Velocity.y) });
-			UpdatePosition(Vec2_Physics{ 0.0f , -m_YLimit - m_Position.y });
-		}
-
-		UpdateVelocity(m_Gravity * Vec2_Physics{ 0.0f, -1.0f } * ts + FractionDirection * FractionAccelaration * ts);
-		UpdatePosition(m_Velocity * ts);
+		Vec2_Physics velocity = m_Position - m_LastPosition;
+		m_LastPosition = m_Position;
+		m_Position += velocity + (40.0f * Vec2_Physics{ 0.0f, -1.0f } - velocity * 40.0f) * ts * ts;
+		ApplyMotionLimit_Verlet();
 	}
 
 	void PhysicsObject_Square::UpdateVelocity(Vec2_Physics deltaVelocity)
@@ -74,6 +60,25 @@ namespace MGE {
 	{
 		m_XLimit = xLimit;
 		m_YLimit = yLimit;
+	}
+
+	void PhysicsObject_Square::ApplyMotionLimit_Verlet()
+	{
+		if (m_Position.x > m_XLimit) {
+			m_Position.x = m_XLimit + (m_XLimit - m_Position.x);
+		}
+
+		if (m_Position.x < -m_XLimit) {
+			m_Position.x = -m_XLimit + (-m_XLimit - m_Position.x);
+		}
+
+		if (m_Position.y < -m_YLimit) {
+			m_Position.y = -m_YLimit + (-m_YLimit - m_Position.y);
+		}
+
+		if (m_Position.y > m_YLimit) {
+			m_Position.y = m_YLimit + (m_YLimit - m_Position.y);
+		}
 	}
 
 }

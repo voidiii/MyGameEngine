@@ -1,6 +1,8 @@
 #include "MGEpch.h"
 #include "CollisionDetectionScene.h"
 
+#define GJK 1
+
 namespace MGE {
 
 	typedef std::map<CollisionKey, Arbiter>::iterator ArbIter;
@@ -76,26 +78,30 @@ namespace MGE {
 
 		return triangleCase(simplex, direction);
 	}
+
+	void CollisionDetectionScene::CreateObjects(int& count)
+	{
+		m_PhysicsObjects.emplace_back(CreateRef<PhysicsObject_Square>(
+			Vec2{-2.0f, 4.0f},
+			Vec4{ 0.2f, 0.3f, 0.8f, 1.0f },
+			count
+		));
+
+		// TODO: aabb collision detection
+		m_PhysicsObjects[count]->SetMotionLimit(m_SceneWidth, m_SceneHeight);
+		//m_PhysicsObjects.push_back(&m_CirclePhyicsObjectContainer[count]);
+	}
 	
 	CollisionDetectionScene::CollisionDetectionScene(float height, float width, int numberOfObjects)
 		:	m_SceneHeight(height), m_SceneWidth(width), m_NumberOfObjects(numberOfObjects)
 	{
-		for (int i = 0; i < m_NumberOfObjects; i++)
-		{
-			m_PhysicsObjects.insert(std::make_pair(i, CreateRef<PhysicsObject_Square>(
-				Vec2{ (-2.0f * rand() / double(RAND_MAX) + 1.0f) * 2.0f, rand() / double(RAND_MAX) * 2.0f },
-				Vec4{ 0.2f, 0.3f, 0.8f, 1.0f },
-				i )
-			));
-			m_PhysicsObjects[i]->SetMotionLimit(m_SceneWidth, m_SceneHeight);
-		}
 	}
 
 
-	bool CollisionDetectionScene::FindCollisions(Ref<MGE::PhysicsObject_Square> Object_A, Ref<MGE::PhysicsObject_Square> Object_B)
+	bool CollisionDetectionScene::FindCollisions(Ref<MGE::PhysicsObject_Square> Object_A, Ref<MGE::PhysicsObject_Square> Object_B, std::vector<Vec2_Physics>& Result_Convexhull)
 	{
 		std::vector<Vec2_Physics> Minkowski_sub;
-		std::vector<Vec2_Physics> Result_Convexhull;
+		// std::vector<Vec2_Physics> Result_Convexhull;
 		Minkowski_sub.reserve(Object_A->GetNumOfVertices() * Object_B->GetNumOfVertices());
 
 		for (int i = 0; i < Object_A->GetNumOfVertices(); i++)
@@ -131,8 +137,41 @@ namespace MGE {
 		}
 	}
 
-	void CollisionDetectionScene::ResolveCollision(Ref<MGE::PhysicsObject_Square> i, Ref<MGE::PhysicsObject_Square> j)
+	void CollisionDetectionScene::ResolveCollision(Ref<MGE::PhysicsObject_Square> i, Ref<MGE::PhysicsObject_Square> j, std::vector<Vec2_Physics>& Result_Convexhull)
 	{
+#if GJK
+		Vec2_Physics origin = { 0.0f, 0.0f };
+		int min_index = 0;
+		float min_distace = 100.0f; 
+		Vec2_Physics collision_normal = { 1.0f, 1.0f };
+
+		for (int i = 0; i < Result_Convexhull.size(); i++)
+		{
+			Vec2_Physics r = Result_Convexhull[i];
+			Vec2_Physics line = Result_Convexhull[(i + 1) % Result_Convexhull.size()] - Result_Convexhull[i];
+			Vec2_Physics normal = mathter::Normalize(Vec2_Physics(-line.y, line.x));
+			
+			float distance = mathter::Dot(r, normal);
+			if (distance < 0.0f)
+			{
+				distance = -distance;
+				normal = -normal;
+			}
+
+			if (distance < min_distace)
+			{
+				min_distace = distance;
+				collision_normal = normal;
+			}
+		}
+
+		Vec2 hit_distance = min_distace * collision_normal;
+
+		i->SetCurrentPosition(i->GetPosition() + (hit_distance)/2.0f);
+		j->SetCurrentPosition(j->GetPosition() - (hit_distance)/2.0f);
+
+
+#else
 		Vec2 hit_distance = Vec2(i->GetPosition() - j->GetPosition());
 		Vec2 hit_direction = mathter::Normalize(hit_distance);
 
@@ -151,10 +190,51 @@ namespace MGE {
 
 		i->UpdatePosition((0.2f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
 		j->UpdatePosition(-(0.2f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
-
+#endif
 	}
 
-#if 1
+#if GJK
+	
+	void CollisionDetectionScene::OnUpdate(Timestep ts)
+	{
+		static int count = 0;
+		static int frame = 0;
+		if (m_PhysicsObjects.size() < m_NumberOfObjects && frame % 50 == 0)
+		{
+			CreateObjects(count);
+			frame = 0;
+			count++;
+		}
+		frame++;
+
+		for (int sub_step = 0; sub_step < 8; sub_step++)
+		{
+			for (int i = 0; i < m_PhysicsObjects.size() - 1; i++)
+			{
+				for (int j = i + 1; j < m_PhysicsObjects.size(); j++)
+				{
+					std::vector<Vec2_Physics> Result_Convexhull;
+					if (FindCollisions(m_PhysicsObjects[i], m_PhysicsObjects[j], Result_Convexhull))
+					{
+						ResolveCollision(m_PhysicsObjects[i], m_PhysicsObjects[j], Result_Convexhull);
+					}
+				}
+			}
+		
+			for (int i = 0; i < m_PhysicsObjects.size(); i++)
+			{
+				m_PhysicsObjects[i]->OnUpdate(ts / 64.0f);
+			}
+		}
+
+		for (int j = 0; j < m_PhysicsObjects.size(); j++)
+		{
+			m_PhysicsObjects[j]->DrawPhysicsObject();
+		}
+	}
+#endif
+
+#if SAT
 	void CollisionDetectionScene::OnUpdate(Timestep ts)
 	{
 		BroadPhase();
@@ -168,7 +248,6 @@ namespace MGE {
 			m_PhysicsObjects[i]->DrawPhysicsObject();
 		}
 	}
-#endif
 
 	void CollisionDetectionScene::BroadPhase()
 	{
@@ -199,30 +278,6 @@ namespace MGE {
 			}
 		}
 	}
-
-#if Old_Version
-	
-	void CollisionDetectionScene::OnUpdate(Timestep ts)
-	{
-		for (int i = 0; i < m_NumberOfObjects - 1; i++)
-		{
-			for (int j = i + 1; j < m_NumberOfObjects; j++)
-			{
-				if (FindCollisions(m_PhysicsObjects[i], m_PhysicsObjects[j]))
-				{
-					ResolveCollision(m_PhysicsObjects[i], m_PhysicsObjects[j]);
-				}
-			}
-		}
-		
-		for (int i = 0; i < m_NumberOfObjects; i++)
-		{
-			m_PhysicsObjects[i]->OnUpdate(ts);
-		}
-		for (int i = 0; i < m_NumberOfObjects; i++)
-		{
-			m_PhysicsObjects[i]->DrawPhysicsObject();
-		}
-	}
 #endif
+
 }

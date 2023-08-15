@@ -16,15 +16,17 @@ namespace MGE {
 		inline Ref<MGE::PhysicsObject_Square> GetPhysicsObjects(int index) { return m_PhysicsObjects[index]; }
 
 
-		bool FindCollisions(Ref<MGE::PhysicsObject_Square> Object_A, Ref<MGE::PhysicsObject_Square> Object_B);
-		void ResolveCollision(Ref<MGE::PhysicsObject_Square> i, Ref<MGE::PhysicsObject_Square> j);
+		bool FindCollisions(Ref<MGE::PhysicsObject_Square> Object_A, Ref<MGE::PhysicsObject_Square> Object_B, std::vector<Vec2_Physics>& Result_Convexhull);
+		void ResolveCollision(Ref<MGE::PhysicsObject_Square> i, Ref<MGE::PhysicsObject_Square> j, std::vector<Vec2_Physics>& Result_Convexhull);
 		inline int GetNumberOfObjects() { return m_NumberOfObjects; }
 
 		void BroadPhase();
 
+		void CreateObjects(int& count);
+
 	private:
 		int m_NumberOfObjects;
-		std::unordered_map<int, Ref<MGE::PhysicsObject_Square>> m_PhysicsObjects;
+		std::vector<Ref<MGE::PhysicsObject_Square>> m_PhysicsObjects;
 
 		float m_SceneWidth, m_SceneHeight;
 
