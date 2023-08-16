@@ -14,7 +14,12 @@ namespace MGE {
 		float max = mathter::Dot(Convexhull[0], direction);
 		for (auto i : Convexhull)
 		{
-			result = max < mathter::Dot(i, direction) ? i : result;
+			float temp = mathter::Dot(i, direction);
+			if (max < temp)
+			{
+				result = i;
+				max = temp;
+			}
 		}
 
 		return result;
@@ -83,7 +88,7 @@ namespace MGE {
 	{
 		m_PhysicsObjects.emplace_back(CreateRef<PhysicsObject_Square>(
 			Vec2{-2.0f, 4.0f},
-			Vec4{ 0.2f, 0.3f, 0.8f, 1.0f },
+			Vec4{ 0.2f + count, 0.3f, 0.8f, 1.0f },
 			count
 		));
 
@@ -164,11 +169,12 @@ namespace MGE {
 				collision_normal = normal;
 			}
 		}
+		printf("min_distance: %f\n", min_distace);
 
 		Vec2 hit_distance = min_distace * collision_normal;
 
-		i->SetCurrentPosition(i->GetPosition() + (hit_distance)/2.0f);
-		j->SetCurrentPosition(j->GetPosition() - (hit_distance)/2.0f);
+		i->SetCurrentPosition(i->GetPosition() - (hit_distance)/16.0f);
+		j->SetCurrentPosition(j->GetPosition() + (hit_distance)/16.0f);
 
 
 #else
@@ -207,7 +213,7 @@ namespace MGE {
 		}
 		frame++;
 
-		for (int sub_step = 0; sub_step < 8; sub_step++)
+		for (int sub_step = 0; sub_step < 1; sub_step++)
 		{
 			for (int i = 0; i < m_PhysicsObjects.size() - 1; i++)
 			{
@@ -223,7 +229,7 @@ namespace MGE {
 		
 			for (int i = 0; i < m_PhysicsObjects.size(); i++)
 			{
-				m_PhysicsObjects[i]->OnUpdate(ts / 64.0f);
+				m_PhysicsObjects[i]->OnUpdate(ts / 1.0f);
 			}
 		}
 

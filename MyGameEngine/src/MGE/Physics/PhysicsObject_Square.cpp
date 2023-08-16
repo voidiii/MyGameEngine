@@ -36,8 +36,14 @@ namespace MGE {
 	void PhysicsObject_Square::OnUpdate(Timestep ts)
 	{
 		Vec2_Physics velocity = m_Position - m_LastPosition;
+
+		if (velocity.x > 0.0f)
+		{
+			printf("UID:%d, velocity.x:%f \n", m_UID, velocity.x);
+		}
+
 		m_LastPosition = m_Position;
-		m_Position += velocity + (40.0f * Vec2_Physics{ 0.0f, -1.0f } - velocity * 40.0f) * ts * ts;
+		m_Position += velocity + (Vec2_Physics{ 0.0f, -1.0f } - velocity) * ts * ts;
 		ApplyMotionLimit_Verlet();
 	}
 

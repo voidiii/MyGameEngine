@@ -50,7 +50,10 @@ namespace MGE {
 		inline void SetGravity(float gravity) { m_Gravity = gravity; }
 		inline void SetColor(Vec4 color) { m_Color = color; }
 
+
 		virtual void OnUpdate(Timestep ts) override;
+
+
 		virtual void UpdateVelocity(Vec2_Physics deltaVelocity) override;
 		virtual void ChangeVelocity(Vec2_Physics newVelocity) override;
 		virtual void UpdatePosition(Vec2_Physics DeltaPosition) override;
