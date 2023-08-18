@@ -1,7 +1,7 @@
 #pragma once
 #include <map>
 #include "PhysicsObject_Square.h"
-#include "Collision.h"
+#include "SATWithClippingCollision.h"
 
 namespace MGE {
 

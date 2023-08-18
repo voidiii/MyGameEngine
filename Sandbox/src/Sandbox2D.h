@@ -3,8 +3,9 @@
 #include "MGE.h"
 #include "MathAlias.h"
 #include "MGE/Core/ProfilingTimer.h"
-#include "MGE/Physics/BallScene.h"
-#include "MGE/Physics/CollisionDetectionScene.h"
+#include "MGE/Physics/Scene_Ball.h"
+#include "MGE/Physics/Scene_CollisionDetection.h"
+#include "MGE/Physics/Scene_SpringAndSoftbody.h"
 
 
 class Sandbox2D : public MGE::Layer
@@ -27,8 +28,9 @@ private:
 	MGE::Ref<MGE::Shader> m_FlatColorShader;
 	MGE::Ref<MGE::Texture2D> m_CheckerboardTexture;
 
-	// MGE::PhysicsScene m_PhysicsScene;
+	MGE::PhysicsScene m_PhysicsScene;
 	MGE::CollisionDetectionScene m_CollisionDetectionScene;
+	MGE::Scene_SpringAndSoftbody m_Scene_SpringAndSoftbody;
 
 	std::vector<MGE::ProfileResult> m_ProfileResults;
 

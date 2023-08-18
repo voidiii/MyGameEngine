@@ -1,5 +1,5 @@
 #include "MGEpch.h"
-#include "Collision.h"
+#include "SATWithClippingCollision.h"
 
 namespace MGE {
 

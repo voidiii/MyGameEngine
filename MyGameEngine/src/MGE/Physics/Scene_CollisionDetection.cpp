@@ -1,5 +1,5 @@
 #include "MGEpch.h"
-#include "CollisionDetectionScene.h"
+#include "Scene_CollisionDetection.h"
 
 #define GJK 1
 
@@ -173,6 +173,7 @@ namespace MGE {
 
 		Vec2 hit_distance = min_distace * collision_normal;
 
+		// 16.0f is to make the collision more stable
 		i->SetCurrentPosition(i->GetPosition() - (hit_distance)/16.0f);
 		j->SetCurrentPosition(j->GetPosition() + (hit_distance)/16.0f);
 
@@ -213,7 +214,8 @@ namespace MGE {
 		}
 		frame++;
 
-		for (int sub_step = 0; sub_step < 1; sub_step++)
+		int sub_step_max = 8;
+		for (int sub_step = 0; sub_step < sub_step_max; sub_step++)
 		{
 			for (int i = 0; i < m_PhysicsObjects.size() - 1; i++)
 			{
@@ -229,7 +231,7 @@ namespace MGE {
 		
 			for (int i = 0; i < m_PhysicsObjects.size(); i++)
 			{
-				m_PhysicsObjects[i]->OnUpdate(ts / 1.0f);
+				m_PhysicsObjects[i]->OnUpdate(ts / sub_step_max);
 			}
 		}
 

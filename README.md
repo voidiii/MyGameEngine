@@ -1,9 +1,18 @@
 # MyGameEngine
-Studying Hazel Engine coded by The Cherno
+Studying Hazel Engine coded by The Cherno and Physics simulation study by myself
 
-学习笔记：（从第三期开始，前两期没啥记的）
-https://zhuanlan.zhihu.com/p/640303210?
+****
+## So Far I Got and TODO:
+1, collision detection with circle and high performance simulation
+![alt text](https://github.com/voidiii/MyGameEngine/blob/main/CodeStructNotebook/Circle_Collision_detection.png?raw=true)
 
+2, GJK and EPA implemented but not stable
+
+3, Soft body with spring and mass model/Pressure vloume model
+
+
+****
+## Engine's Dev Log
 
 Event system anslysis at 7/10
 ![alt text](https://github.com/voidiii/MyGameEngine/blob/main/CodeStructNotebook/Event_system_note.jpg?raw=true)
@@ -51,7 +60,7 @@ Basic implementation of the balls collision scene
 Optimaztion methods:
     1, Space division, use m_Grid in the scene to store info of postion of balls to reduce the number of collision check
     2, Use Thread pool to assgin tasks to different thread, go through m_Grid colume by colume for task-balancing
-    3, Use std::vector for cache friendly
+    3, Use std::vector for cache friendly, it is necessary because for every frame, grid's info needs to update with the new position of the balls and therefore need to go through balls one by one in order. In this case, cache firendly is highly in need.
     4, Substep for soomther perfermance 
     5, Use Verlet intergation, faster performance than classic Newton
 

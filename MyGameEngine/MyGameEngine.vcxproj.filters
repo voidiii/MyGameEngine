@@ -135,10 +135,10 @@
     <ClInclude Include="src\MGE\MouseButtonCodes.h">
       <Filter>src\MGE</Filter>
     </ClInclude>
-    <ClInclude Include="src\MGE\Physics\CollisionDetectionScene.h">
+    <ClInclude Include="src\MGE\Physics\Scene_CollisionDetection.h">
       <Filter>src\MGE\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\MGE\Physics\BallScene.h">
+    <ClInclude Include="src\MGE\Physics\Scene_Ball.h">
       <Filter>src\MGE\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\Physics\PhysicsObject.h">
@@ -364,7 +364,10 @@
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\Core\ThreadPool.h" />
-    <ClInclude Include="src\MGE\Physics\Collision.h" />
+    <ClInclude Include="src\MGE\Physics\SATWithClippingCollision.h" />
+    <ClInclude Include="src\MGE\Physics\PhysicsObject_Spring.h" />
+    <ClInclude Include="src\MGE\Physics\Scene_SpringAndSoftbody.h" />
+    <ClInclude Include="src\MGE\Physics\StaticObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">
@@ -388,10 +391,10 @@
     <ClCompile Include="src\MGE\Log.cpp">
       <Filter>src\MGE</Filter>
     </ClCompile>
-    <ClCompile Include="src\MGE\Physics\CollisionDetectionScene.cpp">
+    <ClCompile Include="src\MGE\Physics\Scene_CollisionDetection.cpp">
       <Filter>src\MGE\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="src\MGE\Physics\BallScene.cpp">
+    <ClCompile Include="src\MGE\Physics\Scene_Ball.cpp">
       <Filter>src\MGE\Physics</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp">
@@ -461,6 +464,9 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\Core\ThreadPool.cpp" />
-    <ClCompile Include="src\MGE\Physics\Collision.cpp" />
+    <ClCompile Include="src\MGE\Physics\SATWithClippingCollision.cpp" />
+    <ClCompile Include="src\MGE\Physics\PhysicsObject_Spring.cpp" />
+    <ClCompile Include="src\MGE\Physics\Scene_SpringAndSoftbody.cpp" />
+    <ClCompile Include="src\MGE\Physics\StaticObject.cpp" />
   </ItemGroup>
 </Project>
