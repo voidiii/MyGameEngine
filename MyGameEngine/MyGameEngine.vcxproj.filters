@@ -10,9 +10,6 @@
     <Filter Include="src\MGE\Core">
       <UniqueIdentifier>{ED45CEB9-D9A8-5D5E-822E-96146E7029E1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\MGE\Debug">
-      <UniqueIdentifier>{AB5EA3F3-171F-1F2A-E059-68A74CD96306}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\MGE\Event">
       <UniqueIdentifier>{86D5BEF3-F295-3A2A-BBD0-83A727507F06}</UniqueIdentifier>
     </Filter>
@@ -93,11 +90,11 @@
     <ClInclude Include="src\MGE\Core\ProfilingTimer.h">
       <Filter>src\MGE\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\MGE\Core\Timestep.h">
+    <ClInclude Include="src\MGE\Core\ThreadPool.h">
       <Filter>src\MGE\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\MGE\Debug\Instrumentor.h">
-      <Filter>src\MGE\Debug</Filter>
+    <ClInclude Include="src\MGE\Core\Timestep.h">
+      <Filter>src\MGE\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\EntryPoint.h">
       <Filter>src\MGE</Filter>
@@ -135,16 +132,28 @@
     <ClInclude Include="src\MGE\MouseButtonCodes.h">
       <Filter>src\MGE</Filter>
     </ClInclude>
-    <ClInclude Include="src\MGE\Physics\Scene_CollisionDetection.h">
+    <ClInclude Include="src\MGE\Physics\PhysicsObject.h">
+      <Filter>src\MGE\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Physics\PhysicsObject_Spring.h">
+      <Filter>src\MGE\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Physics\PhysicsObject_Square.h">
+      <Filter>src\MGE\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Physics\SATWithClippingCollision.h">
       <Filter>src\MGE\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\Physics\Scene_Ball.h">
       <Filter>src\MGE\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\MGE\Physics\PhysicsObject.h">
+    <ClInclude Include="src\MGE\Physics\Scene_CollisionDetection.h">
       <Filter>src\MGE\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\MGE\Physics\PhysicsObject_Square.h">
+    <ClInclude Include="src\MGE\Physics\Scene_SpringAndSoftbody.h">
+      <Filter>src\MGE\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Physics\StaticObject.h">
       <Filter>src\MGE\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\Renderer\Buffer.h">
@@ -363,11 +372,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\MGE\Core\ThreadPool.h" />
-    <ClInclude Include="src\MGE\Physics\SATWithClippingCollision.h" />
-    <ClInclude Include="src\MGE\Physics\PhysicsObject_Spring.h" />
-    <ClInclude Include="src\MGE\Physics\Scene_SpringAndSoftbody.h" />
-    <ClInclude Include="src\MGE\Physics\StaticObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">
@@ -375,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="src\MGE\CameraController.cpp">
       <Filter>src\MGE</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MGE\Core\ThreadPool.cpp">
+      <Filter>src\MGE\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\ImGui\ImGuiBuild.cpp">
       <Filter>src\MGE\ImGui</Filter>
@@ -391,16 +398,28 @@
     <ClCompile Include="src\MGE\Log.cpp">
       <Filter>src\MGE</Filter>
     </ClCompile>
-    <ClCompile Include="src\MGE\Physics\Scene_CollisionDetection.cpp">
+    <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp">
+      <Filter>src\MGE\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MGE\Physics\PhysicsObject_Spring.cpp">
+      <Filter>src\MGE\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MGE\Physics\PhysicsObject_Square.cpp">
+      <Filter>src\MGE\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MGE\Physics\SATWithClippingCollision.cpp">
       <Filter>src\MGE\Physics</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\Physics\Scene_Ball.cpp">
       <Filter>src\MGE\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp">
+    <ClCompile Include="src\MGE\Physics\Scene_CollisionDetection.cpp">
       <Filter>src\MGE\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="src\MGE\Physics\PhysicsObject_Square.cpp">
+    <ClCompile Include="src\MGE\Physics\Scene_SpringAndSoftbody.cpp">
+      <Filter>src\MGE\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MGE\Physics\StaticObject.cpp">
       <Filter>src\MGE\Physics</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\Renderer\Buffer.cpp">
@@ -463,10 +482,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\MGE\Core\ThreadPool.cpp" />
-    <ClCompile Include="src\MGE\Physics\SATWithClippingCollision.cpp" />
-    <ClCompile Include="src\MGE\Physics\PhysicsObject_Spring.cpp" />
-    <ClCompile Include="src\MGE\Physics\Scene_SpringAndSoftbody.cpp" />
-    <ClCompile Include="src\MGE\Physics\StaticObject.cpp" />
   </ItemGroup>
 </Project>

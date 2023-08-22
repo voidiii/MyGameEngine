@@ -99,12 +99,11 @@
       <PreprocessorDefinitions>IMGUI_API=__declspec(dllexport);MGE_PLATFORM_WINDOWS;MGE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\MyGameEngine\vendor\spdlog\include;..\MyGameEngine\src;..\MyGameEngine\vendor\Math\Mather\include\Mathter;..\MyGameEngine\vendor\ImGui;..\MyGameEngine\vendor\optick\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

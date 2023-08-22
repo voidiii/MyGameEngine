@@ -101,12 +101,11 @@
       <PreprocessorDefinitions>IMGUI_API=__declspec(dllexport);MGE_BUILD_DLL;MGE_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;MGE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>vendor\spdlog\include;src;src\MGE;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\Math\Mather\include\Mathter;vendor\stb_image;vendor\optick\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,16 +138,13 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\MGE\Physics\Scene_SpringAndSoftbody.h" />
-    <ClInclude Include="src\MGE\Physics\PhysicsObject_Spring.h" />
-    <ClInclude Include="src\MGE\Physics\SATWithClippingCollision.h" />
     <ClInclude Include="src\MGE.h" />
     <ClInclude Include="src\MGE\Application.h" />
     <ClInclude Include="src\MGE\CameraController.h" />
     <ClInclude Include="src\MGE\Core.h" />
     <ClInclude Include="src\MGE\Core\ProfilingTimer.h" />
+    <ClInclude Include="src\MGE\Core\ThreadPool.h" />
     <ClInclude Include="src\MGE\Core\Timestep.h" />
-    <ClInclude Include="src\MGE\Debug\Instrumentor.h" />
     <ClInclude Include="src\MGE\EntryPoint.h" />
     <ClInclude Include="src\MGE\Event\ApplicationEvent.h" />
     <ClInclude Include="src\MGE\Event\Event.h" />
@@ -161,10 +157,14 @@
     <ClInclude Include="src\MGE\LayerStack.h" />
     <ClInclude Include="src\MGE\Log.h" />
     <ClInclude Include="src\MGE\MouseButtonCodes.h" />
-    <ClInclude Include="src\MGE\Physics\Scene_CollisionDetection.h" />
-    <ClInclude Include="src\MGE\Physics\Scene_Ball.h" />
     <ClInclude Include="src\MGE\Physics\PhysicsObject.h" />
+    <ClInclude Include="src\MGE\Physics\PhysicsObject_Spring.h" />
     <ClInclude Include="src\MGE\Physics\PhysicsObject_Square.h" />
+    <ClInclude Include="src\MGE\Physics\SATWithClippingCollision.h" />
+    <ClInclude Include="src\MGE\Physics\Scene_Ball.h" />
+    <ClInclude Include="src\MGE\Physics\Scene_CollisionDetection.h" />
+    <ClInclude Include="src\MGE\Physics\Scene_SpringAndSoftbody.h" />
+    <ClInclude Include="src\MGE\Physics\StaticObject.h" />
     <ClInclude Include="src\MGE\Renderer\Buffer.h" />
     <ClInclude Include="src\MGE\Renderer\Camera.h" />
     <ClInclude Include="src\MGE\Renderer\GraphicsContext.h" />
@@ -188,8 +188,6 @@
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Test.h" />
-    <ClInclude Include="src\MGE\Core\ThreadPool.h" />
-    <ClInclude Include="src\MGE\Physics\StaticObject.h" />
     <ClInclude Include="vendor\Math\Mather\include\Mathter\Common\Approx.hpp" />
     <ClInclude Include="vendor\Math\Mather\include\Mathter\Common\Definitions.hpp" />
     <ClInclude Include="vendor\Math\Mather\include\Mathter\Common\DeterministicInitializer.hpp" />
@@ -241,20 +239,22 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\MGE\Physics\Scene_SpringAndSoftbody.cpp" />
-    <ClCompile Include="src\MGE\Physics\PhysicsObject_Spring.cpp" />
-    <ClCompile Include="src\MGE\Physics\SATWithClippingCollision.cpp" />
     <ClCompile Include="src\MGE\Application.cpp" />
     <ClCompile Include="src\MGE\CameraController.cpp" />
+    <ClCompile Include="src\MGE\Core\ThreadPool.cpp" />
     <ClCompile Include="src\MGE\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\MGE\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\MGE\Layer.cpp" />
     <ClCompile Include="src\MGE\LayerStack.cpp" />
     <ClCompile Include="src\MGE\Log.cpp" />
-    <ClCompile Include="src\MGE\Physics\Scene_CollisionDetection.cpp" />
-    <ClCompile Include="src\MGE\Physics\Scene_Ball.cpp" />
     <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp" />
+    <ClCompile Include="src\MGE\Physics\PhysicsObject_Spring.cpp" />
     <ClCompile Include="src\MGE\Physics\PhysicsObject_Square.cpp" />
+    <ClCompile Include="src\MGE\Physics\SATWithClippingCollision.cpp" />
+    <ClCompile Include="src\MGE\Physics\Scene_Ball.cpp" />
+    <ClCompile Include="src\MGE\Physics\Scene_CollisionDetection.cpp" />
+    <ClCompile Include="src\MGE\Physics\Scene_SpringAndSoftbody.cpp" />
+    <ClCompile Include="src\MGE\Physics\StaticObject.cpp" />
     <ClCompile Include="src\MGE\Renderer\Buffer.cpp" />
     <ClCompile Include="src\MGE\Renderer\Camera.cpp" />
     <ClCompile Include="src\MGE\Renderer\RenderCommand.cpp" />
@@ -276,8 +276,6 @@
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Test.cpp" />
-    <ClCompile Include="src\MGE\Core\ThreadPool.cpp" />
-    <ClCompile Include="src\MGE\Physics\StaticObject.cpp" />
     <ClCompile Include="vendor\stb_image\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
