@@ -12,8 +12,19 @@ Studying Hazel Engine coded by The Cherno and Physics simulation study by myself
 
 ****
 ## How to Set the VS Solution Up with Premake
- 
+Right now only support Windows, havent tried with Mac and Linux
+Make sure you have Visual Studio newer than 2019, or you can change the version of VS in GenrateProjects.bat
 
+pull or clone the project
+```
+git clone
+```
+pull the submodules
+```
+git pull --recurse-submodules
+```
+
+Then click GenrateProjects.bat to generate the solution
 ****
 ## Engine's Dev Log
 
