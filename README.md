@@ -10,6 +10,9 @@ Studying Hazel Engine coded by The Cherno and Physics simulation study by myself
 
 3, Soft body with spring and mass model/Pressure vloume model
 
+****
+## How to Set the VS Solution Up with Premake
+ 
 
 ****
 ## Engine's Dev Log

@@ -145,6 +145,7 @@
     <ClInclude Include="src\MGE\Core\ProfilingTimer.h" />
     <ClInclude Include="src\MGE\Core\ThreadPool.h" />
     <ClInclude Include="src\MGE\Core\Timestep.h" />
+    <ClInclude Include="src\MGE\Debug\Instrumentor.h" />
     <ClInclude Include="src\MGE\EntryPoint.h" />
     <ClInclude Include="src\MGE\Event\ApplicationEvent.h" />
     <ClInclude Include="src\MGE\Event\Event.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="src\MGE\Log.h" />
     <ClInclude Include="src\MGE\MouseButtonCodes.h" />
     <ClInclude Include="src\MGE\Physics\PhysicsObject.h" />
+    <ClInclude Include="src\MGE\Physics\PhysicsObject_SoftBody.h" />
     <ClInclude Include="src\MGE\Physics\PhysicsObject_Spring.h" />
     <ClInclude Include="src\MGE\Physics\PhysicsObject_Square.h" />
     <ClInclude Include="src\MGE\Physics\SATWithClippingCollision.h" />
@@ -248,6 +250,7 @@
     <ClCompile Include="src\MGE\LayerStack.cpp" />
     <ClCompile Include="src\MGE\Log.cpp" />
     <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp" />
+    <ClCompile Include="src\MGE\Physics\PhysicsObject_SoftBody.cpp" />
     <ClCompile Include="src\MGE\Physics\PhysicsObject_Spring.cpp" />
     <ClCompile Include="src\MGE\Physics\PhysicsObject_Square.cpp" />
     <ClCompile Include="src\MGE\Physics\SATWithClippingCollision.cpp" />

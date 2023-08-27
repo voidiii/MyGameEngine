@@ -10,6 +10,9 @@
     <Filter Include="src\MGE\Core">
       <UniqueIdentifier>{ED45CEB9-D9A8-5D5E-822E-96146E7029E1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\MGE\Debug">
+      <UniqueIdentifier>{AB5EA3F3-171F-1F2A-E059-68A74CD96306}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\MGE\Event">
       <UniqueIdentifier>{86D5BEF3-F295-3A2A-BBD0-83A727507F06}</UniqueIdentifier>
     </Filter>
@@ -96,6 +99,9 @@
     <ClInclude Include="src\MGE\Core\Timestep.h">
       <Filter>src\MGE\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\MGE\Debug\Instrumentor.h">
+      <Filter>src\MGE\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\MGE\EntryPoint.h">
       <Filter>src\MGE</Filter>
     </ClInclude>
@@ -133,6 +139,9 @@
       <Filter>src\MGE</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\Physics\PhysicsObject.h">
+      <Filter>src\MGE\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MGE\Physics\PhysicsObject_SoftBody.h">
       <Filter>src\MGE\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\MGE\Physics\PhysicsObject_Spring.h">
@@ -399,6 +408,9 @@
       <Filter>src\MGE</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp">
+      <Filter>src\MGE\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MGE\Physics\PhysicsObject_SoftBody.cpp">
       <Filter>src\MGE\Physics</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\Physics\PhysicsObject_Spring.cpp">
