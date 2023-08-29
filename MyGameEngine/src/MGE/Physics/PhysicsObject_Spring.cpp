@@ -50,8 +50,8 @@ namespace MGE {
 
 		Vec2_Physics DampingForce = MassPointDistance * (m_MassPointA->GetVelocity() - m_MassPointB->GetVelocity()) * m_DampFactor;
 
-		//m_MassPointA->UpdateForce(-DampingForce);
-		//m_MassPointB->UpdateForce(DampingForce);
+		m_MassPointA->UpdateForce(-DampingForce);
+		m_MassPointB->UpdateForce(DampingForce);
 	}
 
 }

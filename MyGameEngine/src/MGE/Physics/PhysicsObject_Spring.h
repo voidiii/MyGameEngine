@@ -21,12 +21,14 @@ namespace MGE {
 		inline Vec2_Physics GetVelocity() const { return m_Velocity; }
 		
 		inline void UpdateForce(Vec2_Physics deltaForce) { m_Force += deltaForce; }
+		inline float GetDiameter() { return m_Diameter; }
 
 	private:
 		Vec2_Physics m_Position;
 		Vec2_Physics m_Velocity;
 		Vec2_Physics m_Force;
 		float m_Mass;
+		float m_Diameter = 1.0f;
 
 		int m_uID;
 	};
@@ -44,6 +46,7 @@ namespace MGE {
 
 		/* In Spring Update function we need to change the force on each mass point, the rest will leave to mass point's update function */
 		void OnUpdate(Timestep ts);
+
 	private:
 		Ref<MassPoint> m_MassPointA;
 		Ref<MassPoint> m_MassPointB;

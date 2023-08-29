@@ -1,5 +1,5 @@
 #pragma once
-#include "Physics/PhysicsObject_Spring.h"
+#include "PhysicsObject_Spring.h"
 
 namespace MGE {
 
@@ -11,11 +11,13 @@ namespace MGE {
 
 		void OnUpdate(Timestep ts);
 		void DrawSoftBody();
+		void ResolveSlefCollision();
+
+		inline std::vector<std::vector<Ref<MassPoint>>> GetMassPoints() { return m_MassPoints; }
 
 	private:
 		std::vector<std::vector<Ref<MassPoint>>> m_MassPoints;
 		std::vector<Ref<Spring>> m_Springs;
-		
 	};
 
 }

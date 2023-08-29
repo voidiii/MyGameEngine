@@ -4,6 +4,7 @@
 #include <utility>
 #include "PhysicsObject_Spring.h"
 #include "StaticObject.h"
+#include "PhysicsObject_SoftBody.h"
 
 namespace MGE {
 
@@ -21,8 +22,9 @@ namespace MGE {
 		void ElasticCollisions(CirclePhyicsObject* i, CirclePhyicsObject* j);
 
 	private:
-		std::vector<Ref<Spring>> m_SpringContainer;
-		std::vector<Ref<MassPoint>> m_MassPoints; // the scene will do the render call 
+		// std::vector<Ref<Spring>> m_SpringContainer;
+		// std::vector<Ref<MassPoint>> m_MassPoints; // the scene will do the render call 
+		Ref<PhysicsObject_SoftBody> m_SoftBody;
 		std::vector<Ref<StaticObject_Line>> m_StaticLines;
 		float m_SceneWidth, m_SceneHeight;
 
