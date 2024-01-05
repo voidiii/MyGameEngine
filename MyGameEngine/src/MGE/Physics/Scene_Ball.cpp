@@ -1,5 +1,6 @@
 #include "MGEpch.h"
 #include "Scene_Ball.h"
+#include "MGE/CUDA/CUDAHead.cuh"
 #include <thread>
 
 std::mutex mtx;
@@ -87,14 +88,14 @@ namespace MGE {
 	{	
 		// mtx.lock(); // lock the mutex
 		Vec2_Physics hit_distance = Vec2_Physics(i->GetPosition() - j->GetPosition());
-		Vec2_Physics hit_direction = mathter::Normalize(hit_distance);
+		Vec2_Physics hit_direction = glm::normalize(hit_distance);
 
-		float temp = mathter::Dot(Vec2_Physics(i->GetVelocity() - j->GetVelocity()), hit_distance);
+		float temp = glm::dot(Vec2_Physics(i->GetVelocity() - j->GetVelocity()), hit_distance);
 		
 		// float mass_i = i->GetMass();
 		// float mass_j = j->GetMass();
 		
-		float delta_x_square = mathter::Length(hit_distance) * mathter::Length(hit_distance);
+		float delta_x_square = glm::length(hit_distance) * glm::length(hit_distance);
 		
 		// Vec2 new_v_temp = ((2.0f * mass_j) / (mass_i + mass_j)) * (temp) / (delta_x_square) * (hit_distance); // ignore mass for now
 		Vec2_Physics new_v_temp = (temp) / (delta_x_square) * (hit_distance);
@@ -102,8 +103,8 @@ namespace MGE {
 		i->UpdateVelocity(-new_v_temp);
 		j->UpdateVelocity(new_v_temp);
 
-		i->UpdatePosition( (i->GetRadius() * 2.0f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
-		j->UpdatePosition(-(i->GetRadius() * 2.0f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
+		i->UpdatePosition( (i->GetRadius() * 2.0f - glm::length(hit_distance)) / 2.0f * hit_direction);
+		j->UpdatePosition(-(i->GetRadius() * 2.0f - glm::length(hit_distance)) / 2.0f * hit_direction);
 	}
 
 	void PhysicsScene::ElasticCollisions_Verlet(CirclePhyicsObject* i, CirclePhyicsObject* j)
@@ -111,12 +112,12 @@ namespace MGE {
 		//mtx.lock(); // lock the mutex
 		Vec2_Physics hit_distance = Vec2_Physics(i->GetPosition() - j->GetPosition());
 
-		if (mathter::Length(hit_distance) < 0.0001f) return;
+		if (glm::length(hit_distance) < 0.0001f) return;
 
-		Vec2_Physics hit_direction = mathter::Normalize(hit_distance);
+		Vec2_Physics hit_direction = glm::normalize(hit_distance);
 
-		i->SetCurrentPosition(i->GetPosition() + (i->GetRadius() * 2.0f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
-		j->SetCurrentPosition(j->GetPosition() - (j->GetRadius() * 2.0f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
+		i->SetCurrentPosition(i->GetPosition() + (i->GetRadius() * 2.0f - glm::length(hit_distance)) / 2.0f * hit_direction);
+		j->SetCurrentPosition(j->GetPosition() - (j->GetRadius() * 2.0f - glm::length(hit_distance)) / 2.0f * hit_direction);
 		//mtx.unlock();
 	}
 
@@ -145,14 +146,14 @@ namespace MGE {
 								if(uid_1 == uid)
 									continue;
 								
-								// if (mathter::Length(m_CirclePhyicsObjectContainer[uid].GetVelocity()) < 0.1f && m_CirclePhyicsObjectContainer[uid].GetSkipFrame() < 4)
+								// if (glm::length(m_CirclePhyicsObjectContainer[uid].GetVelocity()) < 0.1f && m_CirclePhyicsObjectContainer[uid].GetSkipFrame() < 4)
 								// {
 								// 	m_CirclePhyicsObjectContainer[uid].AddSkipFrame();
 								// 	continue;
 								// }
 
 								Vec2_Physics hit_distance = Vec2_Physics(m_CirclePhyicsObjectContainer[uid].GetPosition() - m_CirclePhyicsObjectContainer[uid_1].GetPosition());
-								if (mathter::Length(hit_distance) < m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f)
+								if (glm::length(hit_distance) < m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f)
 								{
 									//m_CirclePhyicsObjectContainer[uid].ResetSkipFrame();
 									ElasticCollisions_Verlet(&m_CirclePhyicsObjectContainer[uid], &m_CirclePhyicsObjectContainer[uid_1]);
@@ -169,6 +170,17 @@ namespace MGE {
 	{
 		// if (i >= m_Grid.size() - 1 || j >= m_Grid[0].size() - 1) return;
 		
+		std::vector<Vec2_Physics>* surrounding_objects;
+		std::vector<Vec2_Physics>* center_object_position;
+		std::vector<int> center_object_id;
+		std::vector<int> surrounding_object_id;
+		std::vector<Vec2_Physics>* results;
+		size_t bytes;
+
+		cudaMallocHost(&surrounding_objects, bytes);
+		cudaMallocHost(&center_object_position, bytes);
+		cudaMallocHost(&results, bytes);
+
 		for (const auto& uid : m_Grid[i][j]->object_id)
 		{
 			for (int a = -1; a <= 1; a++)
@@ -179,28 +191,77 @@ namespace MGE {
 					{
 						continue;
 					}
-
 					for (const auto& uid_1 : m_Grid[i + a][j + b]->object_id)
 					{
-						if (uid_1 == uid)
-							continue;
-
-						Vec2_Physics hit_distance = Vec2_Physics(m_CirclePhyicsObjectContainer[uid].GetPosition() - m_CirclePhyicsObjectContainer[uid_1].GetPosition());
-
-						//float X = m_CirclePhyicsObjectContainer[uid].GetPosition().x - m_CirclePhyicsObjectContainer[uid_1].GetPosition().x;
-						//float Y = m_CirclePhyicsObjectContainer[uid].GetPosition().y - m_CirclePhyicsObjectContainer[uid_1].GetPosition().y;
-						//
-						//
-						//float hit_distance = X * X + Y * Y;
-						if (mathter::Length(hit_distance) <  m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f)
-						{
-							ElasticCollisions_Verlet(&m_CirclePhyicsObjectContainer[uid], &m_CirclePhyicsObjectContainer[uid_1]);
-						}
+						surrounding_objects->push_back(m_CirclePhyicsObjectContainer[uid_1].GetPosition());
+						center_object_position->push_back(m_CirclePhyicsObjectContainer[uid].GetPosition());
+						center_object_id.push_back(uid);
+						surrounding_object_id.push_back(uid_1);
 					}
 				}
 			}
+			
+			//for (int a = -1; a <= 1; a++)
+			//{
+			//	for (int b = -1; b <= 1; b++)
+			//	{
+			//		if (m_Grid[i + a][j + b]->object_id.size() == 0)
+			//		{
+			//			continue;
+			//		}
+			//
+			//		for (const auto& uid_1 : m_Grid[i + a][j + b]->object_id)
+			//		{
+			//			if (uid_1 == uid)
+			//				continue;
+			//
+			//			Vec2_Physics hit_distance = Vec2_Physics(m_CirclePhyicsObjectContainer[uid].GetPosition() - m_CirclePhyicsObjectContainer[uid_1].GetPosition());
+			//
+			//			//float X = m_CirclePhyicsObjectContainer[uid].GetPosition().x - m_CirclePhyicsObjectContainer[uid_1].GetPosition().x;
+			//			//float Y = m_CirclePhyicsObjectContainer[uid].GetPosition().y - m_CirclePhyicsObjectContainer[uid_1].GetPosition().y;
+			//			//
+			//			//
+			//			//float hit_distance = X * X + Y * Y;
+			//			if (glm::length(hit_distance) <  m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f)
+			//			{
+			//				ElasticCollisions_Verlet(&m_CirclePhyicsObjectContainer[uid], &m_CirclePhyicsObjectContainer[uid_1]);
+			//			}
+			//		}
+			//	}
+			//}
 		}
-		
+
+		results->resize(center_object_position->size());
+
+		bytes = surrounding_objects->size() * sizeof(Vec2_Physics);
+
+		Vec2_Physics* d_a, * d_b, * d_c;
+		cudaMalloc(&d_a, bytes);
+		cudaMalloc(&d_b, bytes);
+		cudaMalloc(&d_c, bytes);
+
+		// Copy data to the device
+		cudaMemcpy(d_a, center_object_position, bytes, cudaMemcpyHostToDevice);
+		cudaMemcpy(d_b, surrounding_objects, bytes, cudaMemcpyHostToDevice);
+
+		//ElasticCollisions_Verlet_GPU<<<5, 1024 >>>(d_a, d_b, d_c, surrounding_objects.size());
+
+		cudaMemcpy(results, d_c, bytes, cudaMemcpyDeviceToHost);
+
+		for (int i = 0; i < surrounding_objects->size(); i++)
+		{
+			m_CirclePhyicsObjectContainer[center_object_id[i]].SetCurrentPosition(m_CirclePhyicsObjectContainer[center_object_id[i]].GetPosition() + (* results)[i]);
+		}
+		cudaFreeHost(surrounding_objects);
+		cudaFreeHost(center_object_position);
+		cudaFreeHost(results);
+
+		// Free memory on device
+		cudaFree(d_a);
+		cudaFree(d_b);
+		cudaFree(d_c);
+
+
 	}
 	
 	void PhysicsScene::GridManage()

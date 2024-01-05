@@ -14,10 +14,10 @@ namespace MGE {
 			m_Normal = mathter::Normalize(m_Normal);
 
 			m_MidPoint = (m_LeftStartPoint + m_RightEndPoint) / 2.0f;
-			m_UpperBound = max(m_LeftStartPoint.y, m_RightEndPoint.y);
-			m_LowerBound = min(m_LeftStartPoint.y, m_RightEndPoint.y);
-			m_LeftBound = min(m_LeftStartPoint.x, m_RightEndPoint.x);
-			m_RightBound = max(m_LeftStartPoint.x, m_RightEndPoint.x);
+			//m_UpperBound = max(m_LeftStartPoint.y, m_RightEndPoint.y);
+			//m_LowerBound = min(m_LeftStartPoint.y, m_RightEndPoint.y);
+			//m_LeftBound = min(m_LeftStartPoint.x, m_RightEndPoint.x);
+			//m_RightBound = max(m_LeftStartPoint.x, m_RightEndPoint.x);
 		}
 		~StaticObject_Line() {}
 

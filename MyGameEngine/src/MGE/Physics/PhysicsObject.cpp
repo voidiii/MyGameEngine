@@ -38,10 +38,10 @@ namespace MGE {
 
 	void CirclePhyicsObject::OnUpdate(Timestep ts)
 	{
-		// if(mathter::Length(m_Velocity) < 0.1f) return; // object static, dont update at all
+		// if(glm::length(m_Velocity) < 0.1f) return; // object static, dont update at all
 		position_mtx.lock();
 		
-		Vec2_Physics FractionDirection = mathter::Length(m_Velocity) > 0.0f ? -mathter::Normalize(m_Velocity) : Vec2{0.0f, 0.0f};
+		Vec2_Physics FractionDirection = mathter::Length(m_Velocity) > 0.0f ? - mathter::Normalize(m_Velocity) : Vec2{0.0f, 0.0f};
 
 		float FractionAccelaration =  2.0f; // fraction 
 
@@ -62,7 +62,7 @@ namespace MGE {
 
 	void CirclePhyicsObject::ApplyMotionLimit()
 	{
-		// if(mathter::Length(m_Velocity) < 0.1f) return;
+		// if(glm::length(m_Velocity) < 0.1f) return;
 		position_mtx.lock();
 		
 		if (m_Position.x > m_XLimit) {

@@ -48,7 +48,7 @@ namespace MGE {
 		virtual void DrawPhysicsObject() override;
 		inline virtual Vec2_Physics GetPosition() const { return m_Position; }
 
-		inline Vec2 GetVelocity() const { return m_Velocity; }
+		inline Vec2_Physics GetVelocity() const { return m_Velocity; }
 		// inline float GetMass() const { return m_mass; }
 		inline float GetUID() const { return m_uID; }
 		inline float GetRadius() const { return m_radius; }

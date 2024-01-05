@@ -76,7 +76,7 @@ public:
 	}
 	LineSegment(const VectorT& point1, const VectorT& point2) : point1(point1), point2(point2) {}
 
-	T Length() const { return mathter::Length(point2 - point1); }
+	T Length() const { return Length(point2 - point1); }
 	VectorT Direction() const { return Normalize(point2 - point1); }
 	VectorT Start() const { return point1; }
 	VectorT End() const { return point2; }

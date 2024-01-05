@@ -180,14 +180,14 @@ namespace MGE {
 
 #else
 		Vec2 hit_distance = Vec2(i->GetPosition() - j->GetPosition());
-		Vec2 hit_direction = mathter::Normalize(hit_distance);
+		Vec2 hit_direction = glm::normalize(hit_distance);
 
-		float temp = mathter::Dot(Vec2(i->GetVelocity() - j->GetVelocity()), hit_distance);
+		float temp = glm::dot(Vec2(i->GetVelocity() - j->GetVelocity()), hit_distance);
 		
 		// float mass_i = i->GetMass();
 		// float mass_j = j->GetMass();
 		
-		float delta_x_square = mathter::Length(hit_distance) * mathter::Length(hit_distance);
+		float delta_x_square = glm::length(hit_distance) * glm::length(hit_distance);
 		
 		// Vec2 new_v_temp = ((2.0f * mass_j) / (mass_i + mass_j)) * (temp) / (delta_x_square) * (hit_distance); // ignore mass for now
 		Vec2 new_v_temp = (temp) / (delta_x_square) * (hit_distance);
@@ -195,8 +195,8 @@ namespace MGE {
 		i->UpdateVelocity(-new_v_temp);
 		j->UpdateVelocity(new_v_temp);
 
-		i->UpdatePosition((0.2f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
-		j->UpdatePosition(-(0.2f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
+		i->UpdatePosition((0.2f - glm::length(hit_distance)) / 2.0f * hit_direction);
+		j->UpdatePosition(-(0.2f - glm::length(hit_distance)) / 2.0f * hit_direction);
 #endif
 	}
 

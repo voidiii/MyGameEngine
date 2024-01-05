@@ -125,7 +125,6 @@ project "Sandbox"
 	links
 	{
 		"MyGameEngine",
-		--"ImGui" -- I added this 
 	}
 
 	filter "system:windows"

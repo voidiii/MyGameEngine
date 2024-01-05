@@ -153,15 +153,15 @@ void MGE::PhysicsObject_SoftBody::ResolveSlefCollision()
 						continue;
 					}
 
-					float distance = mathter::Length(massPoint_i->GetPosition() - massPoint_j->GetPosition());
-					Vec2_Physics direction = mathter::Normalize(massPoint_i->GetPosition() - massPoint_j->GetPosition());
+					float distance = glm::length(massPoint_i->GetPosition() - massPoint_j->GetPosition());
+					Vec2_Physics direction = glm::normalize(massPoint_i->GetPosition() - massPoint_j->GetPosition());
 
 					if (distance < massPoint_i->GetDiameter())
 					{
 						massPoint_i->UpdatePosition((massPoint_i->GetDiameter() - distance) * direction / 2.0f);
 						massPoint_j->UpdatePosition( -(massPoint_j->GetDiameter() - distance) * direction / 2.0f);
-						massPoint_i->ChangeVelocity(1.0f * mathter::Dot(direction, massPoint_i->GetVelocity()) * direction + massPoint_i->GetVelocity());
-						massPoint_j->ChangeVelocity(-1.0f * mathter::Dot( direction, massPoint_j->GetVelocity()) * direction + massPoint_j->GetVelocity());
+						massPoint_i->ChangeVelocity(1.0f * glm::dot(direction, massPoint_i->GetVelocity()) * direction + massPoint_i->GetVelocity());
+						massPoint_j->ChangeVelocity(-1.0f * glm::dot( direction, massPoint_j->GetVelocity()) * direction + massPoint_j->GetVelocity());
 					}
 				}
 			}
