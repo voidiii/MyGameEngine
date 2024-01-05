@@ -1,7 +1,5 @@
 #pragma once
 
-#define GLM_FORCE_CUDA
-
 #include <Vector>
 #include <Vector.hpp>
 #include <Matrix.hpp>
@@ -11,7 +9,7 @@
 namespace MGE
 {
     using Vec2 = mathter::Vector<float, 2, true>;
-    using Vec2_Physics = mathter::Vector<float, 2, true>;
+    using Vec2_Physics = mathter::Vector<float, 2, true > ;
     using Vec3 = mathter::Vector<float, 3, true>;
     using Vec4 = mathter::Vector<float, 4, true>;
     using Mat22 = mathter::Matrix<float, 2, 2, mathter::eMatrixOrder::PRECEDE_VECTOR, mathter::eMatrixLayout::COLUMN_MAJOR, false>;
@@ -23,7 +21,7 @@ namespace MGE
 
     inline int32_t f_toint32(float x)
     {
-        //È¡ï¿½Ã·ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        //È¡µÃ·ûºÅÎ»£¬ÉèÖÃÑÚÂë
         uint32_t n = ((*(uint32_t*)&x) & 0x80000000) ? 0xFFC00000 : 0;
         x += 12582912.0f;
         return ((*(uint32_t*)&x) & 0x3FFFFF) | n;
