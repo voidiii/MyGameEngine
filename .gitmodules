@@ -13,3 +13,6 @@
 [submodule "MyGameEngine/vendor/optick"]
 	path = MyGameEngine/vendor/optick
 	url = https://github.com/voidiii/optick.git
+[submodule "MyGameEngine/vendor/glm"]
+	path = MyGameEngine/vendor/glm
+	url = https://github.com/g-truc/glm
