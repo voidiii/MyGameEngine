@@ -8,6 +8,11 @@
 #include "immintrin.h" //AVX2, 256 bit operations (8 floats)
 #include "MGE/Core/ThreadPool.h"
 
+#include <cuda.h>
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+#include "MGE/CUDA/CUDAHead.cuh"
+
 namespace MGE {
 
 	struct ProfileResult
@@ -44,6 +49,9 @@ namespace MGE {
 		PhysicsScene(float height, float width, int numberOfObjects);
 		~PhysicsScene() {
 			m_ThreadPool.Stop();
+			cudaFree(m_surrounding_objects);
+			cudaFree(m_center_object_position);
+			cudaFree(m_results);
 		}
 
 		void OnUpdate(Timestep ts);
@@ -84,6 +92,11 @@ namespace MGE {
 		std::vector<ProfileResult> m_ProfileResults;
 
 		ThreadPool m_ThreadPool;
+
+		glm::vec2* m_surrounding_objects;
+		glm::vec2* m_center_object_position;
+		glm::vec2* m_results;
+		glm::vec2* m_GPU_CirclePhyicsObjectContainer;
 	};
 
 }

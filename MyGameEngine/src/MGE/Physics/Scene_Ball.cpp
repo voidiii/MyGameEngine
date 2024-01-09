@@ -1,9 +1,5 @@
 #include "MGEpch.h"
 #include "Scene_Ball.h"
-#include <cuda.h>
-#include "cuda_runtime.h"
-#include "device_launch_parameters.h"
-#include "CUDA/CUDAHead.cuh"
 #include <thread>
 
 std::mutex mtx;
@@ -21,6 +17,13 @@ namespace MGE {
 
 		m_ThreadPool.Start();
 		m_CirclePhyicsObjectContainer.reserve(10000);
+
+		size_t bytes = 5000 * sizeof(glm::vec2);
+
+		cudaMallocManaged(&m_surrounding_objects, bytes);
+		cudaMallocManaged(&m_center_object_position, bytes);
+		cudaMallocManaged(&m_results, bytes);
+		cudaMallocManaged(&m_GPU_CirclePhyicsObjectContainer, bytes);
 	}
 
 	void PhysicsScene::CreateObjects(int& count)
@@ -30,6 +33,8 @@ namespace MGE {
 			count,
 			std::move(Vec2_Physics{ 15.0f, 0.0f })
 		));
+
+		m_GPU_CirclePhyicsObjectContainer[count] = glm::vec2(0.0f, 45.0f - 2 * (float)(count % 4));
 
 		// TODO: aabb collision detection
 		m_CirclePhyicsObjectContainer[count].SetMotionLimit(m_SceneWidth, m_SceneHeight);
@@ -74,6 +79,7 @@ namespace MGE {
 				for (auto& j : m_CirclePhyicsObjectContainer)
 				{
 					j.OnUpdate_Verlet(ts/8.0f );
+					m_GPU_CirclePhyicsObjectContainer[j.GetUID()] = glm::vec2(j.GetPosition().x, j.GetPosition().y);
 				}
 			}
 		}
@@ -126,7 +132,6 @@ namespace MGE {
 
 	void PhysicsScene::FindCollisions()
 	{
-		
 		for (int i = 1; i <= (m_int_height * 2); i++)
 		{
 			for (int j = 1; j <= (m_int_width * 2); j++)
@@ -136,37 +141,6 @@ namespace MGE {
 					continue; 
 
 				FindCollisions_GridHandling(i, j);
-
-				//for (const auto& uid : m_Grid[i][j]->object_id)
-				//{
-				//	for(int a = -1; a <= 1; a ++)
-				//	{
-				//		for(int b = -1; b <= 1; b++)
-				//		{
-				//			if (m_Grid[i + a][j + b]->object_id.size() == 0)
-				//				continue;
-				//
-				//			for (const auto& uid_1 : m_Grid[i + a][j + b]->object_id)
-				//			{
-				//				if(uid_1 == uid)
-				//					continue;
-				//				
-				//				// if (mathter::Length(m_CirclePhyicsObjectContainer[uid].GetVelocity()) < 0.1f && m_CirclePhyicsObjectContainer[uid].GetSkipFrame() < 4)
-				//				// {
-				//				// 	m_CirclePhyicsObjectContainer[uid].AddSkipFrame();
-				//				// 	continue;
-				//				// }
-				//
-				//				Vec2_Physics hit_distance = Vec2_Physics(m_CirclePhyicsObjectContainer[uid].GetPosition() - m_CirclePhyicsObjectContainer[uid_1].GetPosition());
-				//				if (mathter::Length(hit_distance) < m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f)
-				//				{
-				//					//m_CirclePhyicsObjectContainer[uid].ResetSkipFrame();
-				//					ElasticCollisions_Verlet(&m_CirclePhyicsObjectContainer[uid], &m_CirclePhyicsObjectContainer[uid_1]);
-				//				}
-				//			}
-				//		}
-				//	}
-				//}
 			}
 		}
 	}
@@ -174,19 +148,20 @@ namespace MGE {
 
 	void PhysicsScene::FindCollisions_GridHandling(int i, int j)
 	{
-		// if (i >= m_Grid.size() - 1 || j >= m_Grid[0].size() - 1) return;
+		std::vector<glm::vec2> surrounding_objects_temp;
+		std::vector<glm::vec2> center_object_position_temp;
+		std::vector<glm::vec2> results_temp;
+		surrounding_objects_temp.reserve(5000);
+		center_object_position_temp.reserve(5000);
+		results_temp.reserve(5000);
 
-		std::vector<glm::vec2> surrounding_objects;
-		surrounding_objects.reserve(5000);
-		std::vector<glm::vec2> center_object_position;
-		center_object_position.reserve(5000);
 		std::vector<int> center_object_id;
 		std::vector<int> surrounding_object_id;
-		std::vector<glm::vec2> results;
-		results.reserve(5000);
 		size_t bytes;
 
 		bytes = 5000 * sizeof(glm::vec2);
+
+		int size = 0;
 		
 
 		for (const auto& uid : m_Grid[i][j]->object_id)
@@ -201,10 +176,11 @@ namespace MGE {
 					}
 					for (const auto& uid_1 : m_Grid[i + a][j + b]->object_id)
 					{
-						surrounding_objects.emplace_back(glm::vec2(m_CirclePhyicsObjectContainer[uid_1].GetPosition().x, m_CirclePhyicsObjectContainer[uid_1].GetPosition().y));
-						center_object_position.emplace_back(glm::vec2(m_CirclePhyicsObjectContainer[uid].GetPosition().x, m_CirclePhyicsObjectContainer[uid].GetPosition().y));
+						surrounding_objects_temp.emplace_back(glm::vec2(m_CirclePhyicsObjectContainer[uid_1].GetPosition().x, m_CirclePhyicsObjectContainer[uid_1].GetPosition().y));
+						center_object_position_temp.emplace_back(glm::vec2(m_CirclePhyicsObjectContainer[uid].GetPosition().x, m_CirclePhyicsObjectContainer[uid].GetPosition().y));
 						center_object_id.push_back(uid);
 						surrounding_object_id.push_back(uid_1);
+						size++;
 					}
 				}
 			}
@@ -238,33 +214,33 @@ namespace MGE {
 			//	}
 			//}
 		}
-
-		glm::vec2* d_a, * d_b, * d_c;
-		cudaMalloc(&d_a, bytes);
-		cudaMalloc(&d_b, bytes);
-		cudaMalloc(&d_c, bytes);
+		
+		std::memcpy(m_surrounding_objects, surrounding_objects_temp.data(), size * sizeof(glm::vec2));
+		std::memcpy(m_center_object_position, center_object_position_temp.data(), size * sizeof(glm::vec2));
 
 		// Copy data to the device
-		int error = cudaMemcpy(d_a, center_object_position.data(), bytes, cudaMemcpyHostToDevice);
-		error = cudaMemcpy(d_b, surrounding_objects.data(), bytes, cudaMemcpyHostToDevice);
+		// int error = cudaMemcpy(d_a, center_object_position.data(), bytes, cudaMemcpyHostToDevice);
+		// error = cudaMemcpy(d_b, surrounding_objects.data(), bytes, cudaMemcpyHostToDevice);
 
-		ElasticCollisions_Verlet_GPU_Jumper(d_a, d_b, d_c, surrounding_objects.size());
+		ElasticCollisions_Verlet_GPU_Jumper(m_surrounding_objects, m_center_object_position, m_results, size);
+		cudaDeviceSynchronize();
 
-		results.resize(surrounding_objects.size());
-		cudaMemcpy(results.data(), d_c, bytes, cudaMemcpyDeviceToHost);
+		// results.resize(surrounding_objects.size());
+		// cudaMemcpy(results.data(), d_c, bytes, cudaMemcpyDeviceToHost);
+
+		std::memcpy(results_temp.data(), m_results, size * sizeof(glm::vec2));
+		results_temp.resize(size);
 		
 
-		for (int i = 0; i < surrounding_objects.size(); i++)
+		for (int i = 0; i < size; i++)
 		{
-			Vec2_Physics new_position = Vec2_Physics(m_CirclePhyicsObjectContainer[center_object_id[i]].GetPosition().x + results[i].x, m_CirclePhyicsObjectContainer[center_object_id[i]].GetPosition().y + results[i].y);
+			Vec2_Physics new_position = Vec2_Physics(m_CirclePhyicsObjectContainer[center_object_id[i]].GetPosition().x + results_temp[i].x, m_CirclePhyicsObjectContainer[center_object_id[i]].GetPosition().y + results_temp[i].y);
 			m_CirclePhyicsObjectContainer[center_object_id[i]].SetCurrentPosition(new_position);
 		}
-		
 
-		// Free memory on device
-		cudaFree(d_a);
-		cudaFree(d_b);
-		cudaFree(d_c);
+		cudaMemset(m_results, 0, size * sizeof(glm::vec2));
+		cudaMemset(m_surrounding_objects, 0, size * sizeof(glm::vec2));
+		cudaMemset(m_center_object_position, 0, size * sizeof(glm::vec2));
 	}
 	
 	void PhysicsScene::GridManage()
