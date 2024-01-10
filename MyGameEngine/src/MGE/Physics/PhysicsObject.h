@@ -52,6 +52,8 @@ namespace MGE {
 		// inline float GetMass() const { return m_mass; }
 		inline int GetUID() const { return m_uID; }
 		inline float GetRadius() const { return m_radius; }
+		inline float GetDensity() const { return m_density; }
+		void SetDensity(float density) { m_density = density; }
 
 		// inline float GetGravity() const { return m_Gravity; }
 		// inline void SetGravity(float gravity) { m_Gravity = gravity; }
@@ -68,6 +70,7 @@ namespace MGE {
 		
 		void SetMotionLimit(float xLimit, float yLimit);
 		void ApplyMotionLimit();
+
 		void AddSkipFrame() { m_SkipFrame++; }
 		void AddSkipFrameUppperLimit() { m_SkipFrameUpperLimit++; }
 		int GetSkipFrame() const { return m_SkipFrame; }
@@ -75,13 +78,17 @@ namespace MGE {
 		void ResetSkipFrame() { m_SkipFrame = 0; }
 		void ResetSkipFrameUppperLimit() { m_SkipFrameUpperLimit = 4; }
 
+		void AddPressureAcceleration(Vec2_Physics impluse) { m_PressureAcceleration += impluse; }
+		void ClearPressureAcceleration() { m_PressureAcceleration = Vec2_Physics{ 0.0f, 0.0f }; }
+		float GetLengthPressureAcceleration() { return mathter::Length(m_PressureAcceleration); }
+
 	private:
 		Vec2_Physics m_Position;
 		Vec2_Physics m_LastPosition;
 		Vec2_Physics m_Velocity = { 0.0f, 0.0f };
-		float m_radius = 0.5f;
-		// float m_mass = 1.0f;
-		// float m_Gravity = 40.0f;
+		Vec2_Physics m_PressureAcceleration = { 0.0f, 0.0f };
+		float m_density;
+		float m_radius = 0.25f;
 		float m_XLimit, m_YLimit;
 		int m_uID;
 		int m_SkipFrame = 0;

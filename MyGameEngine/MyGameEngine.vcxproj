@@ -151,6 +151,7 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\MGE\Physics\PhysicsObject_Fluid.h" />
     <ClInclude Include="src\MGE.h" />
     <ClInclude Include="src\MGE\Application.h" />
     <ClInclude Include="src\MGE\CameraController.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="src\MGE\LayerStack.h" />
     <ClInclude Include="src\MGE\Log.h" />
     <ClInclude Include="src\MGE\MouseButtonCodes.h" />
+    <ClInclude Include="src\MGE\Physics\Fluid\Scene_Fluid.h" />
     <ClInclude Include="src\MGE\Physics\PhysicsObject.h" />
     <ClInclude Include="src\MGE\Physics\PhysicsObject_SoftBody.h" />
     <ClInclude Include="src\MGE\Physics\PhysicsObject_Spring.h" />
@@ -255,6 +257,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\MGE\Physics\PhysicsObject_Fluid.cpp" />
     <ClCompile Include="src\MGE\Application.cpp" />
     <ClCompile Include="src\MGE\CameraController.cpp" />
     <ClCompile Include="src\MGE\Core\ThreadPool.cpp" />
@@ -263,6 +266,7 @@
     <ClCompile Include="src\MGE\Layer.cpp" />
     <ClCompile Include="src\MGE\LayerStack.cpp" />
     <ClCompile Include="src\MGE\Log.cpp" />
+    <ClCompile Include="src\MGE\Physics\Fluid\Scene_Fluid.cpp" />
     <ClCompile Include="src\MGE\Physics\PhysicsObject.cpp" />
     <ClCompile Include="src\MGE\Physics\PhysicsObject_SoftBody.cpp" />
     <ClCompile Include="src\MGE\Physics\PhysicsObject_Spring.cpp" />

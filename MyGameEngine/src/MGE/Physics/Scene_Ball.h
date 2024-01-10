@@ -49,9 +49,6 @@ namespace MGE {
 		PhysicsScene(float height, float width, int numberOfObjects);
 		~PhysicsScene() {
 			m_ThreadPool.Stop();
-			cudaFree(m_surrounding_objects);
-			cudaFree(m_center_object_position);
-			cudaFree(m_results);
 		}
 
 		void OnUpdate(Timestep ts);
@@ -64,15 +61,43 @@ namespace MGE {
 		void FindCollisions_mutithread_Call();
 		void FindCollisions_BrutalForce();
 		void FindCollisions_GridHandling(int i, int j);
+		void FindCollisions_GridHandling_CUDA(int i, int j);
+
+		void ApplyPressue();
+		void ClearPressure();
 
 		void ElasticCollisions(CirclePhyicsObject* i, CirclePhyicsObject* j);
 		void ElasticCollisions_Verlet(CirclePhyicsObject* i, CirclePhyicsObject* j);
 
+		float CaculateDensity(Vec2_Physics position, int id);
+		Vec2_Physics CaculatePressureForce(Vec2_Physics position, int id);
+		float SmoothingKernel(float radius, float dst)
+		{
+			if (dst >= radius) return 0.0f;
+
+			float volume = 3.1415926f * std::pow(radius, 4) / 6.0f;
+
+			return (radius - dst) * (radius - dst) / volume;
+		}
+		float SmoothingKernelDerivative(float radius, float dst)
+		{
+			if (dst >= radius) return 0.0f;
+
+			float scale = -12 / (3.1415926f * std::pow(radius, 4));
+			return scale * (dst - radius);
+		}
+		float ConvertDensityToPressure(float density)
+		{
+			float densityError = density - m_TargetDensity;
+			return densityError * m_PressureMultipier;
+		}
+
 		inline int GetNumberOfObjects() { return m_NumberOfObjects; }
 		inline void AddNumberOfObjects() { m_NumberOfObjects++;  }
-		void CreateObjects(int& count);
+		void CreateObjects(int count);
 		void GridManage();
 		void SetUpGrid();
+		void SetUpDensity();
 
 		inline std::vector<ProfileResult> GetProfileResult() const { return m_ProfileResults; }
 
@@ -88,6 +113,9 @@ namespace MGE {
 		
 		float m_SceneWidth, m_SceneHeight;
 		int m_int_width, m_int_height;
+		float m_SmoothingRadius = 3.0f;
+		float m_TargetDensity = 1.0f;
+		float m_PressureMultipier = 100.0f;
 
 		std::vector<ProfileResult> m_ProfileResults;
 
@@ -97,6 +125,7 @@ namespace MGE {
 		glm::vec2* m_center_object_position;
 		glm::vec2* m_results;
 		glm::vec2* m_GPU_CirclePhyicsObjectContainer;
+
 	};
 
 }

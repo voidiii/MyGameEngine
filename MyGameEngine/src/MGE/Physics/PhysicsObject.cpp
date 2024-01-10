@@ -7,7 +7,7 @@ std::mutex position_mtx;
 namespace MGE {
 
 	CirclePhyicsObject::CirclePhyicsObject(Vec2_Physics Position, int uID, Vec2_Physics Velocity)
-		: m_Position(Position), m_uID(uID), m_Velocity(Velocity), m_LastPosition(Vec2_Physics{ Position.x - 0.2f, Position.y })
+		: m_Position(Position), m_uID(uID), m_Velocity(Velocity), m_LastPosition(Vec2_Physics{ Position.x, Position.y })
 	{
 
 	}
@@ -18,7 +18,7 @@ namespace MGE {
 
 	void CirclePhyicsObject::DrawPhysicsObject()
 	{
-		Renderer2D::DrawCircle({ m_Position.x, m_Position.y, 0.0f }, Vec4{ 0.2f, 0.3f, 0.8f, 1.0f });
+		Renderer2D::DrawCircle({ m_Position.x, m_Position.y, 0.0f }, Vec4{ 1.0f - GetLengthPressureAcceleration() * 100.0f, 0.0f, GetLengthPressureAcceleration() * 100.0f, 1.0f});
 	}
 
 	void CirclePhyicsObject::UpdateVelocity(Vec2_Physics deltaVelocity)
@@ -39,31 +39,29 @@ namespace MGE {
 	void CirclePhyicsObject::OnUpdate(Timestep ts)
 	{
 		// if(mathter::Length(m_Velocity) < 0.1f) return; // object static, dont update at all
-		position_mtx.lock();
 		
 		Vec2_Physics FractionDirection = mathter::Length(m_Velocity) > 0.0f ? -mathter::Normalize(m_Velocity) : Vec2{0.0f, 0.0f};
 
 		float FractionAccelaration =  2.0f; // fraction 
 
-
-		UpdateVelocity(40.0f * Vec2_Physics{ 0.0f, -1.0f } * ts + FractionDirection * FractionAccelaration * ts);
+		UpdateVelocity(/*40.0f * Vec2_Physics{ 0.0f, -1.0f } * ts + */FractionDirection * ts + m_PressureAcceleration * ts);
 		UpdatePosition(m_Velocity * ts);
-		position_mtx.unlock();
-		
+		ApplyMotionLimit();
 	}
 
 	void CirclePhyicsObject::OnUpdate_Verlet(Timestep ts)
 	{
 		Vec2_Physics velocity = m_Position - m_LastPosition;
 		m_LastPosition = m_Position;
-		m_Position += velocity + (40.0f * Vec2_Physics{ 0.0f, -1.0f } - velocity * 40.0f) * ts * ts;
+		//m_Position += velocity;
+		//m_Position += (m_PressureAcceleration)*ts * ts;
+		m_Position += velocity - /*(40.0f * Vec2_Physics{0.0f, -1.0f} - velocity * 40.0f) * ts * ts + */ (m_PressureAcceleration ) * ts * ts;
 		ApplyMotionLimit_Verlet();
 	}
 
 	void CirclePhyicsObject::ApplyMotionLimit()
 	{
 		// if(mathter::Length(m_Velocity) < 0.1f) return;
-		position_mtx.lock();
 		
 		if (m_Position.x > m_XLimit) {
 			ChangeVelocity(Vec2_Physics{ -0.9f * m_Velocity.x, m_Velocity.y});
@@ -80,26 +78,15 @@ namespace MGE {
 			ChangeVelocity(Vec2_Physics{ m_Velocity.x, 0.9f * (-m_Velocity.y) });
 			UpdatePosition(Vec2_Physics{ 0.0f , -m_YLimit - m_Position.y });
 		}
-		position_mtx.unlock();
+
+		if (m_Position.y > -m_YLimit) {
+			ChangeVelocity(Vec2_Physics{ m_Velocity.x, 0.9f * (-m_Velocity.y) });
+			UpdatePosition(Vec2_Physics{ 0.0f , m_YLimit - m_Position.y });
+		}
 	}
 
 	void CirclePhyicsObject::ApplyMotionLimit_Verlet()
 	{
-		// if (
-		// 	m_Position.x < -m_XLimit + 2.0f && 
-		// 	m_Position.y < -m_YLimit + 2.0f &&
-		// 	m_Position.x > -m_XLimit        &&
-		// 	m_Position.y > -m_YLimit
-		//    )
-		// {
-		// 	if ((m_Position.x - (-m_XLimit + 2.0f)) > (-m_YLimit - m_Position.y))
-		// 	{
-		// 		m_Position.y = ( - m_YLimit - (m_Position.x - (-m_XLimit + 2.0f)));
-		// 		m_LastPosition.y = (-m_YLimit - (m_Position.x - (-m_XLimit + 2.0f)));
-		// 	}
-		// 	return;
-		// }
-		
 		if (m_Position.x > m_XLimit) {
 			m_Position.x = m_XLimit + (m_XLimit - m_Position.x);
 		}
@@ -120,7 +107,7 @@ namespace MGE {
 	void CirclePhyicsObject::SetMotionLimit(float xLimit, float yLimit)
 	{
 		m_XLimit = xLimit - 0.5f;
-		m_YLimit = yLimit;
+		m_YLimit = yLimit - 0.5f;
 	}
 
 	// Perimeter of Convex hull for a given set of points
