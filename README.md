@@ -83,3 +83,6 @@ Optimaztion Abstraction:
 
 8/15/2023
 Trying to implement EPA, doesnt look like it can be stable, need more work. 
+
+1/12/2024
+Fluid stable without gravity and low performance 
