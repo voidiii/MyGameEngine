@@ -7,17 +7,18 @@ std::mutex mtx;
 namespace MGE {
 	
 	PhysicsScene::PhysicsScene(float height, float width, int numberOfObjects)
-		: m_SceneHeight(height), m_SceneWidth(width), m_NumberOfObjects(0)
+		: m_SceneHeight(height), m_SceneWidth(width), m_NumberOfObjects(numberOfObjects)
 	{
 		m_int_width = f_toint32(m_SceneWidth);
 		m_int_height = f_toint32(m_SceneHeight);
 		
 		m_Grid.reserve(m_int_height * 2 + 3);
-		CreateObjects(500);
+		CreateObjects(numberOfObjects);
 		GridManage();
 
 		m_ThreadPool.Start();
 		m_CirclePhyicsObjectContainer.reserve(10000);
+		SetUpDensity();
 	}
 
 	void PhysicsScene::CreateObjects(int count)
@@ -55,11 +56,10 @@ namespace MGE {
 					for (const auto& j : grid)
 					{
 						j->object_id.clear();
-					}
+					} 
 				}
 
 				SetUpGrid();
-				SetUpDensity();
 				FindCollisions(); //single thread version
 				// FindCollisions_mutithread_Call();
 				// FindCollisions_BrutalForce();
@@ -69,7 +69,7 @@ namespace MGE {
 					//j.OnUpdate(ts / 8.0f);
 					j.OnUpdate_Verlet(ts/8.0f);
 				}
-				ClearPressure();
+				PredictDensity();
 			}
 		}
 		m_ThreadPool.pause();
@@ -79,6 +79,7 @@ namespace MGE {
 			{
 				j.DrawPhysicsObject();
 			}
+			ClearPressure();
 		}
 	}
 
@@ -183,6 +184,15 @@ namespace MGE {
 		}
 	}
 
+	void PhysicsScene::PredictDensity()
+	{
+		for (auto& j : m_CirclePhyicsObjectContainer)
+		{
+			Vec2_Physics predictedPosition = j.GetPosition() + j.GetVelocity();
+			j.SetDensity(CaculateDensity(predictedPosition, j.GetUID()));
+		}
+	}
+
 	float PhysicsScene::CaculateDensity(Vec2_Physics position, int id)
 	{
 		float density = 0.0f;
@@ -206,7 +216,7 @@ namespace MGE {
 				for (const auto& uid : m_Grid[y + a][x + b]->object_id)
 				{
 					float dst = mathter::Length(position - m_CirclePhyicsObjectContainer[uid].GetPosition());
-					float influence = SmoothingKernel(m_SmoothingRadius, dst);
+					float influence = SmoothingKernel(dst, m_SmoothingRadius);
 					density += influence;
 				}
 			}
@@ -221,6 +231,8 @@ namespace MGE {
 		int x = f_toint32(position.x + m_SceneWidth + 1);
 		int y = f_toint32(position.y + m_SceneHeight + 1);
 
+		float preesureB = ConvertDensityToPressure(m_CirclePhyicsObjectContainer[id].GetDensity());
+		
 		for (int a = -3; a <= 3; a++)
 		{
 			for (int b = -3; b <= 3; b++)
@@ -245,9 +257,9 @@ namespace MGE {
 
 					float slope = SmoothingKernelDerivative(dst, m_SmoothingRadius);
 					float density = m_CirclePhyicsObjectContainer[uid].GetDensity();
-					float temp = -ConvertDensityToPressure(density);
+					float pressureA = ConvertDensityToPressure(density);
 
-					pressureForce += temp * dir * slope / density;
+					pressureForce += ((pressureA + preesureB) / 2) * dir * slope / density;
 				}
 			}
 		}

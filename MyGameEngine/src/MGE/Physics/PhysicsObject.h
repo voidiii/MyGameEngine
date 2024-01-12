@@ -46,6 +46,7 @@ namespace MGE {
 		virtual ~CirclePhyicsObject();
 
 		virtual void DrawPhysicsObject() override;
+		void DebugDraw();
 		inline virtual Vec2_Physics GetPosition() const { return m_Position; }
 
 		inline Vec2 GetVelocity() const { return m_Velocity; }

@@ -179,26 +179,6 @@ namespace MGE {
 			s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
 			s_Data.QuadVertexBufferPtr++;
 		}
-		
-		// s_Data.QuadVertexBufferPtr->Position = Vec3{ position.x + size.x / 2.0f , position.y + size.y / 2.0f, 0.0f };
-		// s_Data.QuadVertexBufferPtr->Color = color;
-		// s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
-		// s_Data.QuadVertexBufferPtr++;
-		// 
-		// s_Data.QuadVertexBufferPtr->Position = Vec3{ position.x - size.x / 2.0f , position.y + size.y / 2.0f, 0.0f };
-		// s_Data.QuadVertexBufferPtr->Color = color;
-		// s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
-		// s_Data.QuadVertexBufferPtr++;
-		// 
-		// s_Data.QuadVertexBufferPtr->Position = Vec3{ position.x - size.x / 2.0f , position.y - size.y / 2.0f, 0.0f };
-		// s_Data.QuadVertexBufferPtr->Color = color;
-		// s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
-		// s_Data.QuadVertexBufferPtr++;
-		// 
-		// s_Data.QuadVertexBufferPtr->Position = Vec3{ position.x + size.x / 2.0f , position.y - size.y / 2.0f, 0.0f };
-		// s_Data.QuadVertexBufferPtr->Color = color;
-		// s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
-		// s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadIndexCount += 6;
 	}

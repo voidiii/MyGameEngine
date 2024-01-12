@@ -71,7 +71,7 @@ namespace MGE {
 
 		float CaculateDensity(Vec2_Physics position, int id);
 		Vec2_Physics CaculatePressureForce(Vec2_Physics position, int id);
-		float SmoothingKernel(float radius, float dst)
+		float SmoothingKernel(float dst, float radius)
 		{
 			if (dst >= radius) return 0.0f;
 
@@ -79,11 +79,11 @@ namespace MGE {
 
 			return (radius - dst) * (radius - dst) / volume;
 		}
-		float SmoothingKernelDerivative(float radius, float dst)
+		float SmoothingKernelDerivative(float dst, float radius)
 		{
 			if (dst >= radius) return 0.0f;
 
-			float scale = -12 / (3.1415926f * std::pow(radius, 4));
+			float scale = 12 / (3.1415926f * std::pow(radius, 4));
 			return scale * (dst - radius);
 		}
 		float ConvertDensityToPressure(float density)
@@ -98,6 +98,7 @@ namespace MGE {
 		void GridManage();
 		void SetUpGrid();
 		void SetUpDensity();
+		void PredictDensity();
 
 		inline std::vector<ProfileResult> GetProfileResult() const { return m_ProfileResults; }
 
@@ -114,8 +115,8 @@ namespace MGE {
 		float m_SceneWidth, m_SceneHeight;
 		int m_int_width, m_int_height;
 		float m_SmoothingRadius = 3.0f;
-		float m_TargetDensity = 1.0f;
-		float m_PressureMultipier = 100.0f;
+		float m_TargetDensity = 30.0f;
+		float m_PressureMultipier = 0.1f;
 
 		std::vector<ProfileResult> m_ProfileResults;
 

@@ -18,7 +18,32 @@ namespace MGE {
 
 	void CirclePhyicsObject::DrawPhysicsObject()
 	{
-		Renderer2D::DrawCircle({ m_Position.x, m_Position.y, 0.0f }, Vec4{ 1.0f - GetLengthPressureAcceleration() * 100.0f, 0.0f, GetLengthPressureAcceleration() * 100.0f, 1.0f});
+		//DebugDraw();
+		Renderer2D::DrawCircle({ m_Position.x, m_Position.y, 0.0f }, Vec4{ 1.0f, 0.0f, 1.0f, 1.0f});
+	}
+
+	void CirclePhyicsObject::DebugDraw()
+	{
+		std::vector<Vec3> vertices;
+
+		vertices.emplace_back(Vec3( 
+			m_PressureAcceleration.x * 0.005f,
+			m_PressureAcceleration.y * 0.005f,
+			0.0f));
+		vertices.emplace_back(Vec3(
+			m_PressureAcceleration.x * 0.005f,
+			m_PressureAcceleration.y * 0.005f + 0.02f,
+			0.0f));
+		vertices.emplace_back(Vec3(
+			0.0f,
+			+ 0.02f,
+			0.0f));
+		vertices.emplace_back(Vec3(
+			0.0f,
+			0.0f,
+			0.0f));
+
+		Renderer2D::DrawQuad(m_Position, Vec4{ 0.0f, 1.0f, 0.0f, 1.0f }, vertices);
 	}
 
 	void CirclePhyicsObject::UpdateVelocity(Vec2_Physics deltaVelocity)
@@ -53,9 +78,8 @@ namespace MGE {
 	{
 		Vec2_Physics velocity = m_Position - m_LastPosition;
 		m_LastPosition = m_Position;
-		//m_Position += velocity;
-		//m_Position += (m_PressureAcceleration)*ts * ts;
-		m_Position += velocity - /*(40.0f * Vec2_Physics{0.0f, -1.0f} - velocity * 40.0f) * ts * ts + */ (m_PressureAcceleration ) * ts * ts;
+		m_Position += velocity + (Vec2_Physics{0.0f, -1.0f} * 2.5f) * ts * ts + (m_PressureAcceleration ) * ts * ts;
+		m_Velocity = m_Position - m_LastPosition;
 		ApplyMotionLimit_Verlet();
 	}
 
@@ -88,11 +112,11 @@ namespace MGE {
 	void CirclePhyicsObject::ApplyMotionLimit_Verlet()
 	{
 		if (m_Position.x > m_XLimit) {
-			m_Position.x = m_XLimit + (m_XLimit - m_Position.x);
+			m_Position.x = (m_XLimit + (m_XLimit - m_Position.x));
 		}
 
 		if (m_Position.x < -m_XLimit) {
-			m_Position.x = -m_XLimit + (-m_XLimit - m_Position.x);
+			m_Position.x = (-m_XLimit + (-m_XLimit - m_Position.x));
 		}
 
 		if (m_Position.y < -m_YLimit) {
