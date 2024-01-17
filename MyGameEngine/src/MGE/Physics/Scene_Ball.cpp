@@ -13,11 +13,11 @@ namespace MGE {
 		m_int_height = f_toint32(m_SceneHeight);
 		
 		m_Grid.reserve(m_int_height * 2 + 3);
+		m_CirclePhyicsObjectContainer.reserve(10000);
 		CreateObjects(numberOfObjects);
 		GridManage();
 
-		m_ThreadPool.Start();
-		m_CirclePhyicsObjectContainer.reserve(10000);
+		//m_ThreadPool.Start();
 		SetUpDensity();
 	}
 
@@ -45,24 +45,16 @@ namespace MGE {
 	void PhysicsScene::OnUpdate(Timestep ts)
 	{
 		m_ProfileResults.clear();
-		m_ThreadPool.resume();
+		//m_ThreadPool.resume();
 
 		{
 			PROFILE_SCOPE("Collision handle");
 			for (int i = 0; i < 8; i++)
 			{	
-				for (const auto& grid : m_Grid)
-				{
-					for (const auto& j : grid)
-					{
-						j->object_id.clear();
-					} 
-				}
-
 				SetUpGrid();
 				FindCollisions(); //single thread version
-				// FindCollisions_mutithread_Call();
-				// FindCollisions_BrutalForce();
+				//FindCollisions_mutithread_Call();
+				//FindCollisions_BrutalForce();
 				ApplyPressue();
 				for (auto& j : m_CirclePhyicsObjectContainer)
 				{
@@ -72,7 +64,7 @@ namespace MGE {
 				PredictDensity();
 			}
 		}
-		m_ThreadPool.pause();
+		//m_ThreadPool.pause();
 		{
 			PROFILE_SCOPE("Drawing");
 			for (auto& j : m_CirclePhyicsObjectContainer)
@@ -152,6 +144,13 @@ namespace MGE {
 	*/
 	void PhysicsScene::SetUpGrid() 
 	{
+		for (const auto& grid : m_Grid)
+		{
+			for (const auto& j : grid)
+			{
+				j->object_id.clear();
+			} 
+		}
 		for(const auto& object : m_CirclePhyicsObjectContainer)
 		{
 			int x = f_toint32(object.GetPosition().x + m_SceneWidth + 1);
@@ -318,12 +317,8 @@ namespace MGE {
 			{
 				if (object_i.GetUID() == object_j.GetUID()) continue;
 
-				float X = object_i.GetPosition().x - object_j.GetPosition().x;
-				float Y = object_i.GetPosition().y - object_j.GetPosition().y;
-
-
-				float hit_distance = X*X + Y*Y;
-				if (hit_distance < 1.0f)
+				Vec2_Physics hit_distance = Vec2_Physics(object_i.GetPosition() - object_j.GetPosition());
+				if (mathter::Length(hit_distance) < object_j.GetRadius() * 2.0f)
 				{
 					ElasticCollisions_Verlet(&object_i, &object_j);
 				}

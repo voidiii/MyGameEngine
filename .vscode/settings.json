@@ -1,3 +1,6 @@
 {
-    "cmake.sourceDirectory": "F:/MyGameEngine/MyGameEngine/vendor/GLFW"
+    "cmake.sourceDirectory": "F:/MyGameEngine/MyGameEngine/vendor/GLFW",
+    "files.associations": {
+        "numbers": "cpp"
+    }
 }

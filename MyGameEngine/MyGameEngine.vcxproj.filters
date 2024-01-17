@@ -383,7 +383,6 @@
     </ClInclude>
     <ClInclude Include="src\MGE\CUDA\CUDAHead.cuh" />
     <ClInclude Include="src\MGE\Physics\Fluid\Scene_Fluid.h" />
-    <ClInclude Include="src\MGE\Physics\PhysicsObject_Fluid.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\MGE\Application.cpp">
@@ -498,7 +497,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\MGE\Physics\Fluid\Scene_Fluid.cpp" />
-    <ClCompile Include="src\MGE\Physics\PhysicsObject_Fluid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="src\MGE\CUDA\CUDA.cu" />

@@ -100,6 +100,11 @@ namespace MGE {
 		void SetUpDensity();
 		void PredictDensity();
 
+		inline void SetTargetDensity(float input) { m_TargetDensity = input; }
+		inline void SetPressureMultipier(float input) { m_PressureMultipier = input; }
+		inline float GetTargetDensity() { return m_TargetDensity; }
+		inline float GetPressureMultipier() { return m_PressureMultipier; }
+
 		inline std::vector<ProfileResult> GetProfileResult() const { return m_ProfileResults; }
 
 	private:

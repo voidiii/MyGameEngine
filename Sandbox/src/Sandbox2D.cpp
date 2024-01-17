@@ -7,7 +7,7 @@
 Sandbox2D::Sandbox2D()
 	: Layer("Sandbox2D"), 
 		m_CameraController(1280.0f / 720.0f, true), 
-		m_PhysicsScene(20.0f, 20.0f, 500),
+		m_PhysicsScene(20.0f, 20.0f, 200),
 		m_CollisionDetectionScene(10.0f, 100.0f, 2),
 		m_Scene_SpringAndSoftbody(10.0f, 100.0f, 2)
 {
@@ -57,6 +57,12 @@ void Sandbox2D::OnImGuiRender(MGE::Timestep ts)
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", ts.GetFrameRate() * 1000.0f, (1.0f / ts.GetFrameRate()) > 120.0f ? 120.0f : (1.0f / ts.GetFrameRate()));
 
 	ImGui::Text("The number of balls: %d", m_PhysicsScene.GetNumberOfObjects());
+	float PreesureMuti = m_PhysicsScene.GetPressureMultipier();
+	float TargetDensity = m_PhysicsScene.GetTargetDensity();
+	ImGui::DragFloat("Pressure mutiplier", &PreesureMuti, 0.05f);
+	ImGui::DragFloat("Target density", &TargetDensity, 0.05f);
+	m_PhysicsScene.SetPressureMultipier(PreesureMuti);
+	m_PhysicsScene.SetTargetDensity(TargetDensity);
 	
 	for (auto& result : m_PhysicsScene.GetProfileResult())
 	{

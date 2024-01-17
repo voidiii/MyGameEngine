@@ -78,7 +78,7 @@ namespace MGE {
 	{
 		Vec2_Physics velocity = m_Position - m_LastPosition;
 		m_LastPosition = m_Position;
-		m_Position += velocity + (Vec2_Physics{0.0f, -1.0f} * 2.5f) * ts * ts + (m_PressureAcceleration ) * ts * ts;
+		m_Position += velocity + /*(Vec2_Physics{0.0f, -1.0f} *10.0f) * ts * ts +*/ (m_PressureAcceleration)*ts * ts;
 		m_Velocity = m_Position - m_LastPosition;
 		ApplyMotionLimit_Verlet();
 	}

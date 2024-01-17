@@ -1,7 +1,5 @@
 #include "MGEpch.h"
 #include "OpenGLVertexArray.h"
-
-
 #include <glad/glad.h>
 
 namespace MGE {

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "MGE/Renderer/VertexArray.h"
 
 namespace MGE {
