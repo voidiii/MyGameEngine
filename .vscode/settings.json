@@ -1,5 +1,8 @@
 {
-    "cmake.sourceDirectory": "F:/MyGameEngine/MyGameEngine/vendor/GLFW",
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.useCMakePresets": "always",
+    "cmake.debugConfig": {"cwd": "${workspaceFolder}/Sandbox"},
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "files.associations": {
         "numbers": "cpp"
     }

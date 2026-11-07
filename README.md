@@ -85,4 +85,62 @@ Optimaztion Abstraction:
 Trying to implement EPA, doesnt look like it can be stable, need more work. 
 
 1/12/2024
-Fluid stable without gravity and low performance 
+Fluid stable without gravity and low performance
+
+11/7/2026
+Coming back to this project after a long break. Set up CMake and VS Code build/debug configurations so the project can be built with MSVC Build Tools without the Visual Studio IDE. Restored missing submodules and fixed compatibility with the current compiler.
+
+Separated the ball collision demo from the particle fluid demo in the Settings scene selector. The ball scene now starts with 10000 balls in a 260 x 160 area, with gravity and mouse spawning. Hold the left mouse button to add balls with the same initial speed magnitude and random directions.
+
+****
+## Collision Optimization Revisit
+
+The ball scene currently uses single-threaded grid collision detection and fixed 480 Hz Verlet updates. The old column-based thread pool code is still present but is not enabled. The following changes were tested in Release builds.
+
+1, Squared distance checks and reuse of collision calculations
+
+Previously, collision detection compared the distance between two balls with their diameter, which required a square root for every candidate pair. It now compares `dot(delta, delta)` with `diameter * diameter`. A square root is only needed when resolving an actual overlap.
+
+The Verlet collision response also calculates the distance, direction and position correction once and reuses them for both balls, instead of repeatedly calculating the same values.
+
+Observed result: the rough interactive limit went from around 8000 balls to around 10000 balls. There was no performance log before this change, so this is an observation rather than a measured speedup.
+
+2, Remove duplicate collision pair checks
+
+Previously, a pair could be processed as both A -> B and B -> A. Within the same cell, only pairs with the second particle ID greater than the first are now checked. Between cells, only the right neighbor and the three neighbors in the next row are visited. This covers each unordered candidate pair once.
+
+Observed result: in the 10000-10999 ball range, average physics step time dropped from about 1.96 ms to 1.16 ms, roughly 41% less time. The earlier build fell to about 444 physics steps/s at 10431 balls, while the deduplicated build still maintained about 480 steps/s at 12772 balls.
+
+Known issue: this also removes repeated position corrections, so the solver does less work per pair and dense piles can become less stable. The speedup is not a comparison at equal solver quality. Abnormal acceleration and pile stability still need work.
+
+3, Contiguous grid memory layout
+
+The original grid used `vector<vector<shared_ptr<Grid>>>`, with a separate `vector<int>` of particle IDs in each cell. It now stores all cells in one contiguous array and all particle IDs in another contiguous array. Each cell references a range in the shared particle ID array.
+
+Grid rebuilding uses three stages: count particles per cell, calculate prefix offsets, then scatter particle IDs into their cell ranges. The scatter preserves the previous particle order within each cell, so collision traversal and solving order stay the same.
+
+The goal is to reduce pointer chasing and scattered memory accesses. The tradeoff is additional linear scans during rebuilding, so this is not guaranteed to improve every workload.
+
+Observed result after expanding the scene:
+
+| Ball count range | Before contiguous grid | After contiguous grid |
+| --- | --- | --- |
+| 10000-10999 | 0.93 ms/step | 0.98 ms/step |
+| 12000-12999 | 1.27 ms/step | 1.30 ms/step |
+| 14000-14999 | 1.48 ms/step | 1.20 ms/step |
+
+These were interactive runs with different particle distributions, not a controlled benchmark. The results are mixed and do not establish a consistent speedup from the memory layout change. In the latest run, 17487 balls took about 1.93-2.10 ms/step and mostly maintained 480 steps/s, falling to about 471 near the end.
+
+****
+## Performance Measurement
+
+FPS alone was not enough to compare these changes. Settings now displays average physics step time and actual completed physics steps per second, updated about once per second. Physics timing excludes drawing. The ball scene target is 480 steps/s; lower sustained throughput means simulation time is falling behind real time.
+
+Every run writes a separate CSV under `Sandbox/logs/`, recording build ID, build configuration, scene, ball count, frame time, FPS, physics step time, physics throughput and spawn settings. Logs are flushed each sampling interval and ignored by Git.
+
+At 480 Hz, the total wall-clock budget is about 2.083 ms per physics step, including the share needed for rendering and other work. Timing comparisons should use Release builds with similar particle counts and distributions. Scene size, pile density and solver stability all affect the results.
+
+Next steps:
+1, Add reproducible benchmarks with fixed random seeds, fixed particle counts and uniform/dense/piled distributions. Time grid rebuilding and collision solving separately.
+2, Improve overlap spawning, boundary response and contact stability. Compare the current position Verlet implementation with semi-implicit Euler plus contact impulse solving at comparable simulation quality; see TODO.md.
+3, Fix thread pool completion tracking and concurrent particle writes before enabling multithreaded collision solving again.

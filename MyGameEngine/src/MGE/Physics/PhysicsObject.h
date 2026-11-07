@@ -67,6 +67,11 @@ namespace MGE {
 		void SetCurrentPosition(Vec2_Physics Position) { m_Position = Position; }
 
 		void OnUpdate_Verlet(Timestep ts);
+		void SetVerletVelocity(Vec2_Physics velocity, float step)
+		{
+			m_LastPosition = m_Position - velocity * step;
+			m_Velocity = velocity * step;
+		}
 		void ApplyMotionLimit_Verlet();
 		
 		void SetMotionLimit(float xLimit, float yLimit);

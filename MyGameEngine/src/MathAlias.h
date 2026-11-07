@@ -4,7 +4,7 @@
 #include <Vector.hpp>
 #include <Matrix.hpp>
 #include <Quaternion.hpp>
-#include "../glm/glm/glm.hpp"
+#include <glm/glm.hpp>
 
 namespace MGE
 {
@@ -21,7 +21,7 @@ namespace MGE
 
     inline int32_t f_toint32(float x)
     {
-        //È¡µÃ·ûºÅÎ»£¬ÉèÖÃÑÚÂë
+        //å–å¾—ç¬¦å·ä½ï¼Œè®¾ç½®æ©ç 
         uint32_t n = ((*(uint32_t*)&x) & 0x80000000) ? 0xFFC00000 : 0;
         x += 12582912.0f;
         return ((*(uint32_t*)&x) & 0x3FFFFF) | n;

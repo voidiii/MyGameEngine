@@ -8,10 +8,12 @@
 #include "immintrin.h" //AVX2, 256 bit operations (8 floats)
 #include "MGE/Core/ThreadPool.h"
 
+#ifdef MGE_ENABLE_CUDA
 #include <cuda.h>
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 #include "MGE/CUDA/CUDAHead.cuh"
+#endif
 
 namespace MGE {
 
@@ -23,13 +25,23 @@ namespace MGE {
 
 	struct Grid
 	{
-		Grid(float x, float y)
-			: x(x), y(y)
+		struct Indices
 		{
-		}
+			const int* first = nullptr;
+			const int* last = nullptr;
+			const int* begin() const { return first; }
+			const int* end() const { return last; }
+			size_t size() const { return static_cast<size_t>(last - first); }
+		} object_id;
+	};
 
-		float x, y;
-		std::vector<int> object_id;
+	struct ContiguousGrid
+	{
+		std::vector<Grid> cells;
+		size_t columns = 0, rows = 0;
+		Grid* operator[](size_t row) { return cells.data() + row * columns; }
+		const Grid* operator[](size_t row) const { return cells.data() + row * columns; }
+		size_t size() const { return rows; }
 	};
 
 	struct CoordinatesWithUID
@@ -46,7 +58,7 @@ namespace MGE {
 	class PhysicsScene
 	{
 	public:
-		PhysicsScene(float height, float width, int numberOfObjects);
+		PhysicsScene(float height, float width, int numberOfObjects, bool fluidEnabled = true);
 		~PhysicsScene() {
 			m_ThreadPool.Stop();
 		}
@@ -92,9 +104,12 @@ namespace MGE {
 			return densityError * m_PressureMultipier;
 		}
 
-		inline int GetNumberOfObjects() { return m_NumberOfObjects; }
+		inline int GetNumberOfObjects() const { return m_NumberOfObjects; }
 		inline void AddNumberOfObjects() { m_NumberOfObjects++;  }
 		void CreateObjects(int count);
+		void SpawnBall(Vec2_Physics position, float speed);
+		float GetPhysicsStepMilliseconds() const { return m_PhysicsStepMilliseconds; }
+		float GetPhysicsStepsPerSecond() const { return m_PhysicsStepsPerSecond; }
 		void GridManage();
 		void SetUpGrid();
 		void SetUpDensity();
@@ -108,9 +123,18 @@ namespace MGE {
 		inline std::vector<ProfileResult> GetProfileResult() const { return m_ProfileResults; }
 
 	private:
+		bool m_FluidEnabled;
+		float m_TimeAccumulator = 0.0f;
+		float m_PhysicsStepMilliseconds = 0.0f;
+		float m_PhysicsStepsPerSecond = 0.0f;
+		double m_PhysicsMeasurementSeconds = 0.0;
+		int m_PhysicsMeasurementSteps = 0;
+		double m_PhysicsMeasurementWallSeconds = 0.0;
 		int m_NumberOfObjects;
 		std::vector<CirclePhyicsObject*> m_PhysicsObjects;
-		std::vector<std::vector<Ref<Grid>>> m_Grid;
+		ContiguousGrid m_Grid;
+		std::vector<size_t> m_GridCounts, m_GridOffsets, m_GridWriteOffsets, m_ParticleCells;
+		std::vector<int> m_GridParticleIndices;
 
 		// std::unordered_map<int, Scope<CoordinatesWithUID>> m_CoordinatesWithUID;
 		std::vector<CirclePhyicsObject> m_CirclePhyicsObjectContainer;

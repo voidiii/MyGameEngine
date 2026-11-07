@@ -1,0 +1,5 @@
+{
+  "version": "0.2.0",
+  "configurations": [{"name": "Sandbox (Debug)", "type": "cppvsdbg", "request": "launch", "program": "${workspaceFolder}/build/Debug/Sandbox.exe", "cwd": "${workspaceFolder}/Sandbox", "preLaunchTask": "Build Debug"},
+    {"name": "Sandbox (Release Performance)", "type": "cppvsdbg", "request": "launch", "program": "${workspaceFolder}/build/Release/Sandbox.exe", "cwd": "${workspaceFolder}/Sandbox", "preLaunchTask": "Build Release"}]
+}

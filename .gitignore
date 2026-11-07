@@ -1,4 +1,6 @@
 # Binaries
+/build/
+/Sandbox/logs/
 **/bin/
 bin-int/
 Intermediates/

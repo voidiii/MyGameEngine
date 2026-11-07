@@ -6,19 +6,18 @@ std::mutex mtx;
 
 namespace MGE {
 	
-	PhysicsScene::PhysicsScene(float height, float width, int numberOfObjects)
-		: m_SceneHeight(height), m_SceneWidth(width), m_NumberOfObjects(numberOfObjects)
+	PhysicsScene::PhysicsScene(float height, float width, int numberOfObjects, bool fluidEnabled)
+		: m_FluidEnabled(fluidEnabled), m_SceneHeight(height), m_SceneWidth(width), m_NumberOfObjects(0)
 	{
 		m_int_width = f_toint32(m_SceneWidth);
 		m_int_height = f_toint32(m_SceneHeight);
 		
-		m_Grid.reserve(m_int_height * 2 + 3);
 		m_CirclePhyicsObjectContainer.reserve(10000);
 		CreateObjects(numberOfObjects);
 		GridManage();
 
 		//m_ThreadPool.Start();
-		SetUpDensity();
+		if (m_FluidEnabled) SetUpDensity();
 	}
 
 	void PhysicsScene::CreateObjects(int count)
@@ -38,8 +37,28 @@ namespace MGE {
 
 			// TODO: aabb collision detection
 			m_CirclePhyicsObjectContainer[i].SetMotionLimit(m_SceneWidth, m_SceneHeight);
+			if (!m_FluidEnabled)
+			{
+				const float angle = static_cast<float>(rand()) / RAND_MAX * 6.2831853f;
+				m_CirclePhyicsObjectContainer[i].SetVerletVelocity(
+					Vec2_Physics{ std::cos(angle) * 5.0f, std::sin(angle) * 5.0f }, 1.0f / 480.0f);
+			}
 			AddNumberOfObjects();
 		}
+	}
+
+	void PhysicsScene::SpawnBall(Vec2_Physics position, float speed)
+	{
+		if (m_CirclePhyicsObjectContainer.size() >= 50000) return;
+		position.x = std::clamp(position.x, -m_SceneWidth + 1.0f, m_SceneWidth - 1.0f);
+		position.y = std::clamp(position.y, -m_SceneHeight + 1.0f, m_SceneHeight - 1.0f);
+		const int id = static_cast<int>(m_CirclePhyicsObjectContainer.size());
+		m_CirclePhyicsObjectContainer.emplace_back(position, id, Vec2_Physics{0.0f, 0.0f});
+		auto& ball = m_CirclePhyicsObjectContainer.back();
+		ball.SetMotionLimit(m_SceneWidth, m_SceneHeight);
+		const float angle = static_cast<float>(rand()) / RAND_MAX * 6.2831853f;
+		ball.SetVerletVelocity(Vec2_Physics{std::cos(angle) * speed, std::sin(angle) * speed}, 1.0f / 480.0f);
+		m_NumberOfObjects = id + 1;
 	}
 
 	void PhysicsScene::OnUpdate(Timestep ts)
@@ -49,19 +68,45 @@ namespace MGE {
 
 		{
 			PROFILE_SCOPE("Collision handle");
-			for (int i = 0; i < 8; i++)
+			int steps = 8;
+			float stepTime = ts / 8.0f;
+			if (!m_FluidEnabled)
+			{
+				m_TimeAccumulator += std::min(static_cast<float>(ts), 0.05f);
+				stepTime = 1.0f / 480.0f;
+				steps = std::min(static_cast<int>(m_TimeAccumulator / stepTime), 24);
+				m_TimeAccumulator -= steps * stepTime;
+			}
+			const auto physicsStart = std::chrono::steady_clock::now();
+			for (int i = 0; i < steps; i++)
 			{	
 				SetUpGrid();
 				FindCollisions(); //single thread version
 				//FindCollisions_mutithread_Call();
 				//FindCollisions_BrutalForce();
-				ApplyPressue();
+				if (m_FluidEnabled) ApplyPressue();
 				for (auto& j : m_CirclePhyicsObjectContainer)
 				{
+					if (!m_FluidEnabled) j.AddPressureAcceleration(Vec2_Physics{0.0f, -9.81f});
 					//j.OnUpdate(ts / 8.0f);
-					j.OnUpdate_Verlet(ts/8.0f);
+					j.OnUpdate_Verlet(stepTime);
+					if (!m_FluidEnabled) j.ClearPressureAcceleration();
 				}
-				PredictDensity();
+				if (m_FluidEnabled) PredictDensity();
+			}
+			const double elapsed = std::chrono::duration<double>(std::chrono::steady_clock::now() - physicsStart).count();
+			if (steps > 0) m_PhysicsMeasurementSeconds += elapsed;
+			m_PhysicsMeasurementSteps += steps;
+			// Use full frame time, not the clamped physics time, to measure real throughput.
+			m_PhysicsMeasurementWallSeconds += std::max(0.0f, static_cast<float>(ts));
+			if (m_PhysicsMeasurementWallSeconds >= 1.0)
+			{
+				m_PhysicsStepMilliseconds = m_PhysicsMeasurementSteps > 0
+					? static_cast<float>(1000.0 * m_PhysicsMeasurementSeconds / m_PhysicsMeasurementSteps) : 0.0f;
+				m_PhysicsStepsPerSecond = static_cast<float>(m_PhysicsMeasurementSteps / m_PhysicsMeasurementWallSeconds);
+				m_PhysicsMeasurementSeconds = 0.0;
+				m_PhysicsMeasurementSteps = 0;
+				m_PhysicsMeasurementWallSeconds = 0.0;
 			}
 		}
 		//m_ThreadPool.pause();
@@ -81,36 +126,42 @@ namespace MGE {
 		//mtx.lock(); // lock the mutex
 		Vec2_Physics hit_distance = Vec2_Physics(i->GetPosition() - j->GetPosition());
 
-		if (mathter::Length(hit_distance) < 0.0001f) return;
+		const float distanceSquared = mathter::Dot(hit_distance, hit_distance);
+		if (distanceSquared < 0.0001f * 0.0001f) return;
 
-		Vec2_Physics hit_direction = mathter::Normalize(hit_distance);
-
-		i->SetCurrentPosition(i->GetPosition() + (i->GetRadius() * 2.0f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
-		j->SetCurrentPosition(j->GetPosition() - (j->GetRadius() * 2.0f - mathter::Length(hit_distance)) / 2.0f * hit_direction);
+		const float distance = std::sqrt(distanceSquared);
+		const Vec2_Physics hit_direction = hit_distance / distance;
+		const Vec2_Physics correction = (i->GetRadius() * 2.0f - distance) * 0.5f * hit_direction;
+		i->SetCurrentPosition(i->GetPosition() + correction);
+		j->SetCurrentPosition(j->GetPosition() - correction);
 		//mtx.unlock();
 	}
 
 	void PhysicsScene::FindCollisions_GridHandling(int i, int j)
 	{
-		for (const auto& uid : m_Grid[i][j]->object_id)
+		for (const auto& uid : m_Grid[i][j].object_id)
 		{
 			for (int a = -1; a <= 1; a++)
 			{
 				for (int b = -1; b <= 1; b++)
 				{
-					if (m_Grid[i + a][j + b]->object_id.size() == 0)
+					// Visit each unordered cell pair once: self, right, and the next row.
+					if (a < 0 || (a == 0 && b < 0)) continue;
+					if (m_Grid[i + a][j + b].object_id.size() == 0)
 					{
 						continue;
 					}
 			
-					for (const auto& uid_1 : m_Grid[i + a][j + b]->object_id)
+					for (const auto& uid_1 : m_Grid[i + a][j + b].object_id)
 					{
-						if (uid_1 == uid)
+						// Within this cell, visit each unordered particle pair once.
+						if (a == 0 && b == 0 && uid_1 <= uid)
 							continue;
 			
 						Vec2_Physics hit_distance = Vec2_Physics(m_CirclePhyicsObjectContainer[uid].GetPosition() - m_CirclePhyicsObjectContainer[uid_1].GetPosition());
 
-						if (mathter::Length(hit_distance) <  m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f)
+						const float diameter = m_CirclePhyicsObjectContainer[uid].GetRadius() * 2.0f;
+						if (mathter::Dot(hit_distance, hit_distance) < diameter * diameter)
 						{
 							ElasticCollisions_Verlet(&m_CirclePhyicsObjectContainer[uid], &m_CirclePhyicsObjectContainer[uid_1]);
 						}
@@ -122,18 +173,13 @@ namespace MGE {
 
 	void PhysicsScene::GridManage()
 	{
-		for (int i = -m_int_height - 1; i <= m_int_height + 1; i++)
-		{
-			std::vector<Ref<Grid>> temp;
-			temp.reserve(m_int_width * 2 + 3);
-			for (int j = -m_int_width - 1; j <= m_int_width + 1; j++)
-			{
-				temp.emplace_back(CreateRef<Grid>(
-					i, j
-				));
-			}
-			m_Grid.push_back(temp);
-		}
+		m_Grid.rows = m_int_height * 2 + 3;
+		m_Grid.columns = m_int_width * 2 + 3;
+		const size_t count = m_Grid.rows * m_Grid.columns;
+		m_Grid.cells.resize(count);
+		m_GridCounts.resize(count);
+		m_GridOffsets.resize(count + 1);
+		m_GridWriteOffsets.resize(count);
 
 		SetUpGrid();
 	}
@@ -144,20 +190,32 @@ namespace MGE {
 	*/
 	void PhysicsScene::SetUpGrid() 
 	{
-		for (const auto& grid : m_Grid)
-		{
-			for (const auto& j : grid)
-			{
-				j->object_id.clear();
-			} 
-		}
+		std::fill(m_GridCounts.begin(), m_GridCounts.end(), 0);
+		m_ParticleCells.resize(m_CirclePhyicsObjectContainer.size());
+		// Keep one valid backing element even for an empty scene.
+		m_GridParticleIndices.resize(std::max(size_t(1), m_CirclePhyicsObjectContainer.size()));
 		for(const auto& object : m_CirclePhyicsObjectContainer)
 		{
 			int x = f_toint32(object.GetPosition().x + m_SceneWidth + 1);
 			int y = f_toint32(object.GetPosition().y + m_SceneHeight + 1);
 
-			m_Grid[y][x]->object_id.emplace_back(object.GetUID());
+			y = std::clamp(y, 1, m_int_height * 2);
+			x = std::clamp(x, 1, m_int_width * 2);
+			const size_t cell = y * m_Grid.columns + x;
+			m_ParticleCells[object.GetUID()] = cell;
+			++m_GridCounts[cell];
 		}
+		m_GridOffsets[0] = 0;
+		for (size_t cell = 0; cell < m_Grid.cells.size(); ++cell)
+		{
+			m_GridOffsets[cell + 1] = m_GridOffsets[cell] + m_GridCounts[cell];
+			m_GridWriteOffsets[cell] = m_GridOffsets[cell];
+			m_Grid.cells[cell].object_id = {m_GridParticleIndices.data() + m_GridOffsets[cell],
+				m_GridParticleIndices.data() + m_GridOffsets[cell + 1]};
+		}
+		// Stable scatter preserves the previous per-cell particle order.
+		for (const auto& object : m_CirclePhyicsObjectContainer)
+			m_GridParticleIndices[m_GridWriteOffsets[m_ParticleCells[object.GetUID()]]++] = object.GetUID();
 	}
 	
 	void PhysicsScene::FindCollisions()
@@ -167,7 +225,7 @@ namespace MGE {
 			for (int j = 1; j <= (m_int_width * 2); j++)
 			{
 				/* loop through the 2-D grid vector */
-				if (m_Grid[i][j]->object_id.size() == 0)
+				if (m_Grid[i][j].object_id.size() == 0)
 					continue; 
 
 				FindCollisions_GridHandling(i, j);
@@ -203,16 +261,16 @@ namespace MGE {
 		{
 			for (int b = -3; b <= 3; b++)
 			{
-				if ((y + a < 0) || (y + a) >= m_Grid.size() || (x + b < 0) || (x + b >= m_Grid[0].size()))
+				if ((y + a < 0) || (y + a) >= m_Grid.size() || (x + b < 0) || (x + b >= m_Grid.columns))
 				{
 					continue;
 				}
-				if (m_Grid[y + a][x + b]->object_id.size() == 0)
+				if (m_Grid[y + a][x + b].object_id.size() == 0)
 				{
 					continue;
 				}
 
-				for (const auto& uid : m_Grid[y + a][x + b]->object_id)
+				for (const auto& uid : m_Grid[y + a][x + b].object_id)
 				{
 					float dst = mathter::Length(position - m_CirclePhyicsObjectContainer[uid].GetPosition());
 					float influence = SmoothingKernel(dst, m_SmoothingRadius);
@@ -236,16 +294,16 @@ namespace MGE {
 		{
 			for (int b = -3; b <= 3; b++)
 			{
-				if ((y + a < 0) || (y + a) >= m_Grid.size() || (x + b < 0) || (x + b >= m_Grid[0].size()))
+				if ((y + a < 0) || (y + a) >= m_Grid.size() || (x + b < 0) || (x + b >= m_Grid.columns))
 				{
 					continue;
 				}
-				if (m_Grid[y + a][x + b]->object_id.size() == 0)
+				if (m_Grid[y + a][x + b].object_id.size() == 0)
 				{
 					continue;
 				}
 
-				for (const auto& uid : m_Grid[y + a][x + b]->object_id)
+				for (const auto& uid : m_Grid[y + a][x + b].object_id)
 				{
 					if (uid == id) continue;
 
@@ -272,10 +330,10 @@ namespace MGE {
 			for (int j = 1; j <= (m_int_width * 2); j++)
 			{
 				/* loop through the 2-D grid vector */
-				if (m_Grid[i][j]->object_id.size() == 0)
+				if (m_Grid[i][j].object_id.size() == 0)
 					continue;
 
-				for (const auto& uid : m_Grid[i][j]->object_id)
+				for (const auto& uid : m_Grid[i][j].object_id)
 				{
 					m_CirclePhyicsObjectContainer[uid].AddPressureAcceleration(CaculatePressureForce(m_CirclePhyicsObjectContainer[uid].GetPosition(), m_CirclePhyicsObjectContainer[uid].GetUID()) / m_CirclePhyicsObjectContainer[uid].GetDensity());
 				}
@@ -328,6 +386,7 @@ namespace MGE {
 
 	void PhysicsScene::FindCollisions_GridHandling_CUDA(int i, int j)
 	{
+#ifdef MGE_ENABLE_CUDA
 		std::vector<glm::vec2> surrounding_objects_temp;
 		std::vector<glm::vec2> center_object_position_temp;
 		std::vector<glm::vec2> results_temp;
@@ -344,17 +403,17 @@ namespace MGE {
 		int size = 0;
 
 
-		for (const auto& uid : m_Grid[i][j]->object_id)
+		for (const auto& uid : m_Grid[i][j].object_id)
 		{
 			for (int a = -1; a <= 1; a++)
 			{
 				for (int b = -1; b <= 1; b++)
 				{
-					if (m_Grid[i + a][j + b]->object_id.size() == 0)
+					if (m_Grid[i + a][j + b].object_id.size() == 0)
 					{
 						continue;
 					}
-					for (const auto& uid_1 : m_Grid[i + a][j + b]->object_id)
+					for (const auto& uid_1 : m_Grid[i + a][j + b].object_id)
 					{
 						surrounding_objects_temp.emplace_back(glm::vec2(m_CirclePhyicsObjectContainer[uid_1].GetPosition().x, m_CirclePhyicsObjectContainer[uid_1].GetPosition().y));
 						center_object_position_temp.emplace_back(glm::vec2(m_CirclePhyicsObjectContainer[uid].GetPosition().x, m_CirclePhyicsObjectContainer[uid].GetPosition().y));
@@ -369,12 +428,12 @@ namespace MGE {
 			//{
 			//	for (int b = -1; b <= 1; b++)
 			//	{
-			//		if (m_Grid[i + a][j + b]->object_id.size() == 0)
+			//		if (m_Grid[i + a][j + b].object_id.size() == 0)
 			//		{
 			//			continue;
 			//		}
 			//
-			//		for (const auto& uid_1 : m_Grid[i + a][j + b]->object_id)
+			//		for (const auto& uid_1 : m_Grid[i + a][j + b].object_id)
 			//		{
 			//			if (uid_1 == uid)
 			//				continue;
@@ -421,6 +480,9 @@ namespace MGE {
 		cudaMemset(m_results, 0, size * sizeof(glm::vec2));
 		cudaMemset(m_surrounding_objects, 0, size * sizeof(glm::vec2));
 		cudaMemset(m_center_object_position, 0, size * sizeof(glm::vec2));
+#else
+		FindCollisions_GridHandling(i, j);
+#endif
 	}
 
 	void PhysicsScene::ElasticCollisions(CirclePhyicsObject* i, CirclePhyicsObject* j)
